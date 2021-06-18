@@ -20,3 +20,7 @@ export function calcWidth(
   testRenderElement.remove();
   return width;
 }
+
+export function calcLineMaxWidth(svgElement: SVGSVGElement): number {
+  return svgElement.width.baseVal.value;
+}
