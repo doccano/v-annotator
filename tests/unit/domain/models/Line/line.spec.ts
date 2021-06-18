@@ -1,4 +1,4 @@
-import { Line } from "@/domain/models/Line";
+import { Line } from "@/domain/models/Line/Line";
 
 describe("Line component", () => {
   it("can get its content", () => {
