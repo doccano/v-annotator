@@ -9,12 +9,12 @@ export class LineSplitter {
     const lines = [] as Line[];
 
     for (const [i, ch] of Array.from(text).entries()) {
-      const charWidth = this.vocab.get(ch)!;
+      const charWidth = this.vocab.has(ch) ? this.vocab.get(ch)! : 0;
       accumulatedWidth += charWidth;
-      if (accumulatedWidth > this.maxWidth) {
+      if (accumulatedWidth > this.maxWidth || ch === "\n") {
         const line = new Line(text.substring(startIndex, i));
         lines.push(line);
-        startIndex = i;
+        startIndex = ch === "\n" ? i + 1 : i;
         accumulatedWidth = charWidth;
       }
     }

@@ -23,4 +23,21 @@ describe("LineSplitter component", () => {
     ];
     expect(lines).toEqual(expected);
   });
+
+  it("can split text with new line", () => {
+    const content = "aaa\nbbb";
+    const vocab = new Map();
+    const maxWidth = 10;
+
+    const characterSet = new Set(content);
+    const characterArray = Array.from(characterSet);
+    characterArray.forEach((ch: string) => {
+      vocab.set(ch, 1);
+    });
+
+    const lineSplitter = new LineSplitter(vocab, maxWidth);
+    const lines = lineSplitter.split(content);
+    const expected = [new Line("aaa"), new Line("bbb")];
+    expect(lines).toEqual(expected);
+  });
 });
