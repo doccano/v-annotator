@@ -43,5 +43,26 @@ export default Vue.extend({
       required: false,
     },
   },
+
+  methods: {
+    addEntity() {
+      this.$emit("add:entity");
+    },
+    addRelation() {
+      this.$emit("add:relation");
+    },
+    updateEntity() {
+      this.$emit("update:entity");
+    },
+    updateRelation() {
+      this.$emit("update:relation");
+    },
+    removeEntity() {
+      this.$emit("remove:entity");
+    },
+    removeRelation() {
+      this.$emit("remove:relation");
+    },
+  },
 });
 </script>
