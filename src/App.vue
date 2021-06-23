@@ -1,17 +1,30 @@
 <template>
   <div id="app">
-    <HelloWorld msg="Welcome to Your Vue.js + TypeScript App" />
+    <v-annotator
+      :text="text"
+      :entities="entities"
+      :entity-labels="entityLabels"
+    />
   </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-import HelloWorld from "./components/HelloWorld.vue";
+import VAnnotator from "./components/VAnnotator.vue";
 
 export default Vue.extend({
   name: "App",
+
   components: {
-    HelloWorld,
+    VAnnotator,
+  },
+
+  data() {
+    return {
+      text: "we must respect the will of the individual. Take it easy I can assure you that everything will turn out to be fine.",
+      entities: [],
+      entityLabels: [],
+    };
   },
 });
 </script>
