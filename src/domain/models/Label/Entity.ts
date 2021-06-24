@@ -15,3 +15,13 @@ export class Entity {
     );
   }
 }
+
+export class Entities {
+  constructor(private entities: Entity[]) {}
+
+  filterByRange(startOffset: number, endOffset: number): Entities {
+    return new Entities(
+      this.entities.filter((entity) => entity.isIn(startOffset, endOffset))
+    );
+  }
+}
