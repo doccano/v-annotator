@@ -6,4 +6,12 @@ export class Entity {
     public startOffset: number,
     public endOffset: number
   ) {}
+
+  isIn(startOffset: number, endOffset: number): boolean {
+    return (
+      (startOffset <= this.startOffset && this.startOffset < endOffset) ||
+      (startOffset < this.endOffset && this.endOffset <= endOffset) ||
+      (this.startOffset < startOffset && endOffset < this.endOffset)
+    );
+  }
 }
