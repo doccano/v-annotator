@@ -1,5 +1,5 @@
-import { Line } from "@/domain/models/Line/Line";
-import { LineSplitter } from "@/domain/models/Line/LineSplitter";
+import { TextLine } from "@/domain/models/Line/TextLine";
+import { TextLineSplitter } from "@/domain/models/Line/TextLineSplitter";
 
 describe("LineSplitter component", () => {
   it("can split text", () => {
@@ -13,13 +13,13 @@ describe("LineSplitter component", () => {
       vocab.set(ch, 1);
     });
 
-    const lineSplitter = new LineSplitter(vocab, maxWidth);
+    const lineSplitter = new TextLineSplitter(vocab, maxWidth);
     const lines = lineSplitter.split(content);
     const expected = [
-      new Line("exa"),
-      new Line("mpl"),
-      new Line("e t"),
-      new Line("ext"),
+      new TextLine("exa", 0, 3),
+      new TextLine("mpl", 3, 6),
+      new TextLine("e t", 6, 9),
+      new TextLine("ext", 9, 12),
     ];
     expect(lines).toEqual(expected);
   });
@@ -35,9 +35,9 @@ describe("LineSplitter component", () => {
       vocab.set(ch, 1);
     });
 
-    const lineSplitter = new LineSplitter(vocab, maxWidth);
+    const lineSplitter = new TextLineSplitter(vocab, maxWidth);
     const lines = lineSplitter.split(content);
-    const expected = [new Line("aaa"), new Line("bbb")];
+    const expected = [new TextLine("aaa", 0, 3), new TextLine("bbb", 4, 7)];
     expect(lines).toEqual(expected);
   });
 });

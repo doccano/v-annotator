@@ -19,8 +19,8 @@
 import _ from "lodash";
 import Vue from "vue";
 import { calcWidth } from "@/domain/models/Character/Character";
-import { Line } from "@/domain/models/Line/Line";
-import { LineSplitter } from "@/domain/models/Line/LineSplitter";
+import { TextLine } from "@/domain/models/Line/TextLine";
+import { TextLineSplitter } from "@/domain/models/Line/TextLineSplitter";
 import LineView from "./LineView.vue";
 
 export default Vue.extend({
@@ -71,7 +71,7 @@ export default Vue.extend({
       containerElement: {} as HTMLElement | null,
       svgElement: {} as SVGSVGElement,
       textElement: {} as SVGTextElement,
-      lines: [] as Line[],
+      lines: [] as TextLine[],
       vocab: {} as Map<string, number>,
       x: 0,
       dy: 24,
@@ -113,7 +113,7 @@ export default Vue.extend({
     handleResize() {
       const maxWidth = this.containerElement!.clientWidth;
       this.svgElement.setAttribute("width", maxWidth.toString() + "px");
-      const splitter = new LineSplitter(this.vocab, maxWidth);
+      const splitter = new TextLineSplitter(this.vocab, maxWidth);
       this.lines = splitter.split(this.text);
     },
   },
