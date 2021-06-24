@@ -12,8 +12,7 @@
       </text>
     </svg>
     {{ containerElement.clientWidth }}
-    {{ _entities }}
-    {{ _entityLabels }}
+    {{ heights }}
   </div>
 </template>
 
@@ -25,6 +24,7 @@ import { TextLine } from "@/domain/models/Line/TextLine";
 import { TextLineSplitter } from "@/domain/models/Line/TextLineSplitter";
 import { Labels, ILabel } from "@/domain/models/Label/Label";
 import { Entities, IEntity } from "@/domain/models/Label/Entity";
+import { TextLineView } from "@/domain/models/View/TextLineView";
 import LineView from "./LineView.vue";
 
 export default Vue.extend({
@@ -97,6 +97,11 @@ export default Vue.extend({
     },
     _entityLabels(): Labels {
       return Labels.valueOf(this.entityLabels);
+    },
+    heights(): number[] {
+      return this.lines.map(
+        (line) => new TextLineView(line, this.textElement).height
+      );
     },
   },
 
