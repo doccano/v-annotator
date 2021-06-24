@@ -12,15 +12,19 @@
       </text>
     </svg>
     {{ containerElement.clientWidth }}
+    {{ _entities }}
+    {{ _entityLabels }}
   </div>
 </template>
 
 <script lang="ts">
 import _ from "lodash";
-import Vue from "vue";
+import Vue, { PropType } from "vue";
 import { calcWidth } from "@/domain/models/Character/Character";
 import { TextLine } from "@/domain/models/Line/TextLine";
 import { TextLineSplitter } from "@/domain/models/Line/TextLineSplitter";
+import { Labels, ILabel } from "@/domain/models/Label/Label";
+import { Entities, IEntity } from "@/domain/models/Label/Entity";
 import LineView from "./LineView.vue";
 
 export default Vue.extend({
@@ -35,7 +39,7 @@ export default Vue.extend({
       required: true,
     },
     entities: {
-      type: Array,
+      type: Array as PropType<IEntity[]>,
       default: () => [],
       required: true,
     },
@@ -45,7 +49,7 @@ export default Vue.extend({
       required: false,
     },
     entityLabels: {
-      type: Array,
+      type: Array as PropType<ILabel[]>,
       default: () => [],
       required: true,
     },
@@ -85,6 +89,15 @@ export default Vue.extend({
     window.addEventListener("resize", _.debounce(this.handleResize, 500));
     this.vocab = calcWidth(this.text, this.textElement);
     this.handleResize();
+  },
+
+  computed: {
+    _entities(): Entities {
+      return Entities.valueOf(this.entities);
+    },
+    _entityLabels(): Labels {
+      return Labels.valueOf(this.entityLabels);
+    },
   },
 
   beforeDestroy: function () {
@@ -127,6 +140,6 @@ svg {
 }
 #container {
   width: 100%;
-  background-color: rgb(124, 120, 120);
+  background-color: rgb(233, 232, 232);
 }
 </style>

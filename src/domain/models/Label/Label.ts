@@ -8,7 +8,7 @@ export class Label {
   ) {}
 }
 
-interface ILabel {
+export interface ILabel {
   id: number;
   text: string;
   prefixKey: string | null;

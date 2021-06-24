@@ -16,7 +16,7 @@ export class Entity {
   }
 }
 
-interface IEntity {
+export interface IEntity {
   id: number;
   label: number;
   user: number;

@@ -22,8 +22,22 @@ export default Vue.extend({
   data() {
     return {
       text: "we must respect the will of the individual. Take it easy I can assure you that everything will turn out to be fine.",
-      entities: [],
-      entityLabels: [],
+      entities: [
+        {
+          id: 0,
+          user: 0,
+          label: 0,
+          startOffset: 3,
+          endOffset: 7,
+        },
+      ],
+      entityLabels: [
+        {
+          id: 0,
+          text: "Test",
+          color: "#777",
+        },
+      ],
     };
   },
 });
