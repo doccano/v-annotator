@@ -16,8 +16,31 @@ export class Entity {
   }
 }
 
+interface IEntity {
+  id: number;
+  label: number;
+  user: number;
+  startOffset: number;
+  endOffset: number;
+}
+
 export class Entities {
   constructor(private entities: Entity[]) {}
+
+  static valueOf(entities: IEntity[]): Entities {
+    return new Entities(
+      entities.map(
+        (entity) =>
+          new Entity(
+            entity.id,
+            entity.label,
+            entity.user,
+            entity.startOffset,
+            entity.endOffset
+          )
+      )
+    );
+  }
 
   filterByRange(startOffset: number, endOffset: number): Entities {
     return new Entities(
