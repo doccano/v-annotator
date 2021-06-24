@@ -1,5 +1,4 @@
-import { Entity } from '@/domain/models/Label/Entity';
-
+import { Entity } from "@/domain/models/Label/Entity";
 
 describe("Entity component", () => {
   it("check isIn", () => {
