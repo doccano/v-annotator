@@ -1,18 +1,8 @@
 <template>
   <div id="container">
     <svg xmlns="http://www.w3.org/2000/svg" ref="svgContainer">
-      <text ref="textContainer">
-        <line-view
-          v-for="(item, key) in lines"
-          :key="key"
-          :text="item.content"
-          :x="x"
-          :dy="dy"
-        />
-      </text>
+      <text ref="textContainer" />
     </svg>
-    {{ containerElement.clientWidth }}
-    {{ heights }}
   </div>
 </template>
 
@@ -25,13 +15,10 @@ import { TextLineSplitter } from "@/domain/models/Line/TextLineSplitter";
 import { Labels, ILabel } from "@/domain/models/Label/Label";
 import { Entities, IEntity } from "@/domain/models/Label/Entity";
 import { TextLineView } from "@/domain/models/View/TextLineView";
-import LineView from "./LineView.vue";
+import { EntityLineView } from "@/domain/models/View/EntityLineView";
+import { SVGNS } from "@/domain/models/Character/SVGNS";
 
 export default Vue.extend({
-  components: {
-    LineView,
-  },
-
   props: {
     text: {
       type: String,
@@ -98,11 +85,6 @@ export default Vue.extend({
     _entityLabels(): Labels {
       return Labels.valueOf(this.entityLabels);
     },
-    heights(): number[] {
-      return this.lines.map(
-        (line) => new TextLineView(line, this.textElement).height
-      );
-    },
   },
 
   beforeDestroy: function () {
@@ -133,6 +115,40 @@ export default Vue.extend({
       this.svgElement.setAttribute("width", maxWidth.toString() + "px");
       const splitter = new TextLineSplitter(this.vocab, maxWidth);
       this.lines = splitter.split(this.text);
+      this.render();
+    },
+    render() {
+      let height = 0;
+      while (this.svgElement.lastChild) {
+        this.svgElement.removeChild(this.svgElement.lastChild);
+      }
+      this.textElement = document.createElementNS(SVGNS, "text");
+      this.svgElement.appendChild(this.textElement);
+      for (const line of this.lines) {
+        const textLine = this.renderText(line);
+        const entityLine = this.renderEntities(line);
+        height += textLine.getBBox().height;
+        entityLine.setAttribute(
+          "transform",
+          `translate(0 ${height.toString()})`
+        );
+        textLine.setAttribute("x", "0");
+        textLine.setAttribute("y", height.toString());
+        height += entityLine.getBBox().height;
+      }
+    },
+    renderText(line: TextLine): SVGTSpanElement {
+      const textLine = new TextLineView(line, this.textElement);
+      return textLine.render();
+    },
+    renderEntities(line: TextLine): SVGGElement {
+      const entityLine = new EntityLineView(
+        this.svgElement,
+        this._entities.filterByRange(line.startOffset, line.endOffset),
+        this._entityLabels,
+        line
+      ).render();
+      return entityLine;
     },
   },
 });

@@ -30,12 +30,31 @@ export default Vue.extend({
           startOffset: 3,
           endOffset: 7,
         },
+        {
+          id: 1,
+          user: 0,
+          label: 1,
+          startOffset: 59,
+          endOffset: 62,
+        },
+        {
+          id: 1,
+          user: 0,
+          label: 0,
+          startOffset: 79,
+          endOffset: 89,
+        },
       ],
       entityLabels: [
         {
           id: 0,
           text: "Test",
-          color: "#777",
+          color: "#008000",
+        },
+        {
+          id: 1,
+          text: "Loc",
+          color: "#ff0000",
         },
       ],
     };
