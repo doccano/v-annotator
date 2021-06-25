@@ -25,7 +25,13 @@ export interface IEntity {
 }
 
 export class Entities {
-  constructor(private entities: Entity[]) {}
+  private levels: Map<number, number>;
+
+  constructor(private entities: Entity[]) {
+    this.entities = entities;
+    this.levels = new Map();
+    this.calculateLevel();
+  }
 
   static valueOf(entities: IEntity[]): Entities {
     return new Entities(
@@ -40,6 +46,24 @@ export class Entities {
           )
       )
     );
+  }
+
+  private calculateLevel() {
+    for (const [i, entity] of this.entities.entries()) {
+      const levels = this.entities
+        .slice(0, i)
+        .filter((item) => entity.isIn(item.startOffset, item.endOffset))
+        .map((item) => this.levels.get(item.id));
+      let level = 0;
+      while (levels.includes(level)) {
+        level++;
+      }
+      this.levels.set(entity.id, level);
+    }
+  }
+
+  getLevelOf(id: number): number | undefined {
+    return this.levels.get(id);
   }
 
   list(): Entity[] {
