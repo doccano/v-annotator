@@ -5,7 +5,7 @@ import { Entities } from "@/domain/models/Label/Entity";
 describe("Entities component", () => {
   it("can filter by range", () => {
     const content = "example text";
-    const textLine = new TextLine(content, 0, content.length);
+    const textLine = new TextLine(content, 0, content.length, new Map());
     const entities = new Entities([
       new Entity(0, 0, 0, 0, content.length),
       new Entity(0, 0, 0, 0, content.length + 1),

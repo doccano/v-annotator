@@ -42,6 +42,10 @@ export class Entities {
     );
   }
 
+  list(): Entity[] {
+    return this.entities;
+  }
+
   filterByRange(startOffset: number, endOffset: number): Entities {
     return new Entities(
       this.entities.filter((entity) => entity.isIn(startOffset, endOffset))
