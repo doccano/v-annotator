@@ -161,6 +161,6 @@ svg {
 }
 #container {
   width: 100%;
-  background-color: rgb(233, 232, 232);
+  /* background-color: rgb(233, 232, 232); */
 }
 </style>

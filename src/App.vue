@@ -38,11 +38,18 @@ export default Vue.extend({
           endOffset: 62,
         },
         {
-          id: 1,
+          id: 2,
           user: 0,
           label: 0,
           startOffset: 79,
           endOffset: 89,
+        },
+        {
+          id: 3,
+          user: 0,
+          label: 1,
+          startOffset: 79,
+          endOffset: 94,
         },
       ],
       entityLabels: [
