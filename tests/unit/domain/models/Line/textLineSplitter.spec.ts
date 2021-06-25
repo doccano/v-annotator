@@ -16,10 +16,10 @@ describe("LineSplitter component", () => {
     const lineSplitter = new TextLineSplitter(vocab, maxWidth);
     const lines = lineSplitter.split(content);
     const expected = [
-      new TextLine("exa", 0, 3),
-      new TextLine("mpl", 3, 6),
-      new TextLine("e t", 6, 9),
-      new TextLine("ext", 9, 12),
+      new TextLine("exa", 0, 3, vocab),
+      new TextLine("mpl", 3, 6, vocab),
+      new TextLine("e t", 6, 9, vocab),
+      new TextLine("ext", 9, 12, vocab),
     ];
     expect(lines).toEqual(expected);
   });
@@ -37,7 +37,10 @@ describe("LineSplitter component", () => {
 
     const lineSplitter = new TextLineSplitter(vocab, maxWidth);
     const lines = lineSplitter.split(content);
-    const expected = [new TextLine("aaa", 0, 3), new TextLine("bbb", 4, 7)];
+    const expected = [
+      new TextLine("aaa", 0, 3, vocab),
+      new TextLine("bbb", 4, 7, vocab),
+    ];
     expect(lines).toEqual(expected);
   });
 });

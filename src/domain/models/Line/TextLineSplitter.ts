@@ -12,7 +12,12 @@ export class TextLineSplitter {
       const charWidth = this.vocab.has(ch) ? this.vocab.get(ch)! : 0;
       accumulatedWidth += charWidth;
       if (accumulatedWidth > this.maxWidth || ch === "\n") {
-        const line = new TextLine(text.substring(startIndex, i), startIndex, i);
+        const line = new TextLine(
+          text.substring(startIndex, i),
+          startIndex,
+          i,
+          this.vocab
+        );
         lines.push(line);
         startIndex = ch === "\n" ? i + 1 : i;
         accumulatedWidth = charWidth;
@@ -22,7 +27,8 @@ export class TextLineSplitter {
       const line = new TextLine(
         text.substring(startIndex),
         startIndex,
-        text.length
+        text.length,
+        this.vocab
       );
       lines.push(line);
     }
