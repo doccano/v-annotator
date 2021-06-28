@@ -29,6 +29,7 @@ export class Entities {
   private overlaps: Map<number, number>;
 
   constructor(private entities: Entity[]) {
+    this.entities.sort((a: Entity, b: Entity) => a.startOffset - b.startOffset);
     this.entities = entities;
     this.levels = new Map();
     this.overlaps = new Map();
