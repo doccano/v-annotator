@@ -13,7 +13,16 @@ export class TextLineView {
       "tspan"
     ) as SVGTSpanElement;
     textSpanElement.textContent = this.textLine.content;
+    Object.assign(textSpanElement, { annotatorElement: this });
     this.textElement.appendChild(textSpanElement);
     return textSpanElement;
+  }
+
+  get startOffset(): number {
+    return this.textLine.startOffset;
+  }
+
+  get endOffset(): number {
+    return this.textLine.endOffset;
   }
 }

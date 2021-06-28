@@ -4,6 +4,7 @@
       :text="text"
       :entities="entities"
       :entity-labels="entityLabels"
+      @add:entity="addEntity"
     />
   </div>
 </template>
@@ -55,27 +56,41 @@ export default Vue.extend({
       entityLabels: [
         {
           id: 0,
-          text: "Test",
-          color: "#008000",
+          text: "Lorem",
+          color: "#2196F3",
         },
         {
           id: 1,
-          text: "Loc",
-          color: "#ff0000",
+          text: "Ipsum",
+          color: "#F9A825",
         },
       ],
     };
   },
+
+  methods: {
+    addEntity(startOffset: number, endOffset: number) {
+      // const id = Math.max(...this.entities.map((entity) => entity.id));
+      const id = Math.floor(Math.random() * 10000);
+      this.entities.push({
+        id,
+        startOffset,
+        endOffset,
+        label: 0,
+        user: 0,
+      })
+    }
+  }
 });
 </script>
 
 <style>
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  /* font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+  -moz-osx-font-smoothing: grayscale; */
+  /* text-align: center; */
+  /* color: #2c3e50; */
+  /* margin-top: 60px; */
 }
 </style>

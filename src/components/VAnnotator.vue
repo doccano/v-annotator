@@ -17,6 +17,8 @@ import { Entities, IEntity } from "@/domain/models/Label/Entity";
 import { TextLineView } from "@/domain/models/View/TextLineView";
 import { EntityLineView } from "@/domain/models/View/EntityLineView";
 import { SVGNS } from "@/domain/models/Character/SVGNS";
+import { EventEmitter } from "events";
+import { TextSelectionHandler } from "../domain/models/EventHandler/TextSelectionHandler";
 
 export default Vue.extend({
   props: {
@@ -66,6 +68,8 @@ export default Vue.extend({
       vocab: {} as Map<string, number>,
       x: 0,
       dy: 24,
+      emitter: new EventEmitter(),
+      textSelectionHandler: {} as TextSelectionHandler,
     };
   },
 
@@ -75,11 +79,26 @@ export default Vue.extend({
     this.textElement = this.$refs.textContainer as SVGTextElement;
     window.addEventListener("resize", _.debounce(this.handleResize, 500));
     this.vocab = calcWidth(this.text, this.textElement);
+    this.textSelectionHandler = new TextSelectionHandler(this.emitter);
     this.handleResize();
+    this.emitter.on("textSelected", (startIndex: number, endIndex: number) => {
+      console.log(startIndex, endIndex);
+      this.addEntity(startIndex, endIndex);
+    });
+  },
+
+  watch: {
+    entities: {
+      handler() {
+        this.render();
+      },
+      deep: true,
+    },
   },
 
   computed: {
     _entities(): Entities {
+      console.log(Entities.valueOf(this.entities))
       return Entities.valueOf(this.entities);
     },
     _entityLabels(): Labels {
@@ -92,8 +111,8 @@ export default Vue.extend({
   },
 
   methods: {
-    addEntity() {
-      this.$emit("add:entity");
+    addEntity(startOffset: number, endOffset: number) {
+      this.$emit("add:entity", startOffset, endOffset);
     },
     addRelation() {
       this.$emit("add:relation");
@@ -119,10 +138,16 @@ export default Vue.extend({
     },
     render() {
       let height = 0;
+      const marginBottom = 12;
       while (this.svgElement.lastChild) {
         this.svgElement.removeChild(this.svgElement.lastChild);
       }
       this.textElement = document.createElementNS(SVGNS, "text");
+      this.textElement.onmouseup = () => {
+        if (window.getSelection()!.type === "Range") {
+          this.textSelectionHandler.textSelected();
+        }
+      };
       this.svgElement.appendChild(this.textElement);
       for (const line of this.lines) {
         const textLine = this.renderText(line);
@@ -134,7 +159,11 @@ export default Vue.extend({
         );
         textLine.setAttribute("x", "0");
         textLine.setAttribute("y", height.toString());
-        height += entityLine.getBBox().height;
+        height += Math.max(
+          entityLine.getBBox().height,
+          textLine.getBBox().height
+        );
+        height += marginBottom;
       }
     },
     renderText(line: TextLine): SVGTSpanElement {
@@ -158,9 +187,10 @@ export default Vue.extend({
 svg {
   white-space: pre;
   overflow-wrap: normal;
+  height: 100%;
 }
 #container {
   width: 100%;
-  /* background-color: rgb(233, 232, 232); */
+  height: 100vh;
 }
 </style>
