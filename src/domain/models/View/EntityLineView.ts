@@ -2,13 +2,15 @@ import { SVGNS } from "../Character/SVGNS";
 import { Entities, Entity } from "../Label/Entity";
 import { Labels } from "../Label/Label";
 import { TextLine } from "../Line/TextLine";
+import { EventEmitter } from "events";
 
 export class EntityLineView {
   constructor(
     private svgElement: SVGSVGElement,
     private entities: Entities,
     private labels: Labels,
-    private textLine: TextLine
+    private textLine: TextLine,
+    private emitter: EventEmitter
   ) {}
 
   render(): SVGGElement {
@@ -101,6 +103,9 @@ export class EntityLineView {
     textElement.setAttribute("y", y.toString());
     textElement.setAttribute("dy", "0.35em");
     textElement.textContent = this.labelText(entity);
+    textElement.onclick = () => {
+      this.emitter.emit("click:label", entity.id);
+    };
     return textElement;
   }
 }
