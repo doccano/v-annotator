@@ -66,8 +66,6 @@ export default Vue.extend({
       textElement: {} as SVGTextElement,
       lines: [] as TextLine[],
       vocab: {} as Map<string, number>,
-      x: 0,
-      dy: 24,
       emitter: new EventEmitter(),
       textSelectionHandler: {} as TextSelectionHandler,
     };
@@ -81,10 +79,7 @@ export default Vue.extend({
     this.vocab = calcWidth(this.text, this.textElement);
     this.textSelectionHandler = new TextSelectionHandler(this.emitter);
     this.handleResize();
-    this.emitter.on("textSelected", (startIndex: number, endIndex: number) => {
-      console.log(startIndex, endIndex);
-      this.addEntity(startIndex, endIndex);
-    });
+    this.registerEvents();
   },
 
   watch: {
@@ -98,7 +93,6 @@ export default Vue.extend({
 
   computed: {
     _entities(): Entities {
-      console.log(Entities.valueOf(this.entities))
       return Entities.valueOf(this.entities);
     },
     _entityLabels(): Labels {
@@ -111,23 +105,22 @@ export default Vue.extend({
   },
 
   methods: {
-    addEntity(startOffset: number, endOffset: number) {
-      this.$emit("add:entity", startOffset, endOffset);
-    },
-    addRelation() {
-      this.$emit("add:relation");
-    },
-    updateEntity() {
-      this.$emit("update:entity");
-    },
-    updateRelation() {
-      this.$emit("update:relation");
-    },
-    removeEntity() {
-      this.$emit("remove:entity");
-    },
-    removeRelation() {
-      this.$emit("remove:relation");
+    registerEvents() {
+      this.emitter.on(
+        "textSelected",
+        (startOffset: number, endOffset: number) => {
+          this.$emit("add:entity", startOffset, endOffset);
+        }
+      );
+      this.emitter.on("update:entity", (id: number) => {
+        this.$emit("update:entity", id);
+      });
+      this.emitter.on("remove:entity", (id: number) => {
+        this.$emit("remove:entity", id);
+      });
+      this.emitter.on("click:label", (id: number) => {
+        this.$emit("click:label", id);
+      });
     },
     handleResize() {
       const maxWidth = this.containerElement!.clientWidth;
@@ -175,7 +168,8 @@ export default Vue.extend({
         this.svgElement,
         this._entities.filterByRange(line.startOffset, line.endOffset),
         this._entityLabels,
-        line
+        line,
+        this.emitter
       ).render();
       return entityLine;
     },
