@@ -74,9 +74,11 @@ export class Entities {
     for (const entity of this.entities) {
       this.overlaps.set(
         entity.id,
-        this.entities.filter((item) =>
-          entity.isIn(item.startOffset, item.endOffset)
-        ).length
+        new Set(
+          this.entities
+            .filter((item) => entity.isIn(item.startOffset, item.endOffset))
+            .map((entity) => this.levels.get(entity.id)!)
+        ).size
       );
     }
   }
