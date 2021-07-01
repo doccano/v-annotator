@@ -31,10 +31,8 @@ export class EntityLineView {
       entityLabelElement.appendChild(lineElement);
       // Do not show a label text if the entity continues from the previous line.
       if (this.textLine.startOffset <= entity.startOffset) {
-        const rectElement = this.createRectangleElement(entity, x1, x2);
         const circleElement = this.createCircleElement(entity, x1);
         const textElement = this.createLabelTextElement(entity, x1);
-        entityLabelElement.appendChild(rectElement);
         entityLabelElement.appendChild(circleElement);
         entityLabelElement.appendChild(textElement);
       }
@@ -73,8 +71,11 @@ export class EntityLineView {
       "line"
     ) as SVGLineElement;
     const y = this.calculateLineY(entity);
-    lineElement.setAttribute("x1", x1.toString());
-    lineElement.setAttribute("x2", x2.toString());
+    // The width is extended by a half circle with a diameter equal to the stroke width.
+    // So we need to adjust the x1 and x2.
+    // https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke-linecap#round
+    lineElement.setAttribute("x1", (x1 + lineWidth / 2).toString());
+    lineElement.setAttribute("x2", (x2 - lineWidth / 2).toString());
     lineElement.setAttribute("y1", y.toString());
     lineElement.setAttribute("y2", y.toString());
     lineElement.setAttribute("stroke-width", lineWidth.toString());
@@ -90,7 +91,7 @@ export class EntityLineView {
     ) as SVGCircleElement;
     const y = this.calculateTextY(entity);
     circleElement.setAttribute("fill", this.color(entity));
-    circleElement.setAttribute("cx", (x1 + radius / 2).toString());
+    circleElement.setAttribute("cx", (x1 + radius).toString());
     circleElement.setAttribute("r", radius.toString());
     circleElement.setAttribute("cy", y.toString());
     return circleElement;
@@ -102,7 +103,7 @@ export class EntityLineView {
       "text"
     ) as SVGTextElement;
     const y = this.calculateTextY(entity);
-    const marginLeft = 3;
+    const marginLeft = 5;
     textElement.setAttribute("fill", "grey");
     textElement.setAttribute("x", (x1 + radius + marginLeft).toString());
     textElement.setAttribute("y", y.toString());
@@ -114,19 +115,5 @@ export class EntityLineView {
       this.emitter.emit("click:label", entity.id);
     };
     return textElement;
-  }
-
-  private createRectangleElement(entity: Entity, x1: number, x2: number) {
-    const rectElement = document.createElementNS(
-      SVGNS,
-      "rect"
-    ) as SVGRectElement;
-    const y = this.calculateTextY(entity);
-    rectElement.setAttribute("fill", "white");
-    rectElement.setAttribute("x", (x1 - radius / 2).toString());
-    rectElement.setAttribute("y", (y - 8).toString()); // fontsize / 2
-    rectElement.setAttribute("width", (x2 - x1).toString());
-    rectElement.setAttribute("height", "16"); // fontsize
-    return rectElement;
   }
 }
