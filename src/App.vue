@@ -22,7 +22,7 @@ export default Vue.extend({
 
   data() {
     return {
-      text: "we must respect the will of the individual. Take it easy I can assure you that everything will turn out to be fine.",
+      text: "we must respect the will of the individual.\nTake it easy I can assure you that everything will turn out to be fine.",
       entities: [
         {
           id: 0,
@@ -70,7 +70,6 @@ export default Vue.extend({
 
   methods: {
     addEntity(startOffset: number, endOffset: number) {
-      // const id = Math.max(...this.entities.map((entity) => entity.id));
       const id = Math.floor(Math.random() * 10000);
       this.entities.push({
         id,
@@ -78,9 +77,9 @@ export default Vue.extend({
         endOffset,
         label: 0,
         user: 0,
-      })
-    }
-  }
+      });
+    },
+  },
 });
 </script>
 
