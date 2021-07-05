@@ -12,7 +12,6 @@ export class TextLineSplitter {
     const lines = [] as TextLine[];
 
     for (const [i, ch] of Array.from(text).entries()) {
-      this.widthCalculator.add(ch);
       if (this.widthCalculator.needsNewline(ch)) {
         const line = new TextLine(
           text.substring(startIndex, i),
@@ -23,8 +22,8 @@ export class TextLineSplitter {
         lines.push(line);
         startIndex = ch === "\n" ? i + 1 : i;
         this.widthCalculator.reset();
-        this.widthCalculator.add(ch);
       }
+      this.widthCalculator.add(ch);
     }
     if (this.widthCalculator.remains()) {
       const line = new TextLine(
