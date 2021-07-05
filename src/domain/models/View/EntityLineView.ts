@@ -4,7 +4,7 @@ import { Labels } from "../Label/Label";
 import { TextLine } from "../Line/TextLine";
 import { EventEmitter } from "events";
 
-const lineWidth = 3;
+const lineWidth = 5;
 const radius = 3;
 
 export class EntityLineView {
