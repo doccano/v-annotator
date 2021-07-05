@@ -1,29 +1,36 @@
 import { EventEmitter } from "events";
 import { TextLineView } from "../View/TextLineView";
 
+interface Range {
+  startOffset: number;
+  endOffset: number;
+}
+
 export class TextSelectionHandler {
   constructor(private emitter: EventEmitter) {}
 
-  getSelectionInfo() {
+  getSelectionInfo(): Range | null {
     const selection = window.getSelection();
     let startElement = null;
     let endElement = null;
     try {
       startElement = selection!.anchorNode!.parentNode;
       endElement = selection!.focusNode!.parentNode;
+      console.log(startElement);
+      console.log(endElement);
+      console.log(selection);
     } catch (e) {
       return null;
     }
-    let startLine: TextLineView;
-    let endLine: TextLineView;
     let startOffset: number;
     let endOffset: number;
     try {
-      startLine = (
+      const startLine = (
         startElement as unknown as { annotatorElement: TextLineView }
       ).annotatorElement;
-      endLine = (endElement as unknown as { annotatorElement: TextLineView })
-        .annotatorElement;
+      const endLine = (
+        endElement as unknown as { annotatorElement: TextLineView }
+      ).annotatorElement;
       startOffset = startLine.startOffset + selection!.anchorOffset;
       endOffset = endLine.startOffset + selection!.focusOffset;
     } catch (e) {
