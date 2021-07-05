@@ -19,6 +19,7 @@ import { EntityLineView } from "@/domain/models/View/EntityLineView";
 import { SVGNS } from "@/domain/models/Character/SVGNS";
 import { EventEmitter } from "events";
 import { TextSelectionHandler } from "../domain/models/EventHandler/TextSelectionHandler";
+import { TextWidthCalculator } from "../domain/models/Line/Strategy";
 
 export default Vue.extend({
   props: {
@@ -125,7 +126,8 @@ export default Vue.extend({
     handleResize() {
       const maxWidth = this.containerElement!.clientWidth;
       this.svgElement.setAttribute("width", maxWidth.toString() + "px");
-      const splitter = new TextLineSplitter(this.vocab, maxWidth);
+      const calculator = new TextWidthCalculator(this.vocab, maxWidth);
+      const splitter = new TextLineSplitter(this.vocab, calculator);
       this.lines = splitter.split(this.text);
       this.render();
     },

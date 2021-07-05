@@ -1,7 +1,11 @@
 import { TextLine } from "./TextLine";
+import { WidthCalculator } from "./Strategy";
 
 export class TextLineSplitter {
-  constructor(private vocab: Map<string, number>, private maxWidth: number) {}
+  constructor(
+    private vocab: Map<string, number>,
+    private widthCalculator: WidthCalculator
+  ) {}
 
   split(text: string): TextLine[] {
     let accumulatedWidth = 0;
@@ -9,9 +13,9 @@ export class TextLineSplitter {
     const lines = [] as TextLine[];
 
     for (const [i, ch] of Array.from(text).entries()) {
-      const charWidth = this.vocab.has(ch) ? this.vocab.get(ch)! : 0;
+      const charWidth = this.widthCalculator.calculateWidth(ch);
       accumulatedWidth += charWidth;
-      if (accumulatedWidth > this.maxWidth || ch === "\n") {
+      if (this.widthCalculator.needsNewline(accumulatedWidth, ch)) {
         const line = new TextLine(
           text.substring(startIndex, i),
           startIndex,
