@@ -8,14 +8,12 @@ export class TextLineSplitter {
   ) {}
 
   split(text: string): TextLine[] {
-    let accumulatedWidth = 0;
     let startIndex = 0;
     const lines = [] as TextLine[];
 
     for (const [i, ch] of Array.from(text).entries()) {
-      const charWidth = this.widthCalculator.calculateWidth(ch);
-      accumulatedWidth += charWidth;
-      if (this.widthCalculator.needsNewline(accumulatedWidth, ch)) {
+      this.widthCalculator.add(ch);
+      if (this.widthCalculator.needsNewline(ch)) {
         const line = new TextLine(
           text.substring(startIndex, i),
           startIndex,
@@ -24,10 +22,11 @@ export class TextLineSplitter {
         );
         lines.push(line);
         startIndex = ch === "\n" ? i + 1 : i;
-        accumulatedWidth = charWidth;
+        this.widthCalculator.reset();
+        this.widthCalculator.add(ch);
       }
     }
-    if (accumulatedWidth > 0) {
+    if (this.widthCalculator.remains()) {
       const line = new TextLine(
         text.substring(startIndex),
         startIndex,

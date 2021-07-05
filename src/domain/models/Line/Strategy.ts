@@ -1,9 +1,13 @@
 export interface WidthCalculator {
   calculateWidth(ch: string): number;
-  needsNewline(accumulatedWidth: number, ch: string): boolean;
+  add(ch: string): void;
+  reset(): void;
+  needsNewline(ch: string): boolean;
+  remains(): boolean;
 }
 
 export class TextWidthCalculator implements WidthCalculator {
+  private accumulatedWidth = 0;
   constructor(private vocab: Map<string, number>, private maxWidth: number) {}
 
   calculateWidth(ch: string): number {
@@ -11,7 +15,20 @@ export class TextWidthCalculator implements WidthCalculator {
     return charWidth;
   }
 
-  needsNewline(accumulatedWidth: number, ch: string): boolean {
-    return accumulatedWidth > this.maxWidth || ch === "\n";
+  add(ch: string): void {
+    const w = this.calculateWidth(ch);
+    this.accumulatedWidth += w;
+  }
+
+  reset(): void {
+    this.accumulatedWidth = 0;
+  }
+
+  needsNewline(ch: string): boolean {
+    return this.accumulatedWidth > this.maxWidth || ch === "\n";
+  }
+
+  remains(): boolean {
+    return this.accumulatedWidth > 0;
   }
 }
