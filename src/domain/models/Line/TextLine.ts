@@ -25,3 +25,12 @@ export class TextLine {
     return [x1, x2];
   }
 }
+
+export class Span {
+  public endOffset = 0;
+  constructor(readonly startOffset: number, readonly dx: number) {}
+
+  setEndOffset(endOffset: number): void {
+    this.endOffset = endOffset;
+  }
+}
