@@ -1,28 +1,49 @@
-export class TextLine {
-  constructor(
-    readonly content: string,
-    readonly startOffset: number,
-    readonly endOffset: number,
-    private vocab: Map<string, number>
-  ) {}
+import { SVGNS } from "../Character/SVGNS";
 
-  range(startOffset: number, endOffset: number): [number, number] {
-    const x1 = Array.from(
-      this.content.substring(0, startOffset - this.startOffset)
-    )
-      .map((ch) => this.vocab.get(ch)!)
-      .reduce((p, x) => p + x, 0);
-    const x2 =
-      x1 +
-      Array.from(
-        this.content.substring(
-          startOffset - this.startOffset,
-          endOffset - this.startOffset
-        )
-      )
+export class TextLine {
+  private spans: Span[] = [];
+  constructor(private vocab: Map<string, number>) {}
+
+  get startOffset(): number {
+    return this.spans[0].startOffset;
+  }
+
+  get endOffset(): number {
+    return this.spans[this.spans.length - 1].endOffset;
+  }
+
+  addSpan(dx: number, startOffset: number, endOffset: number): void {
+    const span = new Span(dx, startOffset, endOffset);
+    this.spans.push(span);
+  }
+
+  range(
+    content: string,
+    startOffset: number,
+    endOffset: number
+  ): [number, number] {
+    const calcPosition = (start: number, end: number) =>
+      Array.from(content.substring(start, end)) // sum of character width
         .map((ch) => this.vocab.get(ch)!)
-        .reduce((p, x) => p + x, 0);
+        .reduce((p, x) => p + x, 0) +
+      this.spans // sum of dx
+        .filter((span) => span.startOffset < end)
+        .reduce((p, span) => p + span.dx, 0);
+    const x1 = calcPosition(this.startOffset, startOffset);
+    const x2 = x1 + calcPosition(startOffset, endOffset);
     return [x1, x2];
+  }
+
+  render(content: string): SVGTSpanElement {
+    const tspanElement = document.createElementNS(
+      SVGNS,
+      "tspan"
+    ) as SVGTSpanElement;
+    for (const span of this.spans) {
+      tspanElement.appendChild(span.render(content));
+    }
+    Object.assign(tspanElement, { annotatorElement: this });
+    return tspanElement;
   }
 }
 
@@ -32,4 +53,16 @@ export class Span {
     readonly startOffset: number,
     readonly endOffset: number
   ) {}
+
+  render(content: string): SVGTSpanElement {
+    const tspanElement = document.createElementNS(
+      SVGNS,
+      "tspan"
+    ) as SVGTSpanElement;
+    tspanElement.textContent = content.substring(
+      this.startOffset,
+      this.endOffset
+    );
+    return tspanElement;
+  }
 }

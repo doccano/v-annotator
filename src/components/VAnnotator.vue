@@ -163,7 +163,7 @@ export default Vue.extend({
     },
     renderText(line: TextLine): SVGTSpanElement {
       const textLine = new TextLineView(line, this.textElement);
-      return textLine.render();
+      return textLine.render(this.text);
     },
     renderEntities(line: TextLine): SVGGElement {
       const entityLine = new EntityLineView(
@@ -172,7 +172,7 @@ export default Vue.extend({
         this._entityLabels,
         line,
         this.emitter
-      ).render();
+      ).render(this.text);
       return entityLine;
     },
   },
