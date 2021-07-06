@@ -82,6 +82,12 @@ export class EntityLineView {
     lineElement.setAttribute("stroke-width", lineWidth.toString());
     lineElement.setAttribute("stroke-linecap", "round");
     lineElement.setAttribute("stroke", this.color(entity));
+    lineElement.onmouseover = () => {
+      lineElement.setAttribute("stroke-width", (lineWidth * 2).toString());
+    };
+    lineElement.onmouseleave = () => {
+      lineElement.setAttribute("stroke-width", lineWidth.toString());
+    };
     return lineElement;
   }
 

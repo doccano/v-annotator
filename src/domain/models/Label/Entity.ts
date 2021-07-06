@@ -87,6 +87,12 @@ export class Entities {
     return this.overlaps.get(id);
   }
 
+  getAt(startOffset: number): Entities {
+    return new Entities(
+      this.entities.filter((entity) => entity.startOffset === startOffset)
+    );
+  }
+
   list(): Entity[] {
     return this.entities;
   }
