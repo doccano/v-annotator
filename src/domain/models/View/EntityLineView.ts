@@ -16,10 +16,11 @@ export class EntityLineView {
     private emitter: EventEmitter
   ) {}
 
-  render(): SVGGElement {
+  render(content: string): SVGGElement {
     const elements = document.createElementNS(SVGNS, "g") as SVGGElement;
     for (const entity of this.entities.list()) {
       const [x1, x2] = this.textLine.range(
+        content,
         entity.startOffset,
         entity.endOffset
       );

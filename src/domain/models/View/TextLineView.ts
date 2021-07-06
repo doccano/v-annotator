@@ -7,15 +7,11 @@ export class TextLineView {
     private textElement: SVGTextElement
   ) {}
 
-  render(): SVGTSpanElement {
-    const textSpanElement = document.createElementNS(
-      SVGNS,
-      "tspan"
-    ) as SVGTSpanElement;
-    textSpanElement.textContent = this.textLine.content;
-    Object.assign(textSpanElement, { annotatorElement: this });
-    this.textElement.appendChild(textSpanElement);
-    return textSpanElement;
+  render(content: string): SVGTSpanElement {
+    const tspanElement = this.textLine.render(content);
+    Object.assign(tspanElement, { annotatorElement: this });
+    this.textElement.appendChild(tspanElement);
+    return tspanElement;
   }
 
   get startOffset(): number {
