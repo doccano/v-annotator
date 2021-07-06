@@ -1,5 +1,4 @@
 import { TextLine } from "../Line/TextLine";
-import { SVGNS } from "../Character/SVGNS";
 
 export class TextLineView {
   constructor(
