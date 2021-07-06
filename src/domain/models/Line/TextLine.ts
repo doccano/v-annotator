@@ -59,6 +59,7 @@ export class Span {
       SVGNS,
       "tspan"
     ) as SVGTSpanElement;
+    tspanElement.setAttribute("dx", this.dx.toString());
     tspanElement.textContent = content.substring(
       this.startOffset,
       this.endOffset
