@@ -1,9 +1,11 @@
 <template>
   <div id="app">
+    <button @click="showLabelText = !showLabelText">Switch</button>
     <v-annotator
       :text="text"
       :entities="entities"
       :entity-labels="entityLabels"
+      :show-label-text="showLabelText"
       @add:entity="addEntity"
     />
   </div>
@@ -22,6 +24,7 @@ export default Vue.extend({
 
   data() {
     return {
+      showLabelText: false,
       text: "we must respect the will of the individual.\nTake it easy I can assure you that everything will turn out to be fine.",
       entities: [
         {

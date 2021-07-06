@@ -58,6 +58,11 @@ export default Vue.extend({
       default: false,
       required: false,
     },
+    showLabelText: {
+      type: Boolean,
+      default: false,
+      required: true,
+    },
   },
 
   data() {
@@ -89,6 +94,9 @@ export default Vue.extend({
         this.render();
       },
       deep: true,
+    },
+    showLabelText() {
+      this.render();
     },
   },
 
@@ -171,7 +179,8 @@ export default Vue.extend({
         this._entities.filterByRange(line.startOffset, line.endOffset),
         this._entityLabels,
         line,
-        this.emitter
+        this.emitter,
+        this.showLabelText
       ).render(this.text);
       return entityLine;
     },

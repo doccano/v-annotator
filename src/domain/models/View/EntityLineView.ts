@@ -13,7 +13,8 @@ export class EntityLineView {
     private entities: Entities,
     private labels: Labels,
     private textLine: TextLine,
-    private emitter: EventEmitter
+    private emitter: EventEmitter,
+    private showLabelText: boolean
   ) {}
 
   render(content: string): SVGGElement {
@@ -31,7 +32,10 @@ export class EntityLineView {
       const lineElement = this.createLineElement(entity, x1, x2);
       entityLabelElement.appendChild(lineElement);
       // Do not show a label text if the entity continues from the previous line.
-      if (this.textLine.startOffset <= entity.startOffset) {
+      if (
+        this.showLabelText &&
+        this.textLine.startOffset <= entity.startOffset
+      ) {
         const circleElement = this.createCircleElement(entity, x1);
         const textElement = this.createLabelTextElement(entity, x1);
         entityLabelElement.appendChild(circleElement);
