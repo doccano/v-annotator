@@ -14,11 +14,8 @@ export class TextSelectionHandler {
     let startElement = null;
     let endElement = null;
     try {
-      startElement = selection!.anchorNode!.parentNode;
-      endElement = selection!.focusNode!.parentNode;
-      console.log(startElement);
-      console.log(endElement);
-      console.log(selection);
+      startElement = selection!.anchorNode!.parentNode?.parentNode;
+      endElement = selection!.focusNode!.parentNode?.parentNode;
     } catch (e) {
       return null;
     }
