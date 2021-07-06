@@ -6,6 +6,7 @@ import { EventEmitter } from "events";
 
 const lineWidth = 5;
 const radius = 3;
+const fontHeight = 16;
 
 export class EntityLineView {
   constructor(
@@ -59,15 +60,13 @@ export class EntityLineView {
 
   private calculateLineY(entity: Entity): number {
     const level = this.entities.getLevelOf(entity.id)!;
-    const marginTop = 3;
-    return (lineWidth + marginTop) * (level + 1);
-  }
-
-  private calculateTextY(entity: Entity): number {
-    const level = this.entities.getLevelOf(entity.id)!;
-    const overlap = this.entities.getOverlapOf(entity.id)!;
-    const lineHeight = lineWidth * (2 * overlap - 1);
-    return 20 * (level + 1) + lineHeight;
+    if (this.showLabelText) {
+      const marginBottom = 8;
+      return lineWidth + (lineWidth + fontHeight + marginBottom) * level;
+    } else {
+      const marginBottom = 5;
+      return lineWidth + (lineWidth + marginBottom) * level;
+    }
   }
 
   private createLineElement(entity: Entity, x1: number, x2: number) {
@@ -100,7 +99,8 @@ export class EntityLineView {
       SVGNS,
       "circle"
     ) as SVGCircleElement;
-    const y = this.calculateTextY(entity);
+    const marginTop = 5;
+    const y = this.calculateLineY(entity) + fontHeight / 2 + marginTop;
     circleElement.setAttribute("fill", this.color(entity));
     circleElement.setAttribute("cx", (x1 + radius).toString());
     circleElement.setAttribute("r", radius.toString());
@@ -113,8 +113,9 @@ export class EntityLineView {
       SVGNS,
       "text"
     ) as SVGTextElement;
-    const y = this.calculateTextY(entity);
+    const marginTop = 5;
     const marginLeft = 5;
+    const y = this.calculateLineY(entity) + fontHeight / 2 + marginTop;
     textElement.setAttribute("fill", "grey");
     textElement.setAttribute("x", (x1 + radius + marginLeft).toString());
     textElement.setAttribute("y", y.toString());
