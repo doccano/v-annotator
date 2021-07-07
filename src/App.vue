@@ -7,6 +7,7 @@
       :entity-labels="entityLabels"
       :show-label-text="showLabelText"
       @add:entity="addEntity"
+      @click:entity="updateEntity"
     />
   </div>
 </template>
@@ -82,6 +83,9 @@ export default Vue.extend({
         user: 0,
       });
     },
+    updateEntity(id: number) {
+      console.log(id);
+    }
   },
 });
 </script>

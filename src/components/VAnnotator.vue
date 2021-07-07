@@ -128,7 +128,7 @@ export default Vue.extend({
         this.$emit("remove:entity", id);
       });
       this.emitter.on("click:label", (id: number) => {
-        this.$emit("click:label", id);
+        this.$emit("click:entity", id);
       });
     },
     handleResize() {
