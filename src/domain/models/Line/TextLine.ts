@@ -1,5 +1,5 @@
-import { SVGNS } from "../Character/SVGNS";
-import { Font } from './Font';
+import { SVGNS } from "./SVGNS";
+import { Font } from "./Font";
 
 export class TextLine {
   private spans: Span[] = [];

@@ -1,4 +1,4 @@
-import { Font } from './Font';
+import { Font } from "./Font";
 export interface WidthCalculator {
   calculateWidth(ch: string): number;
   add(ch: string): void;

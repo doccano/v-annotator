@@ -1,4 +1,4 @@
-import { SVGNS } from "../Character/SVGNS";
+import { SVGNS } from "./SVGNS";
 
 export class Font {
   constructor(
