@@ -82,7 +82,8 @@ export default Vue.extend({
     this.svgElement = this.$refs.svgContainer as SVGSVGElement;
     this.textElement = this.$refs.textContainer as SVGTextElement;
     window.addEventListener("resize", _.debounce(this.handleResize, 500));
-    this.vocab = calcWidth(this.text, this.textElement);
+    const labelText = this.entityLabels.map((label) => label.text).join("");
+    this.vocab = calcWidth(this.text + labelText, this.textElement);
     this.textSelectionHandler = new TextSelectionHandler(this.emitter);
     this.handleResize();
     this.registerEvents();
