@@ -70,6 +70,7 @@ export default Vue.extend({
       containerElement: {} as HTMLElement | null,
       svgElement: {} as SVGSVGElement,
       textElement: {} as SVGTextElement,
+      fontSize: 16,
       lines: [] as TextLine[],
       vocab: {} as Map<string, number>,
       emitter: new EventEmitter(),
@@ -84,6 +85,9 @@ export default Vue.extend({
     window.addEventListener("resize", _.debounce(this.handleResize, 500));
     const labelText = this.entityLabels.map((label) => label.text).join("");
     this.vocab = calcWidth(this.text + labelText, this.textElement);
+    this.fontSize = parseFloat(
+      window.getComputedStyle(this.textElement).fontSize
+    );
     this.textSelectionHandler = new TextSelectionHandler(this.emitter);
     this.handleResize();
     this.registerEvents();

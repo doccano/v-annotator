@@ -85,7 +85,7 @@ export default Vue.extend({
     },
     updateEntity(id: number) {
       console.log(id);
-    }
+    },
   },
 });
 </script>
