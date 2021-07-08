@@ -1,3 +1,4 @@
+import { Font } from './Font';
 export interface WidthCalculator {
   calculateWidth(ch: string): number;
   add(ch: string): void;
@@ -8,10 +9,10 @@ export interface WidthCalculator {
 
 export class TextWidthCalculator implements WidthCalculator {
   private accumulatedWidth = 0;
-  constructor(private vocab: Map<string, number>, private maxWidth: number) {}
+  constructor(private font: Font, private maxWidth: number) {}
 
   calculateWidth(ch: string): number {
-    const charWidth = this.vocab.has(ch) ? this.vocab.get(ch)! : 0;
+    const charWidth = this.font.widthOf(ch);
     return charWidth;
   }
 

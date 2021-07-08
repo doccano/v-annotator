@@ -9,7 +9,6 @@
 <script lang="ts">
 import _ from "lodash";
 import Vue, { PropType } from "vue";
-import { calcWidth } from "@/domain/models/Character/Character";
 import { TextLine } from "@/domain/models/Line/TextLine";
 import { TextLineSplitter } from "@/domain/models/Line/TextLineSplitter";
 import { Labels, ILabel } from "@/domain/models/Label/Label";
@@ -20,6 +19,7 @@ import { SVGNS } from "@/domain/models/Character/SVGNS";
 import { EventEmitter } from "events";
 import { TextSelectionHandler } from "../domain/models/EventHandler/TextSelectionHandler";
 import { TextWidthCalculator } from "../domain/models/Line/Strategy";
+import { Font, createFont } from '@/domain/models/Line/Font';
 
 export default Vue.extend({
   props: {
@@ -70,9 +70,8 @@ export default Vue.extend({
       containerElement: {} as HTMLElement | null,
       svgElement: {} as SVGSVGElement,
       textElement: {} as SVGTextElement,
-      fontSize: 16,
       lines: [] as TextLine[],
-      vocab: {} as Map<string, number>,
+      font: {} as Font,
       emitter: new EventEmitter(),
       textSelectionHandler: {} as TextSelectionHandler,
     };
@@ -84,10 +83,7 @@ export default Vue.extend({
     this.textElement = this.$refs.textContainer as SVGTextElement;
     window.addEventListener("resize", _.debounce(this.handleResize, 500));
     const labelText = this.entityLabels.map((label) => label.text).join("");
-    this.vocab = calcWidth(this.text + labelText, this.textElement);
-    this.fontSize = parseFloat(
-      window.getComputedStyle(this.textElement).fontSize
-    );
+    this.font = createFont(this.text + labelText, this.textElement);
     this.textSelectionHandler = new TextSelectionHandler(this.emitter);
     this.handleResize();
     this.registerEvents();
@@ -139,8 +135,8 @@ export default Vue.extend({
     handleResize() {
       const maxWidth = this.containerElement!.clientWidth;
       this.svgElement.setAttribute("width", maxWidth.toString() + "px");
-      const calculator = new TextWidthCalculator(this.vocab, maxWidth);
-      const splitter = new TextLineSplitter(this.vocab, calculator);
+      const calculator = new TextWidthCalculator(this.font, maxWidth);
+      const splitter = new TextLineSplitter(this.font, calculator);
       this.lines = splitter.split(this.text);
       this.render();
     },

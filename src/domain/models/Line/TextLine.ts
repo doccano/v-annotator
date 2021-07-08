@@ -1,8 +1,9 @@
 import { SVGNS } from "../Character/SVGNS";
+import { Font } from './Font';
 
 export class TextLine {
   private spans: Span[] = [];
-  constructor(private vocab: Map<string, number>) {}
+  constructor(private font: Font) {}
 
   get startOffset(): number {
     return this.spans[0].startOffset;
@@ -23,9 +24,7 @@ export class TextLine {
     endOffset: number
   ): [number, number] {
     const calcPosition = (start: number, end: number) =>
-      Array.from(content.substring(start, end)) // sum of character width
-        .map((ch) => this.vocab.get(ch)!)
-        .reduce((p, x) => p + x, 0) +
+      this.font.widthOf(content.substring(start, end)) + // sum of character width
       this.spans // sum of dx
         .filter((span) => span.startOffset < end)
         .reduce((p, span) => p + span.dx, 0);
