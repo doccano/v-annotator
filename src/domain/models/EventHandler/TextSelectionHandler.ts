@@ -14,8 +14,8 @@ export class TextSelectionHandler {
     let startElement = null;
     let endElement = null;
     try {
-      startElement = selection!.anchorNode!.parentNode?.parentNode;
-      endElement = selection!.focusNode!.parentNode?.parentNode;
+      startElement = selection!.anchorNode!.parentNode;
+      endElement = selection!.focusNode!.parentNode;
     } catch (e) {
       return null;
     }
@@ -47,6 +47,7 @@ export class TextSelectionHandler {
 
   textSelected(): void {
     const selectionInfo = this.getSelectionInfo();
+    console.log(selectionInfo);
     if (selectionInfo) {
       this.emitter.emit(
         "textSelected",

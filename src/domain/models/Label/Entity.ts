@@ -52,6 +52,10 @@ export class Entities {
     );
   }
 
+  isEmpty(): boolean {
+    return this.entities.length === 0;
+  }
+
   private calculateLevel() {
     for (const [i, entity] of this.entities.entries()) {
       const levels = this.entities

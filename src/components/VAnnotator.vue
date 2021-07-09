@@ -140,7 +140,12 @@ export default Vue.extend({
       const maxWidth = this.containerElement!.clientWidth;
       this.svgElement.setAttribute("width", maxWidth.toString() + "px");
       const calculator = new TextWidthCalculator(this.font, maxWidth);
-      const splitter = new TextLineSplitter(this.font, calculator);
+      const splitter = new TextLineSplitter(
+        this.font,
+        calculator,
+        this._entities,
+        this._entityLabels
+      );
       this.lines = splitter.split(this.text);
       this.render();
     },

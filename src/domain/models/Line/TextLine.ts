@@ -29,10 +29,18 @@ export class TextLine {
     const calcPosition = (start: number, end: number) =>
       this.font.widthOf(content.substring(start, end)) + // sum of character width
       this.spans // sum of dx
-        .filter((span) => span.startOffset < end)
+        .filter((span) => span.startOffset <= end)
         .reduce((p, span) => p + span.dx, 0);
     const x1 = calcPosition(this.startOffset, startOffset);
-    const x2 = x1 + calcPosition(startOffset, endOffset);
+    const x2 =
+      x1 +
+      this.font.widthOf(content.substring(startOffset, endOffset)) +
+      this.spans
+        .filter(
+          (span) =>
+            startOffset < span.startOffset && span.startOffset <= endOffset
+        )
+        .reduce((p, span) => p + span.dx, 0);
     return [x1, x2];
   }
 }

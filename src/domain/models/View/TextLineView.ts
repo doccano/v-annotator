@@ -14,7 +14,9 @@ export class TextLineView {
     ) as SVGTSpanElement;
     for (const span of this.textLine.spans) {
       const spanView = new SpanView(span);
-      tspanElement.appendChild(spanView.render(content));
+      const spanElement = spanView.render(content);
+      Object.assign(spanElement, { annotatorElement: span });
+      tspanElement.appendChild(spanElement);
     }
     Object.assign(tspanElement, { annotatorElement: this });
     this.textElement.append(tspanElement);
