@@ -26,6 +26,7 @@ export class LabelText {
 
 export class EntityLabel {
   constructor(
+    readonly id: number,
     readonly circle: Circle,
     readonly labelText: LabelText,
     readonly margin = 5
@@ -37,16 +38,15 @@ export class EntityLabel {
 }
 
 export class EntityLabels {
-  private mapping: Map<string, EntityLabel> = new Map();
+  private mapping: Map<number, EntityLabel> = new Map();
 
   constructor(readonly entityLabels: EntityLabel[]) {
     for (const entityLabel of entityLabels) {
-      const text = entityLabel.labelText.text;
-      this.mapping.set(text, entityLabel);
+      this.mapping.set(entityLabel.id, entityLabel);
     }
   }
 
-  search(text: string): EntityLabel | undefined {
-    return this.mapping.get(text);
+  getById(id: number): EntityLabel | undefined {
+    return this.mapping.get(id);
   }
 }

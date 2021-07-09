@@ -12,7 +12,7 @@ export function createEntityLabels(
   for (const label of labels.list()) {
     const circle = new Circle(radius, label.color);
     const text = new LabelText(label.text, font);
-    const entityLabel = new EntityLabel(circle, text, margin);
+    const entityLabel = new EntityLabel(label.id, circle, text, margin);
     entityLabels.push(entityLabel);
   }
   return new EntityLabels(entityLabels);
