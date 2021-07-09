@@ -1,4 +1,4 @@
-import { SVGNS } from "../Line/SVGNS";
+import { SVGNS } from "./SVGNS";
 import { Entities, Entity } from "../Label/Entity";
 import { Labels } from "../Label/Label";
 import { TextLine } from "../Line/TextLine";

@@ -15,7 +15,7 @@ import { Labels, ILabel } from "@/domain/models/Label/Label";
 import { Entities, IEntity } from "@/domain/models/Label/Entity";
 import { TextLineView } from "@/domain/models/View/TextLineView";
 import { EntityLineView } from "@/domain/models/View/EntityLineView";
-import { SVGNS } from "@/domain/models/Line/SVGNS";
+import { SVGNS } from "@/domain/models/View/SVGNS";
 import { EventEmitter } from "events";
 import { TextSelectionHandler } from "../domain/models/EventHandler/TextSelectionHandler";
 import { TextWidthCalculator } from "../domain/models/Line/Strategy";

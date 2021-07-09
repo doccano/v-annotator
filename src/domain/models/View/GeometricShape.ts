@@ -1,5 +1,5 @@
 import { Circle, Line } from "../Line/Shape";
-import { SVGNS } from "../Line/SVGNS";
+import { SVGNS } from "./SVGNS";
 
 interface GeometricShape {
   render(): SVGElement;
