@@ -35,3 +35,18 @@ export class EntityLabel {
     return this.circle.width + this.margin + this.labelText.width;
   }
 }
+
+export class EntityLabels {
+  private mapping: Map<string, EntityLabel> = new Map();
+
+  constructor(readonly entityLabels: EntityLabel[]) {
+    for (const entityLabel of entityLabels) {
+      const text = entityLabel.labelText.text;
+      this.mapping.set(text, entityLabel);
+    }
+  }
+
+  search(text: string): EntityLabel | undefined {
+    return this.mapping.get(text);
+  }
+}

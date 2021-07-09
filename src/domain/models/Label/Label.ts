@@ -20,4 +20,8 @@ export class Labels {
   getById(id: number): Label | undefined {
     return this.labels.find((label) => label.id === id);
   }
+
+  list(): Label[] {
+    return this.labels;
+  }
 }
