@@ -1,4 +1,5 @@
-import { TextLine } from "../Line/TextLine";
+import { TextLine, Span } from "../Line/TextLine";
+import { SVGNS } from "./SVGNS";
 
 export class TextLineView {
   constructor(
@@ -7,9 +8,16 @@ export class TextLineView {
   ) {}
 
   render(content: string): SVGTSpanElement {
-    const tspanElement = this.textLine.render(content);
+    const tspanElement = document.createElementNS(
+      SVGNS,
+      "tspan"
+    ) as SVGTSpanElement;
+    for (const span of this.textLine.spans) {
+      const spanView = new SpanView(span);
+      tspanElement.appendChild(spanView.render(content));
+    }
     Object.assign(tspanElement, { annotatorElement: this });
-    this.textElement.appendChild(tspanElement);
+    this.textElement.append(tspanElement);
     return tspanElement;
   }
 
@@ -19,5 +27,22 @@ export class TextLineView {
 
   get endOffset(): number {
     return this.textLine.endOffset;
+  }
+}
+
+class SpanView {
+  constructor(private span: Span) {}
+
+  render(content: string): SVGTSpanElement {
+    const tspanElement = document.createElementNS(
+      SVGNS,
+      "tspan"
+    ) as SVGTSpanElement;
+    tspanElement.setAttribute("dx", this.span.dx.toString());
+    tspanElement.textContent = content.substring(
+      this.span.startOffset,
+      this.span.endOffset
+    );
+    return tspanElement;
   }
 }
