@@ -21,6 +21,8 @@ import { TextSelectionHandler } from "../domain/models/EventHandler/TextSelectio
 import { TextWidthCalculator } from "../domain/models/Line/Strategy";
 import { Font } from "@/domain/models/Line/Font";
 import { createFont } from "@/domain/models/View/fontFactory";
+import { createEntityLabels } from "../domain/models/Line/ShapeFactory";
+import { EntityLabels } from "@/domain/models/Line/Shape";
 
 export default Vue.extend({
   props: {
@@ -106,8 +108,9 @@ export default Vue.extend({
     _entities(): Entities {
       return Entities.valueOf(this.entities);
     },
-    _entityLabels(): Labels {
-      return Labels.valueOf(this.entityLabels);
+    _entityLabels(): EntityLabels {
+      const labels = Labels.valueOf(this.entityLabels);
+      return createEntityLabels(3, 5, this.font, labels);
     },
   },
 

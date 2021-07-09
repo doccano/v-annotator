@@ -33,7 +33,19 @@ export class EntityLabel {
   ) {}
 
   get width(): number {
-    return this.circle.width + this.margin + this.labelText.width;
+    return this.circle.width + this.marginLeft + this.labelText.width;
+  }
+
+  get text(): string {
+    return this.labelText.text;
+  }
+
+  get marginLeft(): number {
+    return this.margin + this.circle.radius;
+  }
+
+  get color(): string {
+    return this.circle.color;
   }
 }
 
