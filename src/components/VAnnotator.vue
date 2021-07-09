@@ -20,7 +20,7 @@ import { EventEmitter } from "events";
 import { TextSelectionHandler } from "../domain/models/EventHandler/TextSelectionHandler";
 import { TextWidthCalculator } from "../domain/models/Line/Strategy";
 import { Font } from "@/domain/models/Line/Font";
-import { createFont } from '@/domain/models/View/fontFactory';
+import { createFont } from "@/domain/models/View/fontFactory";
 
 export default Vue.extend({
   props: {
