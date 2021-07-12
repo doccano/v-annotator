@@ -3,6 +3,7 @@ export interface WidthCalculator {
   width: number;
   calculateWidth(ch: string): number;
   add(ch: string): void;
+  addWidth(width: number): void;
   reset(): void;
   needsNewline(ch: string): boolean;
   remains(): boolean;
@@ -24,6 +25,10 @@ export class TextWidthCalculator implements WidthCalculator {
   add(ch: string): void {
     const w = this.calculateWidth(ch);
     this.accumulatedWidth += w;
+  }
+
+  addWidth(width: number): void {
+    this.accumulatedWidth += width;
   }
 
   reset(): void {

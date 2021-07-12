@@ -33,6 +33,7 @@ export class TextLineSplitter {
         line.addSpan(dx, startIndex, i);
         startIndex = i;
         dx = newDx;
+        // this.widthCalculator.addWidth(dx);
       }
       if (this.widthCalculator.needsNewline(ch)) {
         line.addSpan(0, startIndex, i);
@@ -45,7 +46,7 @@ export class TextLineSplitter {
       this.widthCalculator.add(ch);
     }
     if (this.widthCalculator.remains()) {
-      line.addSpan(0, startIndex, text.length);
+      line.addSpan(dx, startIndex, text.length);
       lines.push(line);
     }
     return lines;

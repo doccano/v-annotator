@@ -95,7 +95,11 @@ export default Vue.extend({
   watch: {
     entities: {
       handler() {
-        this.render();
+        if (this.showLabelText) {
+          this.handleResize();
+        } else {
+          this.render();
+        }
       },
       deep: true,
     },
