@@ -36,18 +36,18 @@ export default Vue.extend({
           endOffset: 7,
         },
         {
+          id: 4,
+          user: 0,
+          label: 0,
+          startOffset: 35,
+          endOffset: 46,
+        },
+        {
           id: 1,
           user: 0,
           label: 1,
           startOffset: 59,
           endOffset: 62,
-        },
-        {
-          id: 4,
-          user: 0,
-          label: 0,
-          startOffset: 63,
-          endOffset: 69,
         },
         {
           id: 2,

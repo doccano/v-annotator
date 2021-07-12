@@ -31,15 +31,14 @@ export class TextLine {
       this.spans // sum of dx
         .filter((span) => span.startOffset <= end)
         .reduce((p, span) => p + span.dx, 0);
-    const x1 = calcPosition(this.startOffset, startOffset);
+    const s = Math.max(startOffset, this.startOffset);
+    const e = Math.min(endOffset, this.endOffset);
+    const x1 = calcPosition(this.startOffset, s);
     const x2 =
       x1 +
-      this.font.widthOf(content.substring(startOffset, endOffset)) +
+      this.font.widthOf(content.substring(s, e)) +
       this.spans
-        .filter(
-          (span) =>
-            startOffset < span.startOffset && span.startOffset <= endOffset
-        )
+        .filter((span) => s < span.startOffset && span.startOffset <= e)
         .reduce((p, span) => p + span.dx, 0);
     return [x1, x2];
   }
