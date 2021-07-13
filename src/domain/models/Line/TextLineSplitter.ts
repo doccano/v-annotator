@@ -28,20 +28,6 @@ export class TextLineSplitter {
           .map((e) => e!.width),
         0
       );
-      if (!entities.isEmpty()) {
-        const newDx = Math.max(
-          ...entities
-            .list()
-            .filter((e) => this.isOverlapping(e))
-            .map((e) => this.calculateDx(e)),
-          0
-        );
-        entities.list().map((e) => this.updateLevels(e));
-        line.addSpan(dx, startIndex, i);
-        startIndex = i;
-        dx = newDx;
-        // this.widthCalculator.addWidth(dx);
-      }
       if (this.widthCalculator.needsNewline(ch, maxLabelWidth)) {
         line.addSpan(0, startIndex, i);
         lines.push(line);
@@ -49,6 +35,21 @@ export class TextLineSplitter {
         startIndex = ch === "\n" ? i + 1 : i;
         this.widthCalculator.reset();
         this.resetLevels();
+      } else {
+        if (!entities.isEmpty()) {
+          const newDx = Math.max(
+            ...entities
+              .list()
+              .filter((e) => this.isOverlapping(e))
+              .map((e) => this.calculateDx(e)),
+            0
+          );
+          entities.list().map((e) => this.updateLevels(e));
+          line.addSpan(dx, startIndex, i);
+          startIndex = i;
+          dx = newDx;
+          this.widthCalculator.addWidth(dx);
+        }
       }
       this.widthCalculator.add(ch);
     }
