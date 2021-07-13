@@ -97,6 +97,11 @@ export class Entities {
     );
   }
 
+  startsAt(startOffset: number): boolean {
+    const entities = this.getAt(startOffset);
+    return !entities.isEmpty();
+  }
+
   list(): Entity[] {
     return this.entities;
   }

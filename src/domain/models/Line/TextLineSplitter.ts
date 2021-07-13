@@ -15,41 +15,26 @@ export class TextLineSplitter {
 
   split(text: string): TextLine[] {
     let dx = 0;
-    let startIndex = 0;
     let line = new TextLine(this.font);
+    let startIndex = 0;
     const lines = [] as TextLine[];
 
     for (const [i, ch] of Array.from(text).entries()) {
-      const entities = this.entities.getAt(i);
-      const maxLabelWidth = Math.max(
-        ...entities
-          .list()
-          .map((e) => this.entityLabels.getById(e.label))
-          .map((e) => e!.width),
-        0
-      );
-      if (this.widthCalculator.needsNewline(ch, maxLabelWidth)) {
+      if (this.needsNewline(i, ch)) {
         line.addSpan(0, startIndex, i);
         lines.push(line);
         line = new TextLine(this.font);
         startIndex = ch === "\n" ? i + 1 : i;
         this.widthCalculator.reset();
         this.resetLevels();
-      } else {
-        if (!entities.isEmpty()) {
-          const newDx = Math.max(
-            ...entities
-              .list()
-              .filter((e) => this.isOverlapping(e))
-              .map((e) => this.calculateDx(e)),
-            0
-          );
-          entities.list().map((e) => this.updateLevels(e));
-          line.addSpan(dx, startIndex, i);
-          startIndex = i;
-          dx = newDx;
-          this.widthCalculator.addWidth(dx);
-        }
+      } else if (this.entities.startsAt(i)) {
+        const entities = this.entities.getAt(i);
+        const _dx = this.calculateMaxDx(entities);
+        this.updateLevels(entities);
+        line.addSpan(dx, startIndex, i);
+        startIndex = i;
+        dx = _dx;
+        // this.widthCalculator.addWidth(dx);
       }
       this.widthCalculator.add(ch);
     }
@@ -58,6 +43,13 @@ export class TextLineSplitter {
       lines.push(line);
     }
     return lines;
+  }
+
+  private needsNewline(i: number, ch: string): boolean {
+    const entities = this.entities.getAt(i);
+    const labelIds = entities.list().map((e) => e.label);
+    const maxLabelWidth = this.entityLabels.maxLabelWidth(labelIds);
+    return this.widthCalculator.needsNewline(ch, maxLabelWidth);
   }
 
   private isOverlapping(entity: Entity): boolean {
@@ -70,6 +62,16 @@ export class TextLineSplitter {
     return false;
   }
 
+  private calculateMaxDx(entities: Entities): number {
+    return Math.max(
+      ...entities
+        .list()
+        .filter((e) => this.isOverlapping(e))
+        .map((e) => this.calculateDx(e)),
+      0
+    );
+  }
+
   private calculateDx(entity: Entity): number {
     const level = this.entities.getLevelOf(entity.id)!;
     if (this.isOverlapping(entity)) {
@@ -80,7 +82,11 @@ export class TextLineSplitter {
     return 0;
   }
 
-  private updateLevels(entity: Entity): void {
+  private updateLevels(entities: Entities): void {
+    entities.list().map((e) => this.updateLevel(e));
+  }
+
+  private updateLevel(entity: Entity): void {
     const level = this.entities.getLevelOf(entity.id)!;
     const entityLabel = this.entityLabels.getById(entity.label)!;
     if (this.isOverlapping(entity)) {

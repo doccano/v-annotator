@@ -61,4 +61,11 @@ export class EntityLabels {
   getById(id: number): EntityLabel | undefined {
     return this.mapping.get(id);
   }
+
+  maxLabelWidth(ids: number[]): number {
+    return Math.max(
+      ...ids.map((id) => this.getById(id)).map((e) => e!.width),
+      0
+    );
+  }
 }
