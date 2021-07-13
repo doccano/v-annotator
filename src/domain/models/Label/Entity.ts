@@ -26,15 +26,12 @@ export interface IEntity {
 
 export class Entities {
   private levels: Map<number, number>;
-  private overlaps: Map<number, number>;
 
   constructor(private entities: Entity[]) {
     this.entities.sort((a: Entity, b: Entity) => a.startOffset - b.startOffset);
     this.entities = entities;
     this.levels = new Map();
-    this.overlaps = new Map();
     this.calculateLevel();
-    this.calculateOverlap();
   }
 
   static valueOf(entities: IEntity[]): Entities {
@@ -72,23 +69,6 @@ export class Entities {
 
   getLevelOf(id: number): number | undefined {
     return this.levels.get(id);
-  }
-
-  private calculateOverlap() {
-    for (const entity of this.entities) {
-      this.overlaps.set(
-        entity.id,
-        new Set(
-          this.entities
-            .filter((item) => entity.isIn(item.startOffset, item.endOffset))
-            .map((entity) => this.levels.get(entity.id)!)
-        ).size
-      );
-    }
-  }
-
-  getOverlapOf(id: number): number | undefined {
-    return this.overlaps.get(id);
   }
 
   getAt(startOffset: number): Entities {
