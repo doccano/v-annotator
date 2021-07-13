@@ -30,11 +30,11 @@ export class TextLineSplitter {
       } else if (this.entities.startsAt(i)) {
         const entities = this.entities.getAt(i);
         const _dx = this.calculateMaxDx(entities);
+        this.widthCalculator.addWidth(_dx);
         this.updateLevels(entities);
         line.addSpan(dx, startIndex, i);
         startIndex = i;
         dx = _dx;
-        // this.widthCalculator.addWidth(dx);
       }
       this.widthCalculator.add(ch);
     }
