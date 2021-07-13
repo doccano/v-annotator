@@ -5,7 +5,7 @@ export interface WidthCalculator {
   add(ch: string): void;
   addWidth(width: number): void;
   reset(): void;
-  needsNewline(ch: string): boolean;
+  needsNewline(ch: string, maxLabelWidth: number): boolean;
   remains(): boolean;
 }
 
@@ -35,8 +35,8 @@ export class TextWidthCalculator implements WidthCalculator {
     this.accumulatedWidth = 0;
   }
 
-  needsNewline(ch: string): boolean {
-    return this.accumulatedWidth > this.maxWidth || ch === "\n";
+  needsNewline(ch: string, maxLabelWidth = 0): boolean {
+    return this.accumulatedWidth + maxLabelWidth > this.maxWidth || ch === "\n";
   }
 
   remains(): boolean {

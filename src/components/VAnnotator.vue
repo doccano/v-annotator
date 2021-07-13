@@ -104,7 +104,7 @@ export default Vue.extend({
       deep: true,
     },
     showLabelText() {
-      this.render();
+      this.handleResize();
     },
   },
 
