@@ -25,6 +25,7 @@ export class TextLineSplitter {
         lines.push(line);
         line = new TextLine(this.font);
         startIndex = ch === "\n" ? i + 1 : i;
+        dx = 0;
         this.widthCalculator.reset();
         this.resetLevels();
       } else if (this.entities.startsAt(i)) {
