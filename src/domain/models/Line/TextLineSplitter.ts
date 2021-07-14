@@ -21,7 +21,7 @@ export class TextLineSplitter {
 
     for (const [i, ch] of Array.from(text).entries()) {
       if (this.needsNewline(i, ch)) {
-        line.addSpan(0, startIndex, i);
+        line.addSpan(dx, startIndex, i);
         lines.push(line);
         line = new TextLine(this.font);
         startIndex = ch === "\n" ? i + 1 : i;
@@ -75,12 +75,9 @@ export class TextLineSplitter {
 
   private calculateDx(entity: Entity): number {
     const level = this.entities.getLevelOf(entity.id)!;
-    if (this.isOverlapping(entity)) {
-      const x = this.widthCalculator.width;
-      const endX = this.levels.get(level)!;
-      return endX - x;
-    }
-    return 0;
+    const x = this.widthCalculator.width;
+    const endX = this.levels.get(level)!;
+    return endX - x;
   }
 
   private updateLevels(entities: Entities): void {
@@ -90,14 +87,8 @@ export class TextLineSplitter {
   private updateLevel(entity: Entity): void {
     const level = this.entities.getLevelOf(entity.id)!;
     const entityLabel = this.entityLabels.getById(entity.label)!;
-    if (this.isOverlapping(entity)) {
-      const dx = this.calculateDx(entity);
-      const x = this.levels.get(level)!;
-      this.levels.set(level, x + entityLabel.width - dx);
-    } else {
-      const x = this.widthCalculator.width;
-      this.levels.set(level, x + entityLabel.width);
-    }
+    const x = this.widthCalculator.width;
+    this.levels.set(level, x + entityLabel.width);
   }
 
   private resetLevels(): void {
