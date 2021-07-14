@@ -28,7 +28,8 @@ export class TextLineSplitter {
         dx = 0;
         this.widthCalculator.reset();
         this.resetLevels();
-      } else if (this.entities.startsAt(i)) {
+      }
+      if (this.entities.startsAt(i)) {
         const entities = this.entities.getAt(i);
         const _dx = this.calculateMaxDx(entities);
         this.widthCalculator.addWidth(_dx);
