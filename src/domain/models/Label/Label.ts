@@ -1,5 +1,9 @@
 export class Label {
-  constructor(public id: number, public text: string, public color: string) {}
+  constructor(
+    readonly id: number,
+    readonly text: string,
+    readonly color: string
+  ) {}
 }
 
 export interface ILabel {
