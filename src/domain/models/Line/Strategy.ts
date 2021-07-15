@@ -36,7 +36,9 @@ export class TextWidthCalculator implements WidthCalculator {
   }
 
   needsNewline(ch: string, maxLabelWidth = 0): boolean {
-    return this.accumulatedWidth + maxLabelWidth > this.maxWidth || ch === "\n";
+    return (
+      this.accumulatedWidth + maxLabelWidth >= this.maxWidth || ch === "\n"
+    );
   }
 
   remains(): boolean {
