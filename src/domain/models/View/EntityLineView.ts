@@ -11,7 +11,6 @@ import {
 } from "./GeometricShape";
 
 const lineWidth = 5;
-const fontHeight = 16;
 
 export class EntityLineView {
   constructor(
@@ -65,7 +64,7 @@ export class EntityLineView {
   private addText(element: SVGGElement, x1: number, entity: Entity) {
     const marginTop = 5;
     const entityLabel = this.entityLabels.getById(entity.label);
-    const y = this.calculateLineY(entity) + fontHeight / 2 + marginTop;
+    const y = this.calculateLineY(entity) + this.font.fontSize / 2 + marginTop;
     const circle = new GeometricCircle(x1, y, entityLabel!.circle);
     const text = new GeometricText(x1, y, entityLabel!);
     element.appendChild(circle.render());
@@ -76,7 +75,9 @@ export class EntityLineView {
     const level = this.entities.getLevelOf(entity.id)!;
     if (this.showLabelText) {
       const marginBottom = 8;
-      return lineWidth + (lineWidth + fontHeight + marginBottom) * level;
+      return (
+        lineWidth + (lineWidth + this.font.fontSize + marginBottom) * level
+      );
     } else {
       const marginBottom = 5;
       return lineWidth + (lineWidth + marginBottom) * level;
