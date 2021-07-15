@@ -28,7 +28,7 @@ export class Entities {
   private levels: Map<number, number>;
 
   constructor(private entities: Entity[]) {
-    this.entities.sort((a: Entity, b: Entity) => a.startOffset - b.startOffset);
+    //this.entities.sort((a: Entity, b: Entity) => a.startOffset - b.startOffset);
     this.entities = entities;
     this.levels = new Map();
     this.calculateLevel();
@@ -49,8 +49,12 @@ export class Entities {
     );
   }
 
+  get size(): number {
+    return this.entities.length;
+  }
+
   isEmpty(): boolean {
-    return this.entities.length === 0;
+    return this.size === 0;
   }
 
   private calculateLevel() {

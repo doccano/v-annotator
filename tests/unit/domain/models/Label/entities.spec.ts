@@ -1,8 +1,8 @@
 import { Entity } from "@/domain/models/Label/Entity";
 import { Entities } from "@/domain/models/Label/Entity";
 
-describe("Entities component", () => {
-  it("can filter by range", () => {
+describe("Entities", () => {
+  it("can be filtered by range", () => {
     const content = "example text";
     const entities = new Entities([
       new Entity(0, 0, 0, 0, content.length),
@@ -17,7 +17,7 @@ describe("Entities component", () => {
     expect(actual).toEqual(expected);
   });
 
-  it("calculate level", () => {
+  it("can calculate level", () => {
     const entities = new Entities([
       new Entity(0, 0, 0, 0, 5),
       new Entity(1, 0, 0, 1, 7),
@@ -28,5 +28,49 @@ describe("Entities component", () => {
     expect(entities.getLevelOf(1)).toEqual(1);
     expect(entities.getLevelOf(2)).toEqual(2);
     expect(entities.getLevelOf(3)).toEqual(0);
+  });
+
+  it("is empty", () => {
+    const entities = new Entities([]);
+    expect(entities.isEmpty()).toBeTruthy();
+  });
+
+  it("is not empty", () => {
+    const entities = new Entities([new Entity(0, 0, 0, 0, 0)]);
+    expect(entities.isEmpty()).toBeFalsy();
+  });
+
+  it("starts at", () => {
+    const entities = new Entities([new Entity(0, 0, 0, 0, 5)]);
+    expect(entities.startsAt(0)).toBeTruthy();
+    expect(entities.startsAt(1)).toBeFalsy();
+  });
+
+  it("get at", () => {
+    const entities = new Entities([new Entity(0, 0, 0, 0, 5)]);
+    expect(entities.getAt(0)).toEqual(entities);
+
+    const expected = new Entities([]);
+    expect(entities.getAt(1)).toEqual(expected);
+  });
+
+  it("can list", () => {
+    const expected = [new Entity(0, 0, 0, 0, 0)];
+    const entities = new Entities(expected);
+    expect(entities.list()).toEqual(expected);
+  });
+
+  it("can filter by range", () => {
+    const entities = new Entities([new Entity(0, 0, 0, 1, 5)]);
+    expect(entities.filterByRange(0, 1).isEmpty()).toBeTruthy();
+    expect(entities.filterByRange(1, 5).isEmpty()).toBeFalsy();
+    expect(entities.filterByRange(1, 6).isEmpty()).toBeFalsy();
+    expect(entities.filterByRange(4, 6).isEmpty()).toBeFalsy();
+    expect(entities.filterByRange(5, 6).isEmpty()).toBeTruthy();
+  });
+
+  it("can get size", () => {
+    const entities = new Entities([new Entity(0, 0, 0, 0, 0)]);
+    expect(entities.size).toEqual(1);
   });
 });
