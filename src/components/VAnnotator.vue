@@ -10,7 +10,6 @@
 import _ from "lodash";
 import Vue, { PropType } from "vue";
 import { TextLine } from "@/domain/models/Line/TextLine";
-import { TextLineSplitter } from "@/domain/models/Line/TextLineSplitter";
 import { Labels, ILabel } from "@/domain/models/Label/Label";
 import { Entities, IEntity } from "@/domain/models/Label/Entity";
 import { TextLineView } from "@/domain/models/View/TextLineView";
@@ -23,6 +22,7 @@ import { Font } from "@/domain/models/Line/Font";
 import { createFont } from "@/domain/models/View/fontFactory";
 import { createEntityLabels } from "../domain/models/Line/ShapeFactory";
 import { EntityLabels } from "@/domain/models/Line/Shape";
+import { createTextLineSplitter } from "../domain/models/Line/TextLineSplitterFactory";
 
 export default Vue.extend({
   props: {
@@ -144,7 +144,8 @@ export default Vue.extend({
       const maxWidth = this.containerElement!.clientWidth;
       this.svgElement.setAttribute("width", maxWidth.toString() + "px");
       const calculator = new TextWidthCalculator(this.font, maxWidth);
-      const splitter = new TextLineSplitter(
+      const splitter = createTextLineSplitter(
+        this.showLabelText,
         calculator,
         this._entities,
         this._entityLabels
