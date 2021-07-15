@@ -1,10 +1,10 @@
 export class Entity {
   constructor(
-    public id: number,
-    public label: number,
-    public user: number,
-    public startOffset: number,
-    public endOffset: number
+    readonly id: number,
+    readonly label: number,
+    readonly user: number,
+    readonly startOffset: number,
+    readonly endOffset: number
   ) {}
 
   isIn(startOffset: number, endOffset: number): boolean {
