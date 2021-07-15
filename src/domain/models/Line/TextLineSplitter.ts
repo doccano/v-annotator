@@ -121,6 +121,6 @@ export class TextLineSplitter implements BaseLineSplitter {
   }
 
   private resetLevels(): void {
-    this.levels = new Map();
+    this.levels.clear();
   }
 }
