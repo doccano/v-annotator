@@ -9,7 +9,7 @@ export class Font {
 
   widthOf(text: string): number {
     return Array.from(text)
-      .map((ch) => this.width.get(ch)!)
+      .map((ch) => (this.width.has(ch) ? this.width.get(ch)! : 0))
       .reduce((a: number, b: number) => a + b, 0);
   }
 }
