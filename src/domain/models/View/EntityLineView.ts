@@ -3,6 +3,7 @@ import { Entities, Entity } from "../Label/Entity";
 import { TextLine } from "../Line/TextLine";
 import { EventEmitter } from "events";
 import { EntityLabels } from "../Line/Shape";
+import { Font } from '../Line/Font';
 import {
   GeometricCircle,
   GeometricText,
@@ -18,6 +19,7 @@ export class EntityLineView {
     private entities: Entities,
     private entityLabels: EntityLabels,
     private textLine: TextLine,
+    private font: Font,
     private emitter: EventEmitter,
     private showLabelText: boolean
   ) {}
@@ -26,6 +28,7 @@ export class EntityLineView {
     const elements = document.createElementNS(SVGNS, "g") as SVGGElement;
     for (const entity of this.entities.list()) {
       const [x1, x2] = this.textLine.range(
+        this.font,
         content,
         entity.startOffset,
         entity.endOffset

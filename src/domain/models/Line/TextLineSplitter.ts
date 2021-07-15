@@ -7,7 +7,6 @@ import { EntityLabels } from "./Shape";
 export class TextLineSplitter {
   private levels: Map<number, number> = new Map();
   constructor(
-    private font: Font,
     private widthCalculator: WidthCalculator,
     private entities: Entities,
     private entityLabels: EntityLabels
@@ -15,7 +14,7 @@ export class TextLineSplitter {
 
   split(text: string): TextLine[] {
     let dx = 0;
-    let line = new TextLine(this.font);
+    let line = new TextLine();
     let startIndex = 0;
     const lines = [] as TextLine[];
 
@@ -23,7 +22,7 @@ export class TextLineSplitter {
       if (this.needsNewline(i, ch)) {
         line.addSpan(dx, startIndex, i);
         lines.push(line);
-        line = new TextLine(this.font);
+        line = new TextLine();
         startIndex = ch === "\n" ? i + 1 : i;
         dx = 0;
         this.widthCalculator.reset();

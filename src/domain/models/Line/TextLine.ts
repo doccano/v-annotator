@@ -1,8 +1,7 @@
 import { Font } from "./Font";
 
 export class TextLine {
-  private _spans: Span[] = [];
-  constructor(private font: Font) {}
+  constructor(private _spans: Span[] = []) {}
 
   get startOffset(): number {
     return this._spans[0].startOffset;
@@ -22,12 +21,13 @@ export class TextLine {
   }
 
   range(
+    font: Font,
     content: string,
     startOffset: number,
     endOffset: number
   ): [number, number] {
     const calcPosition = (start: number, end: number) =>
-      this.font.widthOf(content.substring(start, end)) + // sum of character width
+      font.widthOf(content.substring(start, end)) + // sum of character width
       this.spans // sum of dx
         .filter((span) => span.startOffset <= end)
         .reduce((p, span) => p + span.dx, 0);
@@ -36,7 +36,7 @@ export class TextLine {
     const x1 = calcPosition(this.startOffset, s);
     const x2 =
       x1 +
-      this.font.widthOf(content.substring(s, e)) +
+      font.widthOf(content.substring(s, e)) +
       this.spans
         .filter((span) => s < span.startOffset && span.startOffset <= e)
         .reduce((p, span) => p + span.dx, 0);
