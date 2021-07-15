@@ -3,7 +3,7 @@ import { Entities, Entity } from "../Label/Entity";
 import { TextLine } from "../Line/TextLine";
 import { EventEmitter } from "events";
 import { EntityLabels } from "../Line/Shape";
-import { Font } from '../Line/Font';
+import { Font } from "../Line/Font";
 import {
   GeometricCircle,
   GeometricText,

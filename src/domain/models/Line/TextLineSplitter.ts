@@ -1,6 +1,5 @@
 import { TextLine } from "./TextLine";
 import { WidthCalculator } from "./Strategy";
-import { Font } from "./Font";
 import { Entities, Entity } from "../Label/Entity";
 import { EntityLabels } from "./Shape";
 
