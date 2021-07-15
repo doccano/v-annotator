@@ -3,7 +3,7 @@ import { WidthCalculator } from "./Strategy";
 import { Entities, Entity } from "../Label/Entity";
 import { EntityLabels } from "./Shape";
 
-interface BaseLineSplitter {
+export interface BaseLineSplitter {
   split(text: string): TextLine[];
 }
 
