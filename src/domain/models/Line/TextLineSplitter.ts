@@ -3,7 +3,37 @@ import { WidthCalculator } from "./Strategy";
 import { Entities, Entity } from "../Label/Entity";
 import { EntityLabels } from "./Shape";
 
-export class TextLineSplitter {
+interface BaseLineSplitter {
+  split(text: string): TextLine[];
+}
+
+export class SimpleLineSplitter implements BaseLineSplitter {
+  constructor(private widthCalculator: WidthCalculator) {}
+
+  split(text: string): TextLine[] {
+    let line = new TextLine();
+    let startIndex = 0;
+    const lines = [] as TextLine[];
+
+    for (const [i, ch] of Array.from(text).entries()) {
+      if (this.widthCalculator.needsNewline(ch, 0)) {
+        line.addSpan(0, startIndex, i);
+        lines.push(line);
+        line = new TextLine();
+        startIndex = ch === "\n" ? i + 1 : i;
+        this.widthCalculator.reset();
+      }
+      this.widthCalculator.add(ch);
+    }
+    if (this.widthCalculator.remains()) {
+      line.addSpan(0, startIndex, text.length);
+      lines.push(line);
+    }
+    return lines;
+  }
+}
+
+export class TextLineSplitter implements BaseLineSplitter {
   private levels: Map<number, number> = new Map();
   constructor(
     private widthCalculator: WidthCalculator,
