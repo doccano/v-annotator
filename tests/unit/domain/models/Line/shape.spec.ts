@@ -1,6 +1,6 @@
 import { Circle } from "@/domain/models/Line/Shape";
-import { Font } from "../../../../../src/domain/models/Line/Font";
-import { LabelText } from "../../../../../src/domain/models/Line/Shape";
+import { Font } from "@/domain/models/Line/Font";
+import { LabelText } from "@/domain/models/Line/Shape";
 
 describe("Circle", () => {
   it("calculate width", () => {
