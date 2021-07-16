@@ -9,20 +9,14 @@
 <script lang="ts">
 import _ from "lodash";
 import Vue, { PropType } from "vue";
-import { TextLine } from "@/domain/models/Line/TextLine";
 import { Labels, ILabel } from "@/domain/models/Label/Label";
 import { Entities, IEntity } from "@/domain/models/Label/Entity";
-import { TextLineView } from "@/domain/models/View/TextLineView";
-import { EntityLineView } from "@/domain/models/View/EntityLineView";
-import { SVGNS } from "@/domain/models/View/SVGNS";
 import { EventEmitter } from "events";
-import { TextSelectionHandler } from "../domain/models/EventHandler/TextSelectionHandler";
-import { TextWidthCalculator } from "../domain/models/Line/Strategy";
 import { Font } from "@/domain/models/Line/Font";
 import { createFont } from "@/domain/models/View/fontFactory";
 import { createEntityLabels } from "../domain/models/Line/ShapeFactory";
 import { EntityLabels } from "@/domain/models/Line/Shape";
-import { createTextLineSplitter } from "../domain/models/Line/TextLineSplitterFactory";
+import { Annotator } from "../domain/models/View/Annotator";
 
 export default Vue.extend({
   props: {
@@ -70,24 +64,26 @@ export default Vue.extend({
 
   data() {
     return {
-      containerElement: {} as HTMLElement | null,
-      svgElement: {} as SVGSVGElement,
-      textElement: {} as SVGTextElement,
-      lines: [] as TextLine[],
       font: {} as Font,
       emitter: new EventEmitter(),
-      textSelectionHandler: {} as TextSelectionHandler,
+      annotator: {} as Annotator,
     };
   },
 
   mounted() {
-    this.containerElement = document.getElementById("container");
-    this.svgElement = this.$refs.svgContainer as SVGSVGElement;
-    this.textElement = this.$refs.textContainer as SVGTextElement;
+    const containerElement = document.getElementById("container");
+    const svgElement = this.$refs.svgContainer as SVGSVGElement;
+    const textElement = this.$refs.textContainer as SVGTextElement;
+    this.annotator = new Annotator(
+      containerElement!,
+      svgElement,
+      textElement,
+      this.showLabelText,
+      this.emitter
+    );
     window.addEventListener("resize", _.debounce(this.handleResize, 500));
     const labelText = this.entityLabels.map((label) => label.text).join("");
-    this.font = createFont(this.text + labelText, this.textElement);
-    this.textSelectionHandler = new TextSelectionHandler(this.emitter);
+    this.font = createFont(this.text + labelText, textElement);
     this.handleResize();
     this.registerEvents();
   },
@@ -104,6 +100,7 @@ export default Vue.extend({
       deep: true,
     },
     showLabelText() {
+      this.annotator.onChangeLabelOption(this.showLabelText);
       this.handleResize();
     },
   },
@@ -141,63 +138,16 @@ export default Vue.extend({
       });
     },
     handleResize() {
-      const maxWidth = this.containerElement!.clientWidth;
-      this.svgElement.setAttribute("width", maxWidth.toString() + "px");
-      const calculator = new TextWidthCalculator(this.font, maxWidth);
-      const splitter = createTextLineSplitter(
-        this.showLabelText,
-        calculator,
-        this._entities,
-        this._entityLabels
-      );
-      this.lines = splitter.split(this.text);
+      this.annotator.onResize();
       this.render();
     },
     render() {
-      let height = 0;
-      const marginBottom = 12;
-      while (this.svgElement.lastChild) {
-        this.svgElement.removeChild(this.svgElement.lastChild);
-      }
-      this.textElement = document.createElementNS(SVGNS, "text");
-      this.textElement.onmouseup = () => {
-        if (window.getSelection()!.type === "Range") {
-          this.textSelectionHandler.textSelected();
-        }
-      };
-      this.svgElement.appendChild(this.textElement);
-      for (const line of this.lines) {
-        const textLine = this.renderText(line);
-        const entityLine = this.renderEntities(line);
-        height += textLine.getBBox().height;
-        entityLine.setAttribute(
-          "transform",
-          `translate(0 ${height.toString()})`
-        );
-        textLine.setAttribute("x", "0");
-        textLine.setAttribute("y", height.toString());
-        height += Math.max(
-          entityLine.getBBox().height,
-          textLine.getBBox().height
-        );
-        height += marginBottom;
-      }
-    },
-    renderText(line: TextLine): SVGTSpanElement {
-      const textLine = new TextLineView(line, this.textElement);
-      return textLine.render(this.text);
-    },
-    renderEntities(line: TextLine): SVGGElement {
-      const entityLine = new EntityLineView(
-        this.svgElement,
-        this._entities.filterByRange(line.startOffset, line.endOffset),
-        this._entityLabels,
-        line,
+      this.annotator.render(
+        this.text,
         this.font,
-        this.emitter,
-        this.showLabelText
-      ).render(this.text);
-      return entityLine;
+        this._entities,
+        this._entityLabels
+      );
     },
   },
 });
