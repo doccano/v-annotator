@@ -13,7 +13,13 @@ export interface ILabel {
 }
 
 export class Labels {
-  constructor(private labels: Label[]) {}
+  private id2Label: { [key: number]: Label } = {};
+
+  constructor(private labels: Label[]) {
+    for (const label of labels) {
+      this.id2Label[label.id] = label;
+    }
+  }
 
   static valueOf(labels: ILabel[]): Labels {
     return new Labels(
@@ -22,7 +28,7 @@ export class Labels {
   }
 
   getById(id: number): Label | undefined {
-    return this.labels.find((label) => label.id === id);
+    return this.id2Label[id];
   }
 
   list(): Label[] {
