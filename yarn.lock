@@ -911,6 +911,11 @@
     exec-sh "^0.3.2"
     minimist "^1.2.0"
 
+"@flatten-js/interval-tree@^1.0.14":
+  version "1.0.14"
+  resolved "https://registry.yarnpkg.com/@flatten-js/interval-tree/-/interval-tree-1.0.14.tgz#500466b41220fbc0229066ea9f29f6bb8e79b146"
+  integrity sha512-u7RFCMnrQb/fC6gIEXtfuqXFXN+yRDM+NSKZe0JECVyiDPTPqYDgkzvRHIX1NS1BxgK6BlZRLtPukAHoDJgGWg==
+
 "@hapi/address@2.x.x":
   version "2.1.4"
   resolved "https://registry.yarnpkg.com/@hapi/address/-/address-2.1.4.tgz#5d67ed43f3fd41a69d4b9ff7b56e7c0d1d0a81e5"
