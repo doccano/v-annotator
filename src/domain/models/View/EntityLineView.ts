@@ -22,12 +22,16 @@ export class EntityLineView {
     private font: Font,
     private emitter: EventEmitter,
     private showLabelText: boolean
-  ) {}
-
-  render(content: string): SVGGElement {
-    const elements = document.createElementNS(SVGNS, "g") as SVGGElement;
-    for (const entity of this.entities.list()) {
+  ) {
+    entities.list().forEach((entity) => {
       this.levelManager.update(entity);
+    });
+  }
+
+  render(content: string, y: number): SVGGElement {
+    const elements = document.createElementNS(SVGNS, "g") as SVGGElement;
+    elements.setAttribute("transform", `translate(0 ${y.toString()})`);
+    for (const entity of this.entities.list()) {
       const [x1, x2] = this.textLine.range(
         this.font,
         content,
@@ -43,6 +47,20 @@ export class EntityLineView {
     }
     this.svgElement.appendChild(elements);
     return elements;
+  }
+
+  get height(): number {
+    const level = this.levelManager.maxLevel;
+    if (this.showLabelText) {
+      const marginBottom = 8;
+      return (
+        (lineWidth + this.font.lineHeight) * level +
+        Math.max(marginBottom * (level - 1), 0)
+      );
+    } else {
+      const marginBottom = 5;
+      return (lineWidth + marginBottom) * Math.max(level - 1, 0);
+    }
   }
 
   private canDisplayText(entity: Entity) {

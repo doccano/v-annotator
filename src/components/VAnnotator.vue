@@ -157,7 +157,6 @@ export default Vue.extend({
 svg {
   white-space: pre;
   overflow-wrap: normal;
-  height: 100%;
 }
 #container {
   width: 100%;

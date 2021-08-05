@@ -7,11 +7,13 @@ export class TextLineView {
     private textElement: SVGTextElement
   ) {}
 
-  render(content: string): SVGTSpanElement {
+  render(content: string, y: number): SVGTSpanElement {
     const tspanElement = document.createElementNS(
       SVGNS,
       "tspan"
     ) as SVGTSpanElement;
+    tspanElement.setAttribute("x", "0");
+    tspanElement.setAttribute("y", y.toString());
     for (const span of this.textLine.spans) {
       const spanView = new SpanView(span);
       const spanElement = spanView.render(content);

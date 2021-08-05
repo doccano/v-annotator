@@ -26,7 +26,9 @@ export default Vue.extend({
   data() {
     return {
       showLabelText: false,
-      text: "we must respect the will of the individual.\nTake it easy I can assure you that everything will turn out to be fine.",
+      text: "we must respect the will of the individual.\nTake it easy I can assure you that everything will turn out to be fine.\n".repeat(
+        100
+      ),
       entities: [
         {
           id: 0,

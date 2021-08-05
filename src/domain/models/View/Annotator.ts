@@ -39,7 +39,7 @@ export class Annotator {
     entities: Entities,
     entityLabels: EntityLabels
   ): void {
-    let height = 0;
+    let y = font.lineHeight;
     const marginBottom = 12;
     while (this.svgElement.lastChild) {
       this.svgElement.removeChild(this.svgElement.lastChild);
@@ -60,7 +60,7 @@ export class Annotator {
     );
     const lines = splitter.split(text);
     for (const line of lines) {
-      const textLine = new TextLineView(line, this.textElement).render(text);
+      new TextLineView(line, this.textElement).render(text, y);
       const entityLine = new EntityLineView(
         this.svgElement,
         entities.filterByRange(line.startOffset, line.endOffset),
@@ -69,16 +69,11 @@ export class Annotator {
         font,
         this.emitter,
         this.showLabelText
-      ).render(text);
-      height += textLine.getBBox().height;
-      entityLine.setAttribute("transform", `translate(0 ${height.toString()})`);
-      textLine.setAttribute("x", "0");
-      textLine.setAttribute("y", height.toString());
-      height += Math.max(
-        entityLine.getBBox().height,
-        textLine.getBBox().height
       );
-      height += marginBottom;
+      entityLine.render(text, y);
+      y += font.lineHeight;
+      y += Math.max(entityLine.height, font.lineHeight);
+      y += marginBottom;
     }
   }
 }

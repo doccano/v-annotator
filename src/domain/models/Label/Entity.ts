@@ -113,6 +113,10 @@ export class LevelManager {
     return this.entityLevel.get(entity.id);
   }
 
+  get maxLevel(): number {
+    return Math.max(Math.max(...this.entityLevel.values()) + 1, 0);
+  }
+
   clear(): void {
     this.endOffsetPerLevel.clear();
     this.entityLevel.clear();
