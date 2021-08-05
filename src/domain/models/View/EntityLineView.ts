@@ -1,5 +1,5 @@
 import { SVGNS } from "./SVGNS";
-import { Entities, Entity } from "../Label/Entity";
+import { Entities, Entity, LevelManager } from "../Label/Entity";
 import { TextLine } from "../Line/TextLine";
 import { EventEmitter } from "events";
 import { EntityLabels } from "../Line/Shape";
@@ -13,6 +13,7 @@ import {
 const lineWidth = 5;
 
 export class EntityLineView {
+  private levelManager = new LevelManager();
   constructor(
     private svgElement: SVGSVGElement,
     private entities: Entities,
@@ -26,6 +27,7 @@ export class EntityLineView {
   render(content: string): SVGGElement {
     const elements = document.createElementNS(SVGNS, "g") as SVGGElement;
     for (const entity of this.entities.list()) {
+      this.levelManager.update(entity);
       const [x1, x2] = this.textLine.range(
         this.font,
         content,
@@ -72,7 +74,7 @@ export class EntityLineView {
   }
 
   private calculateLineY(entity: Entity): number {
-    const level = this.entities.getLevelOf(entity.id)!;
+    const level = this.levelManager.fetchLevel(entity)!;
     if (this.showLabelText) {
       const marginBottom = 8;
       return (

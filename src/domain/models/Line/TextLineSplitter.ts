@@ -1,6 +1,6 @@
 import { TextLine } from "./TextLine";
 import { WidthCalculator } from "./Strategy";
-import { Entities, Entity } from "../Label/Entity";
+import { Entities, Entity, LevelManager } from "../Label/Entity";
 import { EntityLabels } from "./Shape";
 
 export interface BaseLineSplitter {
@@ -35,6 +35,7 @@ export class SimpleLineSplitter implements BaseLineSplitter {
 
 export class TextLineSplitter implements BaseLineSplitter {
   private levels: Map<number, number> = new Map();
+  private levelManager = new LevelManager();
   constructor(
     private widthCalculator: WidthCalculator,
     private entities: Entities,
@@ -59,6 +60,9 @@ export class TextLineSplitter implements BaseLineSplitter {
       }
       if (this.entities.startsAt(i)) {
         const entities = this.entities.getAt(i);
+        entities.list().forEach((entity) => {
+          this.levelManager.update(entity);
+        });
         const _dx = this.calculateMaxDx(entities);
         this.widthCalculator.addWidth(_dx);
         this.updateLevels(entities);
@@ -83,7 +87,7 @@ export class TextLineSplitter implements BaseLineSplitter {
   }
 
   private isOverlapping(entity: Entity): boolean {
-    const level = this.entities.getLevelOf(entity.id)!;
+    const level = this.levelManager.fetchLevel(entity)!;
     if (this.levels.has(level)) {
       const x = this.widthCalculator.width;
       const endX = this.levels.get(level)!;
@@ -103,7 +107,7 @@ export class TextLineSplitter implements BaseLineSplitter {
   }
 
   private calculateDx(entity: Entity): number {
-    const level = this.entities.getLevelOf(entity.id)!;
+    const level = this.levelManager.fetchLevel(entity)!;
     const x = this.widthCalculator.width;
     const endX = this.levels.get(level)!;
     return endX - x;
@@ -114,7 +118,7 @@ export class TextLineSplitter implements BaseLineSplitter {
   }
 
   private updateLevel(entity: Entity): void {
-    const level = this.entities.getLevelOf(entity.id)!;
+    const level = this.levelManager.fetchLevel(entity)!;
     const entityLabel = this.entityLabels.getById(entity.label)!;
     const x = this.widthCalculator.width;
     this.levels.set(level, x + entityLabel.width);
@@ -122,5 +126,6 @@ export class TextLineSplitter implements BaseLineSplitter {
 
   private resetLevels(): void {
     this.levels.clear();
+    this.levelManager.clear();
   }
 }

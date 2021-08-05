@@ -1,3 +1,5 @@
+import IntervalTree from "@flatten-js/interval-tree";
+
 export class Entity {
   constructor(
     readonly id: number,
@@ -25,13 +27,18 @@ export interface IEntity {
 }
 
 export class Entities {
-  private levels: Map<number, number>;
+  private entityTree: IntervalTree<Entity> = new IntervalTree();
+  private entityByStartOffset: { [key: number]: Entity[] } = {};
 
-  constructor(private entities: Entity[]) {
-    //this.entities.sort((a: Entity, b: Entity) => a.startOffset - b.startOffset);
-    this.entities = entities;
-    this.levels = new Map();
-    this.calculateLevel();
+  constructor(entities: Entity[]) {
+    for (const entity of entities) {
+      const interval: [number, number] = [entity.startOffset, entity.endOffset];
+      this.entityTree.insert(interval, entity);
+      if (!(entity.startOffset in this.entityByStartOffset)) {
+        this.entityByStartOffset[entity.startOffset] = [];
+      }
+      this.entityByStartOffset[entity.startOffset].push(entity);
+    }
   }
 
   static valueOf(entities: IEntity[]): Entities {
@@ -50,35 +57,19 @@ export class Entities {
   }
 
   get size(): number {
-    return this.entities.length;
+    return this.entityTree.size;
   }
 
   isEmpty(): boolean {
     return this.size === 0;
   }
 
-  private calculateLevel() {
-    for (const [i, entity] of this.entities.entries()) {
-      const levels = this.entities
-        .slice(0, i)
-        .filter((item) => entity.isIn(item.startOffset, item.endOffset))
-        .map((item) => this.levels.get(item.id));
-      let level = 0;
-      while (levels.includes(level)) {
-        level++;
-      }
-      this.levels.set(entity.id, level);
-    }
-  }
-
-  getLevelOf(id: number): number | undefined {
-    return this.levels.get(id);
-  }
-
   getAt(startOffset: number): Entities {
-    return new Entities(
-      this.entities.filter((entity) => entity.startOffset === startOffset)
-    );
+    if (startOffset in this.entityByStartOffset) {
+      return new Entities(this.entityByStartOffset[startOffset]);
+    } else {
+      return new Entities([]);
+    }
   }
 
   startsAt(startOffset: number): boolean {
@@ -87,12 +78,43 @@ export class Entities {
   }
 
   list(): Entity[] {
-    return this.entities;
+    return this.entityTree.values;
   }
 
   filterByRange(startOffset: number, endOffset: number): Entities {
-    return new Entities(
-      this.entities.filter((entity) => entity.isIn(startOffset, endOffset))
+    const interval: [number, number] = [startOffset, endOffset];
+    const entities = this.entityTree
+      .search(interval)
+      .filter((entity: Entity) => entity.isIn(startOffset, endOffset));
+    return new Entities(entities);
+  }
+}
+
+export class LevelManager {
+  private endOffsetPerLevel: Map<number, number> = new Map(); // <level, endOffset>
+  private entityLevel: Map<number, number> = new Map(); // <entity.id, level>
+
+  update(entity: Entity): void {
+    for (const [level, endOffset] of this.endOffsetPerLevel) {
+      if (endOffset <= entity.startOffset) {
+        this.endOffsetPerLevel.set(level, entity.endOffset);
+        this.entityLevel.set(entity.id, level);
+        return;
+      }
+    }
+    this.endOffsetPerLevel.set(this.endOffsetPerLevel.size, entity.endOffset);
+    this.entityLevel.set(
+      entity.id,
+      Math.max(Math.max(...this.entityLevel.values()) + 1, 0)
     );
+  }
+
+  fetchLevel(entity: Entity): number | undefined {
+    return this.entityLevel.get(entity.id);
+  }
+
+  clear(): void {
+    this.endOffsetPerLevel.clear();
+    this.entityLevel.clear();
   }
 }

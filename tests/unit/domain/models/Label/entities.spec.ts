@@ -1,5 +1,5 @@
 import { Entity } from "@/domain/models/Label/Entity";
-import { Entities } from "@/domain/models/Label/Entity";
+import { Entities, LevelManager } from "@/domain/models/Label/Entity";
 
 describe("Entities", () => {
   it("can be filtered by range", () => {
@@ -15,19 +15,6 @@ describe("Entities", () => {
     ]);
     const actual = entities.filterByRange(0, content.length);
     expect(actual).toEqual(expected);
-  });
-
-  it("can calculate level", () => {
-    const entities = new Entities([
-      new Entity(0, 0, 0, 0, 5),
-      new Entity(1, 0, 0, 1, 7),
-      new Entity(2, 0, 0, 2, 8),
-      new Entity(3, 0, 0, 6, 9),
-    ]);
-    expect(entities.getLevelOf(0)).toEqual(0);
-    expect(entities.getLevelOf(1)).toEqual(1);
-    expect(entities.getLevelOf(2)).toEqual(2);
-    expect(entities.getLevelOf(3)).toEqual(0);
   });
 
   it("is empty", () => {
@@ -72,5 +59,24 @@ describe("Entities", () => {
   it("can get size", () => {
     const entities = new Entities([new Entity(0, 0, 0, 0, 0)]);
     expect(entities.size).toEqual(1);
+  });
+});
+
+describe("LevelManager", () => {
+  it("can calculate level", () => {
+    const entities = [
+      new Entity(0, 0, 0, 0, 5),
+      new Entity(1, 0, 0, 1, 7),
+      new Entity(2, 0, 0, 2, 8),
+      new Entity(3, 0, 0, 6, 9),
+    ];
+    const manager = new LevelManager();
+    entities.forEach((entity) => {
+      manager.update(entity);
+    });
+    expect(manager.fetchLevel(entities[0])).toEqual(0);
+    expect(manager.fetchLevel(entities[1])).toEqual(1);
+    expect(manager.fetchLevel(entities[2])).toEqual(2);
+    expect(manager.fetchLevel(entities[3])).toEqual(0);
   });
 });
