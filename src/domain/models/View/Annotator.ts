@@ -75,5 +75,9 @@ export class Annotator {
       y += Math.max(entityLine.height, font.lineHeight);
       y += marginBottom;
     }
+    this.svgElement.setAttribute(
+      "height",
+      this.svgElement.getBBox().height.toString()
+    );
   }
 }
