@@ -28,7 +28,10 @@ export class EntityLineView {
     });
   }
 
-  render(content: string, y: number): SVGGElement {
+  render(content: string, y: number): SVGGElement | undefined {
+    if (this.entities.isEmpty()) {
+      return;
+    }
     const elements = document.createElementNS(SVGNS, "g") as SVGGElement;
     elements.setAttribute("transform", `translate(0 ${y.toString()})`);
     for (const entity of this.entities.list()) {
