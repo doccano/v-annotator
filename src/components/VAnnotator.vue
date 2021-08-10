@@ -87,6 +87,7 @@ export default Vue.extend({
   data() {
     return {
       font: null as Font | null,
+      maxWidth: 0,
       containerElement: {} as HTMLElement,
     };
   },
@@ -96,6 +97,8 @@ export default Vue.extend({
     const textElement = this.$refs.textContainer as SVGTextElement;
     const labelText = this.entityLabels.map((label) => label.text).join("");
     this.font = createFont(this.text + labelText, textElement);
+    window.addEventListener("resize", _.debounce(this.setMaxWidth, 500));
+    this.setMaxWidth();
   },
 
   computed: {
@@ -131,18 +134,18 @@ export default Vue.extend({
         return null;
       }
     },
-    maxWidth(): number {
-      if (this.containerElement) {
-        return this.containerElement.clientWidth;
-      } else {
-        return 0;
-      }
-    },
+  },
+
+  beforeDestroy: function () {
+    window.removeEventListener("resize", this.setMaxWidth);
   },
 
   methods: {
     clicked(entity: Entity) {
       console.log(entity);
+    },
+    setMaxWidth() {
+      this.maxWidth = this.containerElement.clientWidth;
     },
   },
 });
