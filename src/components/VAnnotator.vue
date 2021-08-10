@@ -1,16 +1,26 @@
 <template>
   <div id="container">
-    <v-line
-      :entities="line.entities"
-      :entityLabels="_entityLabels"
-      :font="font"
-      :showLabelText="showLabelText"
-      :text="text"
-      :textLine="line.textLine"
-      v-for="(line, index) in lines"
-      :key="index"
-      @click:entity="clicked"
-    />
+    <DynamicScroller
+      page-mode
+      :items="lines"
+      :min-item-size="54"
+      class="scroller"
+    >
+      <template v-slot="{ item, index, active }">
+        <DynamicScrollerItem :item="item" :active="active" :data-index="index">
+          <v-line
+            :entities="item.entities"
+            :entityLabels="_entityLabels"
+            :font="font"
+            :showLabelText="showLabelText"
+            :text="text"
+            :textLine="item.textLine"
+            :key="index"
+            @click:entity="clicked"
+          />
+        </DynamicScrollerItem>
+      </template>
+    </DynamicScroller>
     <svg xmlns="http://www.w3.org/2000/svg" ref="svgContainer">
       <text ref="textContainer" />
     </svg>
@@ -21,6 +31,8 @@
 import _ from "lodash";
 import Vue, { PropType } from "vue";
 import VLine from "./VLine.vue";
+import "vue-virtual-scroller/dist/vue-virtual-scroller.css";
+import { DynamicScroller, DynamicScrollerItem } from "vue-virtual-scroller";
 import { Labels, ILabel } from "@/domain/models/Label/Label";
 import { Entities, IEntity, Entity } from "@/domain/models/Label/Entity";
 import { Font } from "@/domain/models/Line/Font";
@@ -32,12 +44,15 @@ import { TextLine } from "@/domain/models/Line/TextLine";
 import { createTextLineSplitter } from "../domain/models/Line/TextLineSplitterFactory";
 
 interface GeometricLine {
+  id: string;
   entities: Entity[];
   textLine: TextLine;
 }
 
 export default Vue.extend({
   components: {
+    DynamicScroller,
+    DynamicScrollerItem,
     VLine,
   },
 
@@ -119,7 +134,8 @@ export default Vue.extend({
         const entities = this._entities
           .filterByRange(line.startOffset, line.endOffset)
           .list();
-        geometricLines.push({ textLine: line, entities });
+        const id = `${line.startOffset};${line.endOffset}`;
+        geometricLines.push({ id, textLine: line, entities });
       }
       return geometricLines;
     },
