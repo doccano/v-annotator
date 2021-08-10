@@ -146,6 +146,7 @@ export default Vue.extend({
     },
     setMaxWidth() {
       this.maxWidth = this.containerElement.clientWidth;
+      // svgElement.width.baseVal.value;
     },
   },
 });
