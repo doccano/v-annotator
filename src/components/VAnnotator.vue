@@ -1,5 +1,15 @@
 <template>
   <div id="container">
+    <v-line
+      :entities="line.entities"
+      :entityLabels="_entityLabels"
+      :font="font"
+      :showLabelText="showLabelText"
+      :text="text"
+      :textLine="line.textLine"
+      v-for="(line, index) in lines"
+      :key="index"
+    />
     <svg xmlns="http://www.w3.org/2000/svg" ref="svgContainer">
       <text ref="textContainer" />
     </svg>
@@ -9,16 +19,27 @@
 <script lang="ts">
 import _ from "lodash";
 import Vue, { PropType } from "vue";
+import VLine from "./VLine.vue";
 import { Labels, ILabel } from "@/domain/models/Label/Label";
-import { Entities, IEntity } from "@/domain/models/Label/Entity";
-import { EventEmitter } from "events";
+import { Entities, IEntity, Entity } from "@/domain/models/Label/Entity";
 import { Font } from "@/domain/models/Line/Font";
 import { createFont } from "@/domain/models/View/fontFactory";
 import { createEntityLabels } from "../domain/models/Line/ShapeFactory";
 import { EntityLabels } from "@/domain/models/Line/Shape";
-import { Annotator } from "../domain/models/View/Annotator";
+import { TextWidthCalculator } from "../domain/models/Line/Strategy";
+import { TextLine } from "@/domain/models/Line/TextLine";
+import { createTextLineSplitter } from "../domain/models/Line/TextLineSplitterFactory";
+
+interface GeometricLine {
+  entities: Entity[];
+  textLine: TextLine;
+}
 
 export default Vue.extend({
+  components: {
+    VLine,
+  },
+
   props: {
     text: {
       type: String,
@@ -64,100 +85,63 @@ export default Vue.extend({
 
   data() {
     return {
-      font: {} as Font,
-      emitter: new EventEmitter(),
-      annotator: {} as Annotator,
+      font: null as Font | null,
+      containerElement: {} as HTMLElement,
     };
   },
 
   mounted() {
-    const containerElement = document.getElementById("container");
-    const svgElement = this.$refs.svgContainer as SVGSVGElement;
+    this.containerElement = document.getElementById("container")!;
     const textElement = this.$refs.textContainer as SVGTextElement;
-    this.annotator = new Annotator(
-      containerElement!,
-      svgElement,
-      textElement,
-      this.showLabelText,
-      this.emitter
-    );
-    window.addEventListener("resize", _.debounce(this.handleResize, 500));
     const labelText = this.entityLabels.map((label) => label.text).join("");
     this.font = createFont(this.text + labelText, textElement);
-    this.handleResize();
-    this.registerEvents();
-  },
-
-  watch: {
-    entities: {
-      handler() {
-        if (this.showLabelText) {
-          this.handleResize();
-        } else {
-          this.render();
-        }
-      },
-      deep: true,
-    },
-    showLabelText() {
-      this.annotator.onChangeLabelOption(this.showLabelText);
-      this.handleResize();
-    },
   },
 
   computed: {
+    lines(): GeometricLine[] {
+      if (!this.font || !this._entityLabels) {
+        return [];
+      }
+      const calculator = new TextWidthCalculator(this.font, this.maxWidth);
+      const splitter = createTextLineSplitter(
+        this.showLabelText,
+        calculator,
+        this._entities,
+        this._entityLabels!
+      );
+      const geometricLines: GeometricLine[] = [];
+      const lines = splitter.split(this.text);
+      for (const line of lines) {
+        const entities = this._entities
+          .filterByRange(line.startOffset, line.endOffset)
+          .list();
+        geometricLines.push({ textLine: line, entities });
+      }
+      return geometricLines;
+    },
     _entities(): Entities {
       return Entities.valueOf(this.entities);
     },
-    _entityLabels(): EntityLabels {
-      const labels = Labels.valueOf(this.entityLabels);
-      return createEntityLabels(3, 5, this.font, labels);
+    _entityLabels(): EntityLabels | null {
+      if (this.font) {
+        const labels = Labels.valueOf(this.entityLabels);
+        return createEntityLabels(3, 5, this.font, labels);
+      } else {
+        return null;
+      }
     },
-  },
-
-  beforeDestroy: function () {
-    window.removeEventListener("resize", this.handleResize);
-  },
-
-  methods: {
-    registerEvents() {
-      this.emitter.on(
-        "textSelected",
-        (startOffset: number, endOffset: number) => {
-          this.$emit("add:entity", startOffset, endOffset);
-        }
-      );
-      this.emitter.on("update:entity", (id: number) => {
-        this.$emit("update:entity", id);
-      });
-      this.emitter.on("remove:entity", (id: number) => {
-        this.$emit("remove:entity", id);
-      });
-      this.emitter.on("click:label", (id: number) => {
-        this.$emit("click:entity", id);
-      });
-    },
-    handleResize() {
-      this.annotator.onResize();
-      this.render();
-    },
-    render() {
-      this.annotator.render(
-        this.text,
-        this.font,
-        this._entities,
-        this._entityLabels
-      );
+    maxWidth(): number {
+      if (this.containerElement) {
+        return this.containerElement.clientWidth;
+      } else {
+        return 0;
+      }
     },
   },
 });
 </script>
 
 <style scoped>
-svg {
-  white-space: pre;
-  overflow-wrap: normal;
-}
 #container {
   width: 100%;
   height: 100vh;
