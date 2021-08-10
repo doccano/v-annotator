@@ -17,6 +17,7 @@
         :showLabelText="showLabelText"
         :text="text"
         :textLine="textLine"
+        @click:entity="$emit('click:entity', $event)"
       />
     </g>
   </svg>

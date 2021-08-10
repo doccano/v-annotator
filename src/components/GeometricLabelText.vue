@@ -1,15 +1,7 @@
 <template>
-  <g>
+  <g style="cursor: pointer; userselect: none" @click="$emit('click:entity')">
     <circle :r="r" :fill="color" :cx="cx" :cy="y" />
-    <text
-      :x="textX"
-      :y="y"
-      fill="grey"
-      dy="0.35em"
-      style="cursor: pointer; userselect: none"
-    >
-      {{ entityLabel.text }}
-    </text>
+    <text :x="textX" :y="y" fill="grey" dy="0.35em" v-text="entityLabel.text" />
   </g>
 </template>
 

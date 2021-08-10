@@ -9,6 +9,7 @@
       :textLine="line.textLine"
       v-for="(line, index) in lines"
       :key="index"
+      @click:entity="clicked"
     />
     <svg xmlns="http://www.w3.org/2000/svg" ref="svgContainer">
       <text ref="textContainer" />
@@ -136,6 +137,12 @@ export default Vue.extend({
       } else {
         return 0;
       }
+    },
+  },
+
+  methods: {
+    clicked(entity: Entity) {
+      console.log(entity);
     },
   },
 });

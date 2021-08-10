@@ -12,6 +12,7 @@
         :x="ge.x1"
         :y="ge.textY"
         :entityLabel="ge.entityLabel"
+        @click:entity="$emit('click:entity', ge.entity)"
       />
     </g>
   </g>

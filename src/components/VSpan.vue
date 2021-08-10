@@ -1,5 +1,5 @@
 <template>
-  <tspan :dx="dx">{{ text }}</tspan>
+  <tspan :dx="dx" v-text="text" />
 </template>
 
 <script lang="ts">
