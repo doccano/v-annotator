@@ -21,9 +21,6 @@
         </DynamicScrollerItem>
       </template>
     </DynamicScroller>
-    <svg xmlns="http://www.w3.org/2000/svg" ref="svgContainer">
-      <text ref="textContainer" />
-    </svg>
   </div>
 </template>
 
@@ -109,9 +106,8 @@ export default Vue.extend({
 
   mounted() {
     this.containerElement = document.getElementById("container")!;
-    const textElement = this.$refs.textContainer as SVGTextElement;
     const labelText = this.entityLabels.map((label) => label.text).join("");
-    this.font = createFont(this.text + labelText, textElement);
+    this.font = createFont(this.text + labelText, this.containerElement);
     window.addEventListener("resize", _.debounce(this.setMaxWidth, 500));
     this.setMaxWidth();
   },
