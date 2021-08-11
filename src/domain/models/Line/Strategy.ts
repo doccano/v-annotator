@@ -18,7 +18,7 @@ export class TextWidthCalculator implements WidthCalculator {
   }
 
   calculateWidth(ch: string): number {
-    const charWidth = this.font.widthOf(ch);
+    const charWidth = this.font.widthOfChar(ch);
     return charWidth;
   }
 
