@@ -64,17 +64,17 @@ export class Entities {
     return this.size === 0;
   }
 
-  getAt(startOffset: number): Entities {
+  getAt(startOffset: number): Entity[] {
     if (startOffset in this.entityByStartOffset) {
-      return new Entities(this.entityByStartOffset[startOffset]);
+      return this.entityByStartOffset[startOffset];
     } else {
-      return new Entities([]);
+      return [];
     }
   }
 
   startsAt(startOffset: number): boolean {
     const entities = this.getAt(startOffset);
-    return !entities.isEmpty();
+    return entities.length !== 0;
   }
 
   list(): Entity[] {

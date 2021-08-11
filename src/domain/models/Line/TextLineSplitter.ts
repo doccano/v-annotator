@@ -60,7 +60,7 @@ export class TextLineSplitter implements BaseLineSplitter {
       }
       if (this.entities.startsAt(i)) {
         const entities = this.entities.getAt(i);
-        entities.list().forEach((entity) => {
+        entities.forEach((entity) => {
           this.levelManager.update(entity);
         });
         const _dx = this.calculateMaxDx(entities);
@@ -82,10 +82,10 @@ export class TextLineSplitter implements BaseLineSplitter {
   private needsNewline(i: number, ch: string): boolean {
     const entities = this.entities.getAt(i);
     // For performance.
-    if (entities.isEmpty()) {
+    if (entities.length === 0) {
       return this.widthCalculator.needsNewline(ch, 0);
     }
-    const labelIds = entities.list().map((e) => e.label);
+    const labelIds = entities.map((e) => e.label);
     const maxLabelWidth = this.entityLabels.maxLabelWidth(labelIds);
     return this.widthCalculator.needsNewline(ch, maxLabelWidth);
   }
@@ -100,10 +100,9 @@ export class TextLineSplitter implements BaseLineSplitter {
     return false;
   }
 
-  private calculateMaxDx(entities: Entities): number {
+  private calculateMaxDx(entities: Entity[]): number {
     return Math.max(
       ...entities
-        .list()
         .filter((e) => this.isOverlapping(e))
         .map((e) => this.calculateDx(e)),
       0
@@ -117,8 +116,8 @@ export class TextLineSplitter implements BaseLineSplitter {
     return endX - x;
   }
 
-  private updateLevels(entities: Entities): void {
-    entities.list().map((e) => this.updateLevel(e));
+  private updateLevels(entities: Entity[]): void {
+    entities.map((e) => this.updateLevel(e));
   }
 
   private updateLevel(entity: Entity): void {
