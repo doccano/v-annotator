@@ -15,7 +15,8 @@ export class SimpleLineSplitter implements BaseLineSplitter {
     let startIndex = 0;
     const lines = [] as TextLine[];
 
-    for (const [i, ch] of Array.from(text).entries()) {
+    for (let i = 0; i < text.length; i++) {
+      const ch = text[i];
       if (this.widthCalculator.needsNewline(ch, 0)) {
         line.addSpan(0, startIndex, i);
         lines.push(line);
@@ -48,7 +49,8 @@ export class TextLineSplitter implements BaseLineSplitter {
     let startIndex = 0;
     const lines = [] as TextLine[];
 
-    for (const [i, ch] of Array.from(text).entries()) {
+    for (let i = 0; i < text.length; i++) {
+      const ch = text[i];
       if (this.needsNewline(i, ch)) {
         line.addSpan(dx, startIndex, i);
         lines.push(line);
