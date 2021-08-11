@@ -49,11 +49,11 @@ describe("Entities", () => {
 
   it("can filter by range", () => {
     const entities = new Entities([new Entity(0, 0, 0, 1, 5)]);
-    expect(entities.filterByRange(0, 1).isEmpty()).toBeTruthy();
-    expect(entities.filterByRange(1, 5).isEmpty()).toBeFalsy();
-    expect(entities.filterByRange(1, 6).isEmpty()).toBeFalsy();
-    expect(entities.filterByRange(4, 6).isEmpty()).toBeFalsy();
-    expect(entities.filterByRange(5, 6).isEmpty()).toBeTruthy();
+    expect(entities.filterByRange(0, 1).length == 0).toBeTruthy();
+    expect(entities.filterByRange(1, 5).length == 0).toBeFalsy();
+    expect(entities.filterByRange(1, 6).length == 0).toBeFalsy();
+    expect(entities.filterByRange(4, 6).length == 0).toBeFalsy();
+    expect(entities.filterByRange(5, 6).length == 0).toBeTruthy();
   });
 
   it("can get size", () => {

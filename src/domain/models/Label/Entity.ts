@@ -81,12 +81,12 @@ export class Entities {
     return this.entityTree.values;
   }
 
-  filterByRange(startOffset: number, endOffset: number): Entities {
+  filterByRange(startOffset: number, endOffset: number): Entity[] {
     const interval: [number, number] = [startOffset, endOffset];
     const entities = this.entityTree
       .search(interval)
       .filter((entity: Entity) => entity.isIn(startOffset, endOffset));
-    return new Entities(entities);
+    return entities;
   }
 }
 

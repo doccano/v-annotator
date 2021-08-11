@@ -127,9 +127,10 @@ export default Vue.extend({
       const geometricLines: GeometricLine[] = [];
       const lines = splitter.split(this.text);
       for (const line of lines) {
-        const entities = this._entities
-          .filterByRange(line.startOffset, line.endOffset)
-          .list();
+        const entities = this._entities.filterByRange(
+          line.startOffset,
+          line.endOffset
+        );
         const id = `${line.startOffset};${line.endOffset}`;
         geometricLines.push({ id, textLine: line, entities });
       }
