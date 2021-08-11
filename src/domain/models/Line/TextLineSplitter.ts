@@ -81,6 +81,10 @@ export class TextLineSplitter implements BaseLineSplitter {
 
   private needsNewline(i: number, ch: string): boolean {
     const entities = this.entities.getAt(i);
+    // For performance.
+    if (entities.isEmpty()) {
+      return this.widthCalculator.needsNewline(ch, 0);
+    }
     const labelIds = entities.list().map((e) => e.label);
     const maxLabelWidth = this.entityLabels.maxLabelWidth(labelIds);
     return this.widthCalculator.needsNewline(ch, maxLabelWidth);
