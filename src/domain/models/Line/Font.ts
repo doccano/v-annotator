@@ -14,6 +14,6 @@ export class Font {
   }
 
   widthOfChar(ch: string): number {
-    return this.width.has(ch) ? this.width.get(ch)! : 0;
+    return this.width.get(ch)!;
   }
 }
