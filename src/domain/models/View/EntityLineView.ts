@@ -30,7 +30,8 @@ export class EntityLineView {
 
   render(content: string): GeometricEntity[] {
     const geometricEntities: GeometricEntity[] = [];
-    for (const entity of this.entities) {
+    for (let i = 0; i < this.entities.length; i++) {
+      const entity = this.entities[i];
       const [x1, x2] = this.textLine.range(
         this.font,
         content,

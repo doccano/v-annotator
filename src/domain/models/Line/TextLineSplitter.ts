@@ -67,7 +67,7 @@ export class TextLineSplitter implements BaseLineSplitter {
         });
         const _dx = this.calculateMaxDx(entities);
         this.widthCalculator.addWidth(_dx);
-        this.updateLevels(entities);
+        entities.forEach((e) => this.updateLevel(e));
         line.addSpan(dx, startIndex, i);
         startIndex = i;
         dx = _dx;
@@ -116,10 +116,6 @@ export class TextLineSplitter implements BaseLineSplitter {
     const x = this.widthCalculator.width;
     const endX = this.levels.get(level)!;
     return endX - x;
-  }
-
-  private updateLevels(entities: Entity[]): void {
-    entities.map((e) => this.updateLevel(e));
   }
 
   private updateLevel(entity: Entity): void {
