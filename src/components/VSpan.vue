@@ -1,22 +1,30 @@
 <template>
-  <tspan :dx="dx" v-text="text" />
+  <tspan
+    :dx="span.dx"
+    v-text="text.substring(span.startOffset, span.endOffset)"
+  />
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import Vue, { PropType } from "vue";
+import { Span } from "@/domain/models/Line/TextLine";
 
 export default Vue.extend({
   props: {
+    span: {
+      type: Object as PropType<Span>,
+      required: true,
+    },
     text: {
       type: String,
       default: "",
       required: true,
     },
-    dx: {
-      type: Number,
-      default: 0,
-      required: true,
-    },
+  },
+
+  mounted() {
+    (this.$el as unknown as { annotatorElement: Span }).annotatorElement =
+      this.span;
   },
 });
 </script>

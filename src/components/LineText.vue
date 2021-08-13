@@ -3,8 +3,8 @@
     <v-span
       v-for="(span, index) in spans"
       :key="index"
-      :dx="span.dx"
-      :text="text.substring(span.startOffset, span.endOffset)"
+      :span="span"
+      :text="text"
     />
   </tspan>
 </template>

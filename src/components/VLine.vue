@@ -75,7 +75,13 @@ export default Vue.extend({
 
   watch: {
     showLabelText() {
-      this.$nextTick().then(() => this.setHeight());
+      this.setHeight();
+    },
+    entities: {
+      handler: function () {
+        this.setHeight();
+      },
+      deep: true,
     },
   },
 
@@ -91,8 +97,10 @@ export default Vue.extend({
 
   methods: {
     setHeight(): void {
-      const svgElement = this.$refs.svg as SVGSVGElement;
-      this.height = svgElement.getBBox().height + this.font.lineHeight;
+      this.$nextTick(() => {
+        const svgElement = this.$refs.svg as SVGSVGElement;
+        this.height = svgElement.getBBox().height + this.font.lineHeight;
+      });
     },
   },
 });

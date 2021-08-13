@@ -1,5 +1,5 @@
 <template>
-  <div id="container">
+  <div id="container" @click="open">
     <DynamicScroller
       page-mode
       :items="lines"
@@ -37,7 +37,7 @@ import { createFont } from "@/domain/models/View/fontFactory";
 import { createEntityLabels } from "../domain/models/Line/ShapeFactory";
 import { EntityLabels } from "@/domain/models/Line/Shape";
 import { TextWidthCalculator } from "../domain/models/Line/Strategy";
-import { TextLine } from "@/domain/models/Line/TextLine";
+import { TextLine, Span } from "@/domain/models/Line/TextLine";
 import { createTextLineSplitter } from "../domain/models/Line/TextLineSplitterFactory";
 
 interface GeometricLine {
@@ -161,6 +161,37 @@ export default Vue.extend({
     setMaxWidth() {
       this.maxWidth = this.containerElement.clientWidth;
       // svgElement.width.baseVal.value;
+    },
+    open(): void {
+      const selection = window.getSelection();
+      let startElement = null;
+      let endElement = null;
+      try {
+        startElement = selection!.anchorNode!.parentNode;
+        endElement = selection!.focusNode!.parentNode;
+      } catch (e) {
+        return;
+      }
+      let startOffset: number;
+      let endOffset: number;
+      try {
+        const startLine = (
+          startElement as unknown as { annotatorElement: Span }
+        ).annotatorElement;
+        const endLine = (endElement as unknown as { annotatorElement: Span })
+          .annotatorElement;
+        startOffset = startLine.startOffset + selection!.anchorOffset;
+        endOffset = endLine.startOffset + selection!.focusOffset;
+      } catch (e) {
+        return;
+      }
+      if (startOffset > endOffset) {
+        [startOffset, endOffset] = [endOffset, startOffset];
+      }
+      if (startOffset >= endOffset) {
+        return;
+      }
+      this.$emit("add:entity", startOffset, endOffset);
     },
   },
 });
