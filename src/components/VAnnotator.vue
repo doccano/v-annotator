@@ -192,6 +192,7 @@ export default Vue.extend({
         return;
       }
       this.$emit("add:entity", startOffset, endOffset);
+      window.getSelection()?.removeAllRanges();
     },
   },
 });

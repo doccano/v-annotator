@@ -22,9 +22,16 @@ export default Vue.extend({
     },
   },
 
-  mounted() {
-    (this.$el as unknown as { annotatorElement: Span }).annotatorElement =
-      this.span;
+  watch: {
+    span: {
+      immediate: true,
+      handler() {
+        this.$nextTick(() => {
+          (this.$el as unknown as { annotatorElement: Span }).annotatorElement =
+            this.span;
+        });
+      },
+    },
   },
 });
 </script>
