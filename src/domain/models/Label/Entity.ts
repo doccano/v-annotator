@@ -18,14 +18,6 @@ export class Entity {
   }
 }
 
-export interface IEntity {
-  id: number;
-  label: number;
-  user: number;
-  startOffset: number;
-  endOffset: number;
-}
-
 export class Entities {
   private entityTree: IntervalTree<Entity> = new IntervalTree();
   private entityByStartOffset: { [key: number]: Entity[] } = {};
@@ -41,7 +33,7 @@ export class Entities {
     }
   }
 
-  static valueOf(entities: IEntity[]): Entities {
+  static valueOf(entities: Entity[]): Entities {
     return new Entities(
       entities.map(
         (entity) =>

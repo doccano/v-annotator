@@ -30,8 +30,8 @@ import Vue, { PropType } from "vue";
 import VLine from "./VLine.vue";
 import "vue-virtual-scroller/dist/vue-virtual-scroller.css";
 import { DynamicScroller, DynamicScrollerItem } from "vue-virtual-scroller";
-import { Labels, ILabel } from "@/domain/models/Label/Label";
-import { Entities, IEntity, Entity } from "@/domain/models/Label/Entity";
+import { Labels, Label } from "@/domain/models/Label/Label";
+import { Entities, Entity } from "@/domain/models/Label/Entity";
 import { Font } from "@/domain/models/Line/Font";
 import { createFont } from "@/domain/models/View/fontFactory";
 import { createEntityLabels } from "../domain/models/Line/ShapeFactory";
@@ -60,7 +60,7 @@ export default Vue.extend({
       required: true,
     },
     entities: {
-      type: Array as PropType<IEntity[]>,
+      type: Array as PropType<Entity[]>,
       default: () => [],
       required: true,
     },
@@ -70,7 +70,7 @@ export default Vue.extend({
       required: false,
     },
     entityLabels: {
-      type: Array as PropType<ILabel[]>,
+      type: Array as PropType<Label[]>,
       default: () => [],
       required: true,
     },
