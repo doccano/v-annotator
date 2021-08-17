@@ -1,3 +1,4 @@
+import differenceBy from "lodash/differenceBy";
 import IntervalTree from "@flatten-js/interval-tree";
 
 export class Entity {
@@ -19,17 +20,13 @@ export class Entity {
 }
 
 export class Entities {
-  private entityTree: IntervalTree<Entity> = new IntervalTree();
-  private entityByStartOffset: { [key: number]: Entity[] } = {};
+  private tree: IntervalTree<Entity> = new IntervalTree();
+  private start2entity: { [key: number]: Entity[] } = {};
 
   constructor(entities: Entity[]) {
     for (const entity of entities) {
-      const interval: [number, number] = [entity.startOffset, entity.endOffset];
-      this.entityTree.insert(interval, entity);
-      if (!(entity.startOffset in this.entityByStartOffset)) {
-        this.entityByStartOffset[entity.startOffset] = [];
-      }
-      this.entityByStartOffset[entity.startOffset].push(entity);
+      this.tree.insert([entity.startOffset, entity.endOffset], entity);
+      this.addStart2Entity(entity);
     }
   }
 
@@ -49,16 +46,67 @@ export class Entities {
   }
 
   get size(): number {
-    return this.entityTree.size;
+    return this.tree.size;
   }
 
   isEmpty(): boolean {
     return this.size === 0;
   }
 
+  delete(entity: Entity): void {
+    this.tree.remove([entity.startOffset, entity.endOffset], entity);
+    this.start2entity[entity.startOffset] = this.start2entity[
+      entity.startOffset
+    ].filter((e) => e.id !== entity.id);
+  }
+
+  add(entity: Entity): void {
+    this.tree.insert([entity.startOffset, entity.endOffset], entity);
+    this.addStart2Entity(entity);
+  }
+
+  replace(oldEntity: Entity, newEntity: Entity): void {
+    this.delete(oldEntity);
+    this.add(newEntity);
+  }
+
+  private addStart2Entity(entity: Entity): void {
+    if (!(entity.startOffset in this.start2entity)) {
+      this.start2entity[entity.startOffset] = [];
+    }
+    this.start2entity[entity.startOffset].push(entity);
+  }
+
+  update(others: Entity[]): void {
+    const oldEntities = this.list();
+    // add entities
+    const addedEntities = differenceBy(others, oldEntities, "id");
+    addedEntities.forEach((e) => this.add(e));
+    // delete entities
+    const deletedEntities = differenceBy(oldEntities, others, "id");
+    deletedEntities.forEach((e) => this.delete(e));
+    // update entities
+    const mapping = Object.assign(
+      {},
+      ...oldEntities.map((e) => ({ [e.id]: e }))
+    );
+    others.forEach((e) => {
+      if (e.id in mapping) {
+        const f = mapping[e.id];
+        if (
+          f.label !== e.label ||
+          f.startOffset !== e.startOffset ||
+          f.endOffset !== e.endOffset
+        ) {
+          this.replace(f, e);
+        }
+      }
+    });
+  }
+
   getAt(startOffset: number): Entity[] {
-    if (startOffset in this.entityByStartOffset) {
-      return this.entityByStartOffset[startOffset];
+    if (startOffset in this.start2entity) {
+      return this.start2entity[startOffset];
     } else {
       return [];
     }
@@ -70,15 +118,13 @@ export class Entities {
   }
 
   list(): Entity[] {
-    return this.entityTree.values;
+    return this.tree.values;
   }
 
   filterByRange(startOffset: number, endOffset: number): Entity[] {
-    const interval: [number, number] = [startOffset, endOffset];
-    const entities = this.entityTree
-      .search(interval)
+    return this.tree
+      .search([startOffset, endOffset])
       .filter((entity: Entity) => entity.isIn(startOffset, endOffset));
-    return entities;
   }
 }
 
