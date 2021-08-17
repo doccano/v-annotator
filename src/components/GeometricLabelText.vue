@@ -1,39 +1,44 @@
 <template>
   <g style="cursor: pointer; userselect: none" @click="$emit('click:entity')">
     <circle :r="r" :fill="color" :cx="cx" :cy="y" />
-    <text :x="textX" :y="y" fill="grey" dy="0.35em" v-text="entityLabel.text" />
+    <text :x="x" :y="y" fill="grey" :dx="dx" dy="0.35em" v-text="text" />
   </g>
 </template>
 
 <script lang="ts">
-import { EntityLabel } from "@/domain/models/Line/Shape";
-import Vue, { PropType } from "vue";
+import Vue from "vue";
 
 export default Vue.extend({
   props: {
+    r: {
+      type: Number,
+      required: true,
+    },
     x: {
       type: Number,
+      required: true,
     },
     y: {
       type: Number,
+      required: true,
     },
-    entityLabel: {
-      type: Object as PropType<EntityLabel>,
+    dx: {
+      type: Number,
+      required: true,
+    },
+    color: {
+      type: String,
+      required: true,
+    },
+    text: {
+      type: String,
+      required: true,
     },
   },
 
   computed: {
-    color(): string {
-      return this.entityLabel!.circle.color;
-    },
     cx(): number {
       return this.x + this.r;
-    },
-    r(): number {
-      return this.entityLabel!.circle.radius;
-    },
-    textX(): number {
-      return this.x + this.entityLabel.marginLeft;
     },
   },
 });

@@ -9,9 +9,12 @@
       />
       <geometric-label-text
         v-if="canDisplayText(ge.entity)"
+        :r="ge.entityLabel.circle.radius"
         :x="ge.x1"
         :y="ge.textY"
-        :entityLabel="ge.entityLabel"
+        :dx="ge.entityLabel.marginLeft"
+        :color="ge.entityLabel.color"
+        :text="ge.entityLabel.text"
         @click:entity="$emit('click:entity', ge.entity)"
       />
     </g>
