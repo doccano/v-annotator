@@ -1,3 +1,4 @@
+import IntervalTree from "@flatten-js/interval-tree";
 import { TextLine } from "./TextLine";
 import { WidthCalculator } from "./Strategy";
 import { Entities, Entity, LevelManager } from "../Label/Entity";
@@ -128,5 +129,40 @@ export class TextLineSplitter implements BaseLineSplitter {
   private resetLevels(): void {
     this.levels.clear();
     this.levelManager.clear();
+  }
+}
+
+export class TextLines {
+  private tree: IntervalTree<TextLine> = new IntervalTree();
+
+  constructor(private text: string = "", private splitter: BaseLineSplitter) {}
+
+  update(): void {
+    const updatedLines = [];
+    const lines = this.splitter.split(this.text);
+    for (const line of lines) {
+      if (this.meetStopCriteria(line)) {
+        break;
+      }
+      updatedLines.push(line);
+    }
+    this.replaceLines(updatedLines);
+  }
+
+  list(): TextLine[] {
+    return this.tree.values;
+  }
+
+  private meetStopCriteria(line: TextLine): boolean {
+    return this.tree.exist([line.startOffset, line.endOffset], line);
+  }
+
+  private replaceLines(lines: TextLine[]): void {
+    const startOffset = lines[0].startOffset;
+    const endOffset = lines[lines.length - 1].endOffset;
+    this.tree.remove([startOffset, endOffset]);
+    for (const line of lines) {
+      this.tree.insert([line.startOffset, line.endOffset], line);
+    }
   }
 }
