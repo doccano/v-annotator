@@ -20,11 +20,26 @@ export class Entity {
   }
 }
 
-export class Entities {
+export abstract class EntitySubject {
+  private observers: EntityObserver[] = [];
+
+  register(observer: EntityObserver): void {
+    this.observers.push(observer);
+  }
+
+  notify(entities: Entities, hint: EntityObserverHint): void {
+    for (const observer of this.observers) {
+      observer.update(entities, hint);
+    }
+  }
+}
+
+export class Entities extends EntitySubject {
   private tree: IntervalTree<Entity> = new IntervalTree();
   private start2entity: { [key: number]: Entity[] } = {};
 
   constructor(entities: Entity[]) {
+    super();
     for (const entity of entities) {
       this.tree.insert([entity.startOffset, entity.endOffset], entity);
       this.addStart2Entity(entity);
@@ -82,24 +97,31 @@ export class Entities {
     const oldEntities = this.list();
     // add entities
     const addedEntities = differenceBy(others, oldEntities, "id");
-    addedEntities.forEach((e) => this.add(e));
+    addedEntities.forEach((entity) => {
+      this.add(entity);
+      this.notify(this, { entity, mode: "add" });
+    });
     // delete entities
     const deletedEntities = differenceBy(oldEntities, others, "id");
-    deletedEntities.forEach((e) => this.delete(e));
+    deletedEntities.forEach((entity) => {
+      this.delete(entity);
+      this.notify(this, { entity, mode: "delete" });
+    });
     // update entities
     const mapping = Object.assign(
       {},
       ...oldEntities.map((e) => ({ [e.id]: e }))
     );
-    others.forEach((e) => {
-      if (e.id in mapping) {
-        const f = mapping[e.id];
+    others.forEach((entity) => {
+      if (entity.id in mapping) {
+        const f = mapping[entity.id];
         if (
-          f.label !== e.label ||
-          f.startOffset !== e.startOffset ||
-          f.endOffset !== e.endOffset
+          f.label !== entity.label ||
+          f.startOffset !== entity.startOffset ||
+          f.endOffset !== entity.endOffset
         ) {
-          this.replace(f, e);
+          this.replace(f, entity);
+          this.notify(this, { entity, mode: "update" });
         }
       }
     });
@@ -159,19 +181,5 @@ export class LevelManager {
   clear(): void {
     this.endOffsetPerLevel.clear();
     this.entityLevel.clear();
-  }
-}
-
-export class EntitySubject {
-  private observers: EntityObserver[] = [];
-
-  register(observer: EntityObserver): void {
-    this.observers.push(observer);
-  }
-
-  notify(entities: Entities, hint: EntityObserverHint): void {
-    for (const observer of this.observers) {
-      observer.update(entities, hint);
-    }
   }
 }
