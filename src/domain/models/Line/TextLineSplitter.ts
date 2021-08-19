@@ -4,21 +4,24 @@ import { Entities, Entity, LevelManager } from "../Label/Entity";
 import { EntityLabels } from "./Shape";
 
 export interface BaseLineSplitter {
-  split(text: string, startOffset: number, entities?: Entities): TextLine[];
+  split(
+    text: string,
+    startOffset: number,
+    entities?: Entities
+  ): Iterable<TextLine>;
 }
 
 export class SimpleLineSplitter implements BaseLineSplitter {
   constructor(private widthCalculator: WidthCalculator) {}
 
-  split(text: string, startOffset = 0): TextLine[] {
+  *split(text: string, startOffset = 0): Iterable<TextLine> {
     let line = new TextLine();
-    const lines = [] as TextLine[];
 
-    for (let i = 0; i < text.length; i++) {
+    for (let i = startOffset; i < text.length; i++) {
       const ch = text[i];
       if (this.widthCalculator.needsNewline(ch, 0)) {
         line.addSpan(0, startOffset, i);
-        lines.push(line);
+        yield line;
         line = new TextLine();
         startOffset = ch === "\n" ? i + 1 : i;
         this.widthCalculator.reset();
@@ -27,9 +30,8 @@ export class SimpleLineSplitter implements BaseLineSplitter {
     }
     if (this.widthCalculator.remains()) {
       line.addSpan(0, startOffset, text.length);
-      lines.push(line);
+      yield line;
     }
-    return lines;
   }
 }
 
@@ -41,16 +43,19 @@ export class TextLineSplitter implements BaseLineSplitter {
     private entityLabels: EntityLabels
   ) {}
 
-  split(text: string, startOffset = 0, entities: Entities): TextLine[] {
+  *split(
+    text: string,
+    startOffset = 0,
+    entities: Entities
+  ): Iterable<TextLine> {
     let dx = 0;
     let line = new TextLine();
-    const lines = [] as TextLine[];
 
-    for (let i = 0; i < text.length; i++) {
+    for (let i = startOffset; i < text.length; i++) {
       const ch = text[i];
       if (this.needsNewline(i, ch, entities)) {
         line.addSpan(dx, startOffset, i);
-        lines.push(line);
+        yield line;
         line = new TextLine();
         startOffset = ch === "\n" ? i + 1 : i;
         dx = 0;
@@ -73,9 +78,8 @@ export class TextLineSplitter implements BaseLineSplitter {
     }
     if (this.widthCalculator.remains()) {
       line.addSpan(dx, startOffset, text.length);
-      lines.push(line);
+      yield line;
     }
-    return lines;
   }
 
   private needsNewline(i: number, ch: string, entities: Entities): boolean {
