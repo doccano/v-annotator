@@ -1,34 +1,32 @@
-import IntervalTree from "@flatten-js/interval-tree";
 import { TextLine } from "./TextLine";
 import { WidthCalculator } from "./Strategy";
 import { Entities, Entity, LevelManager } from "../Label/Entity";
 import { EntityLabels } from "./Shape";
 
 export interface BaseLineSplitter {
-  split(text: string): TextLine[];
+  split(text: string, startOffset: number, entities?: Entities): TextLine[];
 }
 
 export class SimpleLineSplitter implements BaseLineSplitter {
   constructor(private widthCalculator: WidthCalculator) {}
 
-  split(text: string): TextLine[] {
+  split(text: string, startOffset = 0): TextLine[] {
     let line = new TextLine();
-    let startIndex = 0;
     const lines = [] as TextLine[];
 
     for (let i = 0; i < text.length; i++) {
       const ch = text[i];
       if (this.widthCalculator.needsNewline(ch, 0)) {
-        line.addSpan(0, startIndex, i);
+        line.addSpan(0, startOffset, i);
         lines.push(line);
         line = new TextLine();
-        startIndex = ch === "\n" ? i + 1 : i;
+        startOffset = ch === "\n" ? i + 1 : i;
         this.widthCalculator.reset();
       }
       this.widthCalculator.add(ch);
     }
     if (this.widthCalculator.remains()) {
-      line.addSpan(0, startIndex, text.length);
+      line.addSpan(0, startOffset, text.length);
       lines.push(line);
     }
     return lines;
@@ -40,55 +38,53 @@ export class TextLineSplitter implements BaseLineSplitter {
   private levelManager = new LevelManager();
   constructor(
     private widthCalculator: WidthCalculator,
-    private entities: Entities,
     private entityLabels: EntityLabels
   ) {}
 
-  split(text: string): TextLine[] {
+  split(text: string, startOffset = 0, entities: Entities): TextLine[] {
     let dx = 0;
     let line = new TextLine();
-    let startIndex = 0;
     const lines = [] as TextLine[];
 
     for (let i = 0; i < text.length; i++) {
       const ch = text[i];
-      if (this.needsNewline(i, ch)) {
-        line.addSpan(dx, startIndex, i);
+      if (this.needsNewline(i, ch, entities)) {
+        line.addSpan(dx, startOffset, i);
         lines.push(line);
         line = new TextLine();
-        startIndex = ch === "\n" ? i + 1 : i;
+        startOffset = ch === "\n" ? i + 1 : i;
         dx = 0;
         this.widthCalculator.reset();
         this.resetLevels();
       }
-      if (this.entities.startsAt(i)) {
-        const entities = this.entities.getAt(i);
-        entities.forEach((entity) => {
+      if (entities.startsAt(i)) {
+        const _entities = entities.getAt(i);
+        _entities.forEach((entity) => {
           this.levelManager.update(entity);
         });
-        const _dx = this.calculateMaxDx(entities);
+        const _dx = this.calculateMaxDx(_entities);
         this.widthCalculator.addWidth(_dx);
-        entities.forEach((e) => this.updateLevel(e));
-        line.addSpan(dx, startIndex, i);
-        startIndex = i;
+        _entities.forEach((e) => this.updateLevel(e));
+        line.addSpan(dx, startOffset, i);
+        startOffset = i;
         dx = _dx;
       }
       this.widthCalculator.add(ch);
     }
     if (this.widthCalculator.remains()) {
-      line.addSpan(dx, startIndex, text.length);
+      line.addSpan(dx, startOffset, text.length);
       lines.push(line);
     }
     return lines;
   }
 
-  private needsNewline(i: number, ch: string): boolean {
-    const entities = this.entities.getAt(i);
+  private needsNewline(i: number, ch: string, entities: Entities): boolean {
+    const _entities = entities.getAt(i);
     // For performance.
-    if (entities.length === 0) {
+    if (_entities.length === 0) {
       return this.widthCalculator.needsNewline(ch, 0);
     }
-    const labelIds = entities.map((e) => e.label);
+    const labelIds = _entities.map((e) => e.label);
     const maxLabelWidth = this.entityLabels.maxLabelWidth(labelIds);
     return this.widthCalculator.needsNewline(ch, maxLabelWidth);
   }
@@ -129,40 +125,5 @@ export class TextLineSplitter implements BaseLineSplitter {
   private resetLevels(): void {
     this.levels.clear();
     this.levelManager.clear();
-  }
-}
-
-export class TextLines {
-  private tree: IntervalTree<TextLine> = new IntervalTree();
-
-  constructor(private text: string = "", private splitter: BaseLineSplitter) {}
-
-  update(): void {
-    const updatedLines = [];
-    const lines = this.splitter.split(this.text);
-    for (const line of lines) {
-      if (this.meetStopCriteria(line)) {
-        break;
-      }
-      updatedLines.push(line);
-    }
-    this.replaceLines(updatedLines);
-  }
-
-  list(): TextLine[] {
-    return this.tree.values;
-  }
-
-  private meetStopCriteria(line: TextLine): boolean {
-    return this.tree.exist([line.startOffset, line.endOffset], line);
-  }
-
-  private replaceLines(lines: TextLine[]): void {
-    const startOffset = lines[0].startOffset;
-    const endOffset = lines[lines.length - 1].endOffset;
-    this.tree.remove([startOffset, endOffset]);
-    for (const line of lines) {
-      this.tree.insert([line.startOffset, line.endOffset], line);
-    }
   }
 }

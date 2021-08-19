@@ -1,5 +1,4 @@
 import { WidthCalculator } from "./Strategy";
-import { Entities } from "../Label/Entity";
 import { EntityLabels } from "./Shape";
 import {
   BaseLineSplitter,
@@ -10,11 +9,10 @@ import {
 export function createTextLineSplitter(
   showLabelText: boolean,
   widthCalculator: WidthCalculator,
-  entities: Entities,
   entityLabels: EntityLabels
 ): BaseLineSplitter {
   if (showLabelText) {
-    return new TextLineSplitter(widthCalculator, entities, entityLabels);
+    return new TextLineSplitter(widthCalculator, entityLabels);
   } else {
     return new SimpleLineSplitter(widthCalculator);
   }

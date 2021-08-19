@@ -121,11 +121,10 @@ export default Vue.extend({
       const splitter = createTextLineSplitter(
         this.showLabelText,
         calculator,
-        this._entities,
         this._entityLabels!
       );
       const geometricLines: GeometricLine[] = [];
-      const lines = splitter.split(this.text);
+      const lines = splitter.split(this.text, 0, this._entities);
       for (let i = 0; i < lines.length; i++) {
         geometricLines.push({
           id: `${lines[i].startOffset}:${lines[i].endOffset}`,

@@ -1,5 +1,6 @@
 import differenceBy from "lodash/differenceBy";
 import IntervalTree from "@flatten-js/interval-tree";
+import { EntityObserver, EntityObserverHint } from "../Line/Observer";
 
 export class Entity {
   constructor(
@@ -158,5 +159,19 @@ export class LevelManager {
   clear(): void {
     this.endOffsetPerLevel.clear();
     this.entityLevel.clear();
+  }
+}
+
+export class EntitySubject {
+  private observers: EntityObserver[] = [];
+
+  register(observer: EntityObserver): void {
+    this.observers.push(observer);
+  }
+
+  notify(entities: Entities, hint: EntityObserverHint): void {
+    for (const observer of this.observers) {
+      observer.update(entities, hint);
+    }
   }
 }
