@@ -18,14 +18,10 @@ export class TextLines implements EntityObserver {
 
   constructor(private text: string = "", private splitter: BaseLineSplitter) {}
 
-  update(entities: Entities, hint: EntityObserverHint): void {
+  update(entities: Entities, hint?: EntityObserverHint): void {
     const updatedLines = [];
-    const startLine = this.findByEntity(hint.entity);
-    const lines = this.splitter.split(
-      this.text,
-      startLine.startOffset,
-      entities
-    );
+    const startOffset = hint ? this.findByEntity(hint.entity) : 0;
+    const lines = this.splitter.split(this.text, startOffset, entities);
     for (const line of lines) {
       if (this.meetStopCriteria(line)) {
         break;
@@ -39,8 +35,18 @@ export class TextLines implements EntityObserver {
     return this.tree.values;
   }
 
-  private findByEntity(entity: Entity): TextLine {
-    return this.tree.search([entity.startOffset, entity.endOffset])[0];
+  private findByEntity(entity: Entity): number {
+    const lines = this.tree.search([entity.startOffset, entity.endOffset]);
+    for (const line of lines) {
+      if (
+        line.endOffset === entity.startOffset ||
+        line.startOffset === entity.endOffset
+      ) {
+        continue;
+      }
+      return line.startOffset;
+    }
+    return 0;
   }
 
   private meetStopCriteria(line: TextLine): boolean {
@@ -50,7 +56,12 @@ export class TextLines implements EntityObserver {
   private replaceLines(lines: TextLine[]): void {
     const startOffset = lines[0].startOffset;
     const endOffset = lines[lines.length - 1].endOffset;
-    this.tree.remove([startOffset, endOffset]);
+    for (const line of this.tree.search([startOffset, endOffset])) {
+      if (line.endOffset === startOffset || line.startOffset === endOffset) {
+        continue;
+      }
+      this.tree.remove([line.startOffset, line.endOffset], line);
+    }
     for (const line of lines) {
       this.tree.insert([line.startOffset, line.endOffset], line);
     }
