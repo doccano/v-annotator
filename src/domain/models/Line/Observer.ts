@@ -1,4 +1,4 @@
-import IntervalTree from "@flatten-js/interval-tree";
+import _ from "lodash";
 
 import { Entity, Entities } from "../Label/Entity";
 import { TextLine } from "./TextLine";
@@ -14,8 +14,7 @@ export interface EntityObserver {
 }
 
 export class TextLines implements EntityObserver {
-  private tree: IntervalTree<TextLine> = new IntervalTree();
-
+  private lines: TextLine[] = [];
   constructor(private text: string = "", private splitter: BaseLineSplitter) {}
 
   update(entities: Entities, hint?: EntityObserverHint): void {
@@ -28,42 +27,38 @@ export class TextLines implements EntityObserver {
       }
       updatedLines.push(line);
     }
-    this.replaceLines(updatedLines);
+    if (updatedLines.length > 0) {
+      this.replaceLines(updatedLines);
+    }
   }
 
   list(): TextLine[] {
-    return this.tree.values;
+    return this.lines;
   }
 
   private findByEntity(entity: Entity): number {
-    const lines = this.tree.search([entity.startOffset, entity.endOffset]);
-    for (const line of lines) {
-      if (
-        line.endOffset === entity.startOffset ||
-        line.startOffset === entity.endOffset
-      ) {
-        continue;
-      }
-      return line.startOffset;
+    const i = _.sortedIndexBy(this.lines, entity, "startOffset");
+    if (i === 0) {
+      return 0;
+    } else {
+      return this.lines[i - 1].startOffset;
     }
-    return 0;
   }
 
   private meetStopCriteria(line: TextLine): boolean {
-    return this.tree.exist([line.startOffset, line.endOffset], line);
+    return (
+      this.lines.find(
+        (l) =>
+          l.startOffset === line.startOffset && l.endOffset === line.endOffset
+      ) !== undefined
+    );
   }
 
   private replaceLines(lines: TextLine[]): void {
     const startOffset = lines[0].startOffset;
     const endOffset = lines[lines.length - 1].endOffset;
-    for (const line of this.tree.search([startOffset, endOffset])) {
-      if (line.endOffset === startOffset || line.startOffset === endOffset) {
-        continue;
-      }
-      this.tree.remove([line.startOffset, line.endOffset], line);
-    }
-    for (const line of lines) {
-      this.tree.insert([line.startOffset, line.endOffset], line);
-    }
+    const l = _.sortedIndexBy(this.lines, { startOffset }, "startOffset");
+    const r = _.sortedLastIndexBy(this.lines, { endOffset }, "endOffset");
+    this.lines.splice(l, r - l + 1, ...lines);
   }
 }
