@@ -43,7 +43,7 @@ import { TextLines } from "@/domain/models/Line/Observer";
 import { BaseLineSplitter } from "@/domain/models/Line/TextLineSplitter";
 
 interface GeometricLine {
-  id: string;
+  id: number;
   entities: Entity[];
   textLine: TextLine;
 }
@@ -141,13 +141,14 @@ export default Vue.extend({
       const geometricLines: GeometricLine[] = [];
       textLines.updateSplitter(splitter);
       entityList.update(this.entities);
-      for (const line of textLines.list()) {
+      const lines = textLines.list();
+      for (let i = 0; i < lines.length; i++) {
         geometricLines.push({
-          id: `${line.startOffset}:${line.endOffset}`,
-          textLine: line,
+          id: lines[i].startOffset,
+          textLine: lines[i],
           entities: this._entities.filterByRange(
-            line.startOffset,
-            line.endOffset
+            lines[i].startOffset,
+            lines[i].endOffset
           ),
         });
       }
