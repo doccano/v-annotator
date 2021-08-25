@@ -17,6 +17,14 @@ export class TextLines implements EntityObserver {
   private lines: TextLine[] = [];
   constructor(private text: string = "", private splitter: BaseLineSplitter) {}
 
+  updateText(text: string): void {
+    this.text = text;
+  }
+
+  updateSplitter(splitter: BaseLineSplitter): void {
+    this.splitter = splitter;
+  }
+
   update(entities: Entities, hint?: EntityObserverHint): void {
     const updatedLines = [];
     const startOffset = hint ? this.findByEntity(hint.entity) : 0;
@@ -46,19 +54,14 @@ export class TextLines implements EntityObserver {
   }
 
   private meetStopCriteria(line: TextLine): boolean {
-    return (
-      this.lines.find(
-        (l) =>
-          l.startOffset === line.startOffset && l.endOffset === line.endOffset
-      ) !== undefined
-    );
+    return this.lines.some((l) => line.equal(l));
   }
 
   private replaceLines(lines: TextLine[]): void {
     const startOffset = lines[0].startOffset;
     const endOffset = lines[lines.length - 1].endOffset;
     const l = _.sortedIndexBy(this.lines, { startOffset }, "startOffset");
-    const r = _.sortedLastIndexBy(this.lines, { endOffset }, "endOffset");
+    const r = _.sortedIndexBy(this.lines, { endOffset }, "endOffset");
     this.lines.splice(l, r - l + 1, ...lines);
   }
 }

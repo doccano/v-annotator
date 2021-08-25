@@ -39,12 +39,18 @@ import { EntityLabels } from "@/domain/models/Line/Shape";
 import { TextWidthCalculator } from "../domain/models/Line/Strategy";
 import { TextLine, Span } from "@/domain/models/Line/TextLine";
 import { createTextLineSplitter } from "../domain/models/Line/TextLineSplitterFactory";
+import { TextLines } from "@/domain/models/Line/Observer";
+import { BaseLineSplitter } from "@/domain/models/Line/TextLineSplitter";
 
 interface GeometricLine {
   id: string;
   entities: Entity[];
   textLine: TextLine;
 }
+
+const textLines = new TextLines("", {} as BaseLineSplitter);
+const entityList = new Entities([]);
+entityList.register(textLines);
 
 export default Vue.extend({
   components: {
@@ -112,6 +118,15 @@ export default Vue.extend({
     this.setMaxWidth();
   },
 
+  watch: {
+    text: {
+      handler() {
+        textLines.updateText(this.text);
+      },
+      immediate: true,
+    },
+  },
+
   computed: {
     lines(): GeometricLine[] {
       if (!this.font || !this._entityLabels) {
@@ -124,8 +139,9 @@ export default Vue.extend({
         this._entityLabels!
       );
       const geometricLines: GeometricLine[] = [];
-      const lines = splitter.split(this.text, 0, this._entities);
-      for (const line of lines) {
+      textLines.updateSplitter(splitter);
+      entityList.update(this.entities);
+      for (const line of textLines.list()) {
         geometricLines.push({
           id: `${line.startOffset}:${line.endOffset}`,
           textLine: line,

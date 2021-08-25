@@ -15,6 +15,18 @@ export class TextLine {
     return this._spans;
   }
 
+  equal(line: TextLine): boolean {
+    if (line.spans.length !== this.spans.length) {
+      return false;
+    }
+    for (let i = 0; i < line.spans.length; i++) {
+      if (line.spans[i].startOffset !== this.spans[i].startOffset) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   addSpan(dx: number, startOffset: number, endOffset: number): void {
     const span = new Span(dx, startOffset, endOffset);
     this._spans.push(span);
