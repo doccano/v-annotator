@@ -20,7 +20,7 @@ export class TextLine {
       return false;
     }
     for (let i = 0; i < line.spans.length; i++) {
-      if (line.spans[i].startOffset !== this.spans[i].startOffset) {
+      if (!line.spans[i].equalTo(this.spans[i])) {
         return false;
       }
     }
@@ -62,4 +62,12 @@ export class Span {
     readonly startOffset: number,
     readonly endOffset: number
   ) {}
+
+  equalTo(other: Span): boolean {
+    return (
+      this.dx === other.dx &&
+      this.startOffset === other.startOffset &&
+      this.endOffset === other.endOffset
+    );
+  }
 }
