@@ -66,5 +66,15 @@ describe("Subject", () => {
     ]);
     const t1 = performance.now();
     console.log(`Call to doSomething took ${t1 - t0} milliseconds.`);
+    entities.update([
+      new Entity(0, 0, 0, 3, 7),
+      new Entity(4, 0, 0, 35, 46),
+      new Entity(1, 1, 0, 59, 62),
+      new Entity(2, 0, 0, 79, 89),
+      new Entity(3, 1, 0, 79, 94),
+      new Entity(5, 0, 0, 500000, 500001),
+    ]);
+    const t2 = performance.now();
+    console.log(`Call to doSomething took ${t2 - t1} milliseconds.`);
   });
 });

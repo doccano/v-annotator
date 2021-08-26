@@ -57,7 +57,11 @@ export class TextLines implements EntityObserver {
   }
 
   private meetStopCriteria(line: TextLine): boolean {
-    return this.lines.some((l) => line.equal(l));
+    if (this.lines.length === 0) {
+      return false;
+    }
+    const i = _.sortedIndexBy(this.lines, line, "startOffset");
+    return this.lines[i].equal(line);
   }
 
   private replaceLines(lines: TextLine[]): void {
