@@ -48,7 +48,10 @@ export class TextLines implements EntityObserver {
     const i = _.sortedIndexBy(this.lines, entity, "startOffset");
     if (i === 0) {
       return 0;
+    } else if (i === this.lines.length) {
+      return this.lines[this.lines.length - 1].startOffset;
     }
+
     if (this.lines[i].startOffset === entity.startOffset) {
       return this.lines[i].startOffset;
     } else {
