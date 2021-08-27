@@ -1,31 +1,25 @@
 <template>
   <div id="container" @click="open">
-    <DynamicScroller
-      page-mode
-      :items="lines"
-      :min-item-size="54"
-      class="scroller"
-    >
-      <template v-slot="{ item, index, active }">
-        <DynamicScrollerItem :item="item" :active="active" :data-index="index">
-          <v-line
-            :entities="
-              _entities.filterByRange(
-                item.textLine.startOffset,
-                item.textLine.endOffset
-              )
-            "
-            :entityLabels="_entityLabels"
-            :font="font"
-            :showLabelText="showLabelText"
-            :text="text"
-            :textLine="item.textLine"
-            :key="index"
-            @click:entity="clicked"
-          />
-        </DynamicScrollerItem>
+    <RecycleScroller page-mode class="scroller" :items="lines">
+      <template v-slot="{ item, index }">
+        <v-line
+          :entities="
+            _entities.filterByRange(
+              item.textLine.startOffset,
+              item.textLine.endOffset
+            )
+          "
+          :entityLabels="_entityLabels"
+          :font="font"
+          :showLabelText="showLabelText"
+          :text="text"
+          :textLine="item.textLine"
+          :key="index"
+          :style="{ height: item.size + 'px' }"
+          @click:entity="clicked"
+        />
       </template>
-    </DynamicScroller>
+    </RecycleScroller>
   </div>
 </template>
 
@@ -34,7 +28,7 @@ import _ from "lodash";
 import Vue, { PropType } from "vue";
 import VLine from "./VLine.vue";
 import "vue-virtual-scroller/dist/vue-virtual-scroller.css";
-import { DynamicScroller, DynamicScrollerItem } from "vue-virtual-scroller";
+import { RecycleScroller } from "vue-virtual-scroller";
 import { Labels, Label } from "@/domain/models/Label/Label";
 import { Entities, Entity } from "@/domain/models/Label/Entity";
 import { Font } from "@/domain/models/Line/Font";
@@ -48,8 +42,9 @@ import { TextLines } from "@/domain/models/Line/Observer";
 import { BaseLineSplitter } from "@/domain/models/Line/TextLineSplitter";
 
 interface GeometricLine {
-  id: number;
+  id: string;
   textLine: TextLine;
+  size: number;
 }
 
 const textLines = new TextLines("", {} as BaseLineSplitter);
@@ -58,8 +53,7 @@ entityList.register(textLines);
 
 export default Vue.extend({
   components: {
-    DynamicScroller,
-    DynamicScrollerItem,
+    RecycleScroller,
     VLine,
   },
 
@@ -148,8 +142,9 @@ export default Vue.extend({
       const lines = textLines.list();
       for (let i = 0; i < lines.length; i++) {
         geometricLines.push({
-          id: lines[i].startOffset,
+          id: `${lines[i].startOffset}:${lines[i].endOffset}:${lines[i].level}`,
           textLine: lines[i],
+          size: this.getHeight(lines[i]),
         });
       }
       return geometricLines;
@@ -174,6 +169,15 @@ export default Vue.extend({
   methods: {
     clicked(entity: Entity) {
       console.log(entity);
+    },
+    getHeight(line: TextLine): number {
+      const marginBottom = 8;
+      const lineWidth = 5;
+      return (
+        44 +
+        (lineWidth + this.font!.lineHeight) * line.level +
+        Math.max(marginBottom * (line.level - 1), 0)
+      );
     },
     setMaxWidth() {
       this.maxWidth = this.containerElement.clientWidth;

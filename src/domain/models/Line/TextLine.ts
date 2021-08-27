@@ -1,6 +1,7 @@
 import { Font } from "./Font";
 
 export class TextLine {
+  private _level = 0;
   constructor(private _spans: Span[] = []) {}
 
   get startOffset(): number {
@@ -14,9 +15,19 @@ export class TextLine {
   get spans(): Span[] {
     return this._spans;
   }
+  get level(): number {
+    return this._level;
+  }
+
+  set level(level: number) {
+    this._level = level;
+  }
 
   equal(line: TextLine): boolean {
     if (line.spans.length !== this.spans.length) {
+      return false;
+    }
+    if (line.level !== this.level) {
       return false;
     }
     for (let i = 0; i < line.spans.length; i++) {

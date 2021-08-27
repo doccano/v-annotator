@@ -1,12 +1,14 @@
 <template>
-  <tspan x="0">
-    <v-span
-      v-for="(span, index) in spans"
-      :key="index"
-      :span="span"
-      :text="text"
-    />
-  </tspan>
+  <text>
+    <tspan x="0">
+      <v-span
+        v-for="(span, index) in spans"
+        :key="index"
+        :span="span"
+        :text="text"
+      />
+    </tspan>
+  </text>
 </template>
 
 <script lang="ts">

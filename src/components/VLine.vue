@@ -1,15 +1,7 @@
 <template>
-  <svg
-    version="1.1"
-    xmlns="http://www.w3.org/2000/svg"
-    style="width: 100%"
-    ref="svg"
-    :style="{ height: height + 'px' }"
-  >
+  <svg version="1.1" xmlns="http://www.w3.org/2000/svg">
     <g :transform="translate">
-      <text>
-        <line-text :spans="textLine.spans" :text="text" />
-      </text>
+      <line-text :spans="textLine.spans" :text="text" />
       <line-entity
         :entities="entities"
         :entityLabels="entityLabels"
@@ -73,34 +65,9 @@ export default Vue.extend({
     };
   },
 
-  watch: {
-    showLabelText() {
-      this.setHeight();
-    },
-    entities: {
-      handler: function () {
-        this.setHeight();
-      },
-      deep: true,
-    },
-  },
-
-  mounted() {
-    this.setHeight();
-  },
-
   computed: {
     translate(): string {
       return `translate(0, ${this.font.lineHeight})`;
-    },
-  },
-
-  methods: {
-    setHeight(): void {
-      this.$nextTick(() => {
-        const svgElement = this.$refs.svg as SVGSVGElement;
-        this.height = svgElement.getBBox().height + this.font.lineHeight;
-      });
     },
   },
 });
@@ -110,5 +77,6 @@ export default Vue.extend({
 svg {
   white-space: pre;
   overflow-wrap: normal;
+  width: 100%;
 }
 </style>

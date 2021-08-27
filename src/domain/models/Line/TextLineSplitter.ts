@@ -56,6 +56,7 @@ export class TextLineSplitter implements BaseLineSplitter {
       const ch = text[i];
       if (this.needsNewline(i, ch, entities)) {
         line.addSpan(dx, startOffset, i);
+        line.level = this.levelManager.maxLevel;
         yield line;
         line = new TextLine();
         startOffset = ch === "\n" ? i + 1 : i;
@@ -79,6 +80,7 @@ export class TextLineSplitter implements BaseLineSplitter {
     }
     if (this.widthCalculator.remains()) {
       line.addSpan(dx, startOffset, text.length);
+      line.level = this.levelManager.maxLevel;
       yield line;
     }
   }
