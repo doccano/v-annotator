@@ -146,15 +146,12 @@ export default Vue.extend({
       textLines.updateSplitter(splitter);
       entityList.update(this.entities);
       const lines = textLines.list();
-      const t0 = performance.now();
       for (let i = 0; i < lines.length; i++) {
         geometricLines.push({
           id: lines[i].startOffset,
           textLine: lines[i],
         });
       }
-      const t1 = performance.now();
-      console.log(t1 - t0);
       return geometricLines;
     },
     _entities(): Entities {
