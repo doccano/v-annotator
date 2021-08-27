@@ -81,6 +81,18 @@ export default Vue.extend({
     };
   },
 
+  created() {
+    for (let i = 0; i < 1000; i++) {
+      this.entities.push({
+        id: i + 5,
+        user: 0,
+        label: 1,
+        startOffset: i * 10 + 100,
+        endOffset: i * 10 + 105,
+      });
+    }
+  },
+
   methods: {
     addEntity(startOffset: number, endOffset: number) {
       const id = Math.floor(Math.random() * 10000);
@@ -98,14 +110,3 @@ export default Vue.extend({
   },
 });
 </script>
-
-<style>
-#app {
-  /* font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale; */
-  /* text-align: center; */
-  /* color: #2c3e50; */
-  /* margin-top: 60px; */
-}
-</style>

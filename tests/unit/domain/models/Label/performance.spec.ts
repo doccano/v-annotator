@@ -1,3 +1,4 @@
+import IntervalTree from "@flatten-js/interval-tree";
 import { TextLines } from "@/domain/models/Line/Observer";
 import { TextLineSplitter } from "@/domain/models/Line/TextLineSplitter";
 import { TextWidthCalculator } from "@/domain/models/Line/Strategy";
@@ -76,5 +77,32 @@ describe("Subject", () => {
     ]);
     const t2 = performance.now();
     console.log(`Call to doSomething took ${t2 - t1} milliseconds.`);
+  });
+
+  it("filter by range", () => {
+    const entityList: Entity[] = [];
+    for (let i = 0; i < 1000; i++) {
+      entityList.push(new Entity(i + 5, 0, 1, i * 10 + 100, i * 10 + 105));
+    }
+    const entities = Entities.valueOf(entityList);
+    const t0 = performance.now();
+    for (let i = 0; i < 20000; i++) {
+      entities.filterByRange(i * 70, (i + 1) * 70);
+    }
+    const t1 = performance.now();
+    console.log(`Call to filterByRange took ${t1 - t0} milliseconds.`);
+  });
+
+  it("interval tree", () => {
+    const tree = new IntervalTree();
+    for (let i = 0; i < 1000; i++) {
+      tree.insert([i * 10 + 100, i * 10 + 105], i);
+    }
+    const t0 = performance.now();
+    for (let i = 0; i < 20000; i++) {
+      tree.search([i * 70, (i + 1) * 70]);
+    }
+    const t1 = performance.now();
+    console.log(`Call to tree search took ${t1 - t0} milliseconds.`);
   });
 });

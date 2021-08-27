@@ -9,7 +9,12 @@
       <template v-slot="{ item, index, active }">
         <DynamicScrollerItem :item="item" :active="active" :data-index="index">
           <v-line
-            :entities="item.entities"
+            :entities="
+              _entities.filterByRange(
+                item.textLine.startOffset,
+                item.textLine.endOffset
+              )
+            "
             :entityLabels="_entityLabels"
             :font="font"
             :showLabelText="showLabelText"
@@ -44,7 +49,6 @@ import { BaseLineSplitter } from "@/domain/models/Line/TextLineSplitter";
 
 interface GeometricLine {
   id: number;
-  entities: Entity[];
   textLine: TextLine;
 }
 
@@ -142,16 +146,15 @@ export default Vue.extend({
       textLines.updateSplitter(splitter);
       entityList.update(this.entities);
       const lines = textLines.list();
+      const t0 = performance.now();
       for (let i = 0; i < lines.length; i++) {
         geometricLines.push({
           id: lines[i].startOffset,
           textLine: lines[i],
-          entities: this._entities.filterByRange(
-            lines[i].startOffset,
-            lines[i].endOffset
-          ),
         });
       }
+      const t1 = performance.now();
+      console.log(t1 - t0);
       return geometricLines;
     },
     _entities(): Entities {
