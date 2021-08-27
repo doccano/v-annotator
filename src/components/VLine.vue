@@ -3,12 +3,9 @@
     <g :transform="translate">
       <line-text :spans="textLine.spans" :text="text" />
       <line-entity
-        :entities="entities"
-        :entityLabels="entityLabels"
-        :font="font"
-        :showLabelText="showLabelText"
-        :text="text"
-        :textLine="textLine"
+        v-for="gEntity in geometricEntities"
+        :key="gEntity.entity.id"
+        :entity="gEntity"
         @click:entity="$emit('click:entity', $event)"
       />
     </g>
@@ -23,6 +20,10 @@ import { EntityLabels } from "@/domain/models/Line/Shape";
 import { TextLine } from "@/domain/models/Line/TextLine";
 import LineEntity from "./LineEntity.vue";
 import LineText from "./LineText.vue";
+import {
+  EntityLineView,
+  GeometricEntity,
+} from "@/domain/models/View/EntityLineView";
 
 export default Vue.extend({
   components: {
@@ -68,6 +69,16 @@ export default Vue.extend({
   computed: {
     translate(): string {
       return `translate(0, ${this.font.lineHeight})`;
+    },
+    geometricEntities(): GeometricEntity[] {
+      const view = new EntityLineView(
+        this.entities,
+        this.entityLabels,
+        this.textLine,
+        this.font,
+        this.showLabelText
+      );
+      return view.render(this.text);
     },
   },
 });
