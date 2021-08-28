@@ -49,7 +49,9 @@ export class TextLineSplitter implements BaseLineSplitter {
         const _dx = this.calculateMaxDx(_entities);
         this.widthCalculator.addWidth(_dx);
         _entities.forEach((e) => this.updateLevel(e));
-        line.addSpan(dx, startOffset, i);
+        if (startOffset !== i) {
+          line.addSpan(dx, startOffset, i);
+        }
         startOffset = i;
         dx = _dx;
       }
