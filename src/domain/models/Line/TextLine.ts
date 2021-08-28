@@ -61,7 +61,7 @@ export class TextLine {
       x1 +
       font.widthOf(content.substring(s, e)) +
       this.spans
-        .filter((span) => s < span.startOffset && span.startOffset <= e)
+        .filter((span) => s < span.startOffset && span.startOffset < e)
         .reduce((p, span) => p + span.dx, 0);
     return [x1, x2];
   }
