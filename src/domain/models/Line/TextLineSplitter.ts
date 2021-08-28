@@ -11,30 +11,6 @@ export interface BaseLineSplitter {
   ): Iterable<TextLine>;
 }
 
-export class SimpleLineSplitter implements BaseLineSplitter {
-  constructor(private widthCalculator: WidthCalculator) {}
-
-  *split(text: string, startOffset = 0): Iterable<TextLine> {
-    let line = new TextLine();
-
-    for (let i = startOffset; i < text.length; i++) {
-      const ch = text[i];
-      if (this.widthCalculator.needsNewline(ch, 0)) {
-        line.addSpan(0, startOffset, i);
-        yield line;
-        line = new TextLine();
-        startOffset = ch === "\n" ? i + 1 : i;
-        this.widthCalculator.reset();
-      }
-      this.widthCalculator.add(ch);
-    }
-    if (this.widthCalculator.remains()) {
-      line.addSpan(0, startOffset, text.length);
-      yield line;
-    }
-  }
-}
-
 export class TextLineSplitter implements BaseLineSplitter {
   private levels: Map<number, number> = new Map();
   private levelManager = new LevelManager();
