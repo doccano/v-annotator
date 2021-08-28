@@ -27,6 +27,7 @@ export class TextLineSplitter implements BaseLineSplitter {
     let dx = 0;
     let line = new TextLine();
     this.widthCalculator.reset();
+    this.resetLevels();
 
     for (let i = startOffset; i < text.length; i++) {
       const ch = text[i];
