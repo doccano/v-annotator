@@ -5,7 +5,6 @@
       :text="text"
       :entities="entities"
       :entity-labels="entityLabels"
-      :show-label-text="showLabelText"
       @add:entity="addEntity"
       @click:entity="updateEntity"
     />

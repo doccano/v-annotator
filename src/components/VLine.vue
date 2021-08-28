@@ -37,11 +37,6 @@ export default Vue.extend({
       default: () => [],
       required: true,
     },
-    showLabelText: {
-      type: Boolean,
-      default: true,
-      required: false,
-    },
     textLine: {
       type: Object as PropType<TextLine>,
       required: true,
@@ -75,8 +70,7 @@ export default Vue.extend({
         this.entities,
         this.entityLabels,
         this.textLine,
-        this.font,
-        this.showLabelText
+        this.font
       );
       return view.render(this.text);
     },

@@ -11,7 +11,6 @@
           "
           :entityLabels="_entityLabels"
           :font="font"
-          :showLabelText="showLabelText"
           :text="text"
           :textLine="item.textLine"
           :key="index"
@@ -37,9 +36,8 @@ import { createEntityLabels } from "../domain/models/Line/ShapeFactory";
 import { EntityLabels } from "@/domain/models/Line/Shape";
 import { TextWidthCalculator } from "../domain/models/Line/Strategy";
 import { TextLine, Span } from "@/domain/models/Line/TextLine";
-import { createTextLineSplitter } from "../domain/models/Line/TextLineSplitterFactory";
 import { TextLines } from "@/domain/models/Line/Observer";
-import { BaseLineSplitter } from "@/domain/models/Line/TextLineSplitter";
+import { BaseLineSplitter, TextLineSplitter } from "@/domain/models/Line/TextLineSplitter";
 
 interface GeometricLine {
   id: string;
@@ -93,11 +91,6 @@ export default Vue.extend({
       default: false,
       required: false,
     },
-    showLabelText: {
-      type: Boolean,
-      default: false,
-      required: true,
-    },
   },
 
   data() {
@@ -131,11 +124,7 @@ export default Vue.extend({
         return [];
       }
       const calculator = new TextWidthCalculator(this.font, this.maxWidth);
-      const splitter = createTextLineSplitter(
-        this.showLabelText,
-        calculator,
-        this._entityLabels!
-      );
+      const splitter = new TextLineSplitter(calculator, this._entityLabels);
       const geometricLines: GeometricLine[] = [];
       textLines.updateSplitter(splitter);
       entityList.update(this.entities);

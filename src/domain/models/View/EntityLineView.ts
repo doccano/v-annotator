@@ -20,8 +20,7 @@ export class EntityLineView {
     private entities: Entity[],
     private entityLabels: EntityLabels,
     private textLine: TextLine,
-    private font: Font,
-    private showLabelText: boolean
+    private font: Font
   ) {
     entities.forEach((entity) => {
       this.levelManager.update(entity);
@@ -55,14 +54,7 @@ export class EntityLineView {
 
   private calculateLineY(entity: Entity): number {
     const level = this.levelManager.fetchLevel(entity)!;
-    if (this.showLabelText) {
-      const marginBottom = 8;
-      return (
-        lineWidth + (lineWidth + this.font.fontSize + marginBottom) * level
-      );
-    } else {
-      const marginBottom = 5;
-      return lineWidth + (lineWidth + marginBottom) * level;
-    }
+    const marginBottom = 8;
+    return lineWidth + (lineWidth + this.font.fontSize + marginBottom) * level;
   }
 }
