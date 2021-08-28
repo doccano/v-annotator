@@ -6,6 +6,7 @@
         v-for="gEntity in geometricEntities"
         :key="gEntity.entity.id"
         :entity="gEntity"
+        :has-text-label="hasTextLabel(gEntity.entity)"
         @click:entity="$emit('click:entity', $event)"
         @contextmenu:entity="$emit('contextmenu:entity', $event)"
       />
@@ -74,6 +75,13 @@ export default Vue.extend({
         this.font
       );
       return view.render(this.text);
+    },
+  },
+
+  methods: {
+    hasTextLabel(entity: Entity): boolean {
+      // Do not show a label text if the entity continues from the previous line.
+      return this.textLine.startOffset <= entity.startOffset;
     },
   },
 });

@@ -7,6 +7,7 @@
       :color="entity.entityLabel.color"
     />
     <geometric-label-text
+      v-if="hasTextLabel"
       :r="entity.entityLabel.circle.radius"
       :x="entity.x1"
       :y="entity.textY"
@@ -34,6 +35,10 @@ export default Vue.extend({
   props: {
     entity: {
       type: Object as PropType<GeometricEntity>,
+      required: true,
+    },
+    hasTextLabel: {
+      type: Boolean,
       required: true,
     },
   },
