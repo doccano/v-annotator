@@ -25,6 +25,7 @@ export default Vue.extend({
 
   data() {
     return {
+      id: 5,
       text: "we must respect the will of the individual.\nTake it easy I can assure you that everything will turn out to be fine.\n".repeat(
         10000
       ),
@@ -81,27 +82,21 @@ export default Vue.extend({
   },
 
   created() {
-    for (let i = 0; i < 1000; i++) {
-      this.entities.push({
-        id: i + 5,
-        user: 0,
-        label: 1,
-        startOffset: i * 10 + 100,
-        endOffset: i * 10 + 105,
-      });
+    for (let i = 0; i < 10000; i++) {
+      this.addEntity(i * 10 + 100, i * 10 + 105);
     }
   },
 
   methods: {
     addEntity(startOffset: number, endOffset: number) {
-      const id = Math.floor(Math.random() * 10000);
       this.entities.push({
-        id,
+        id: this.id,
         startOffset,
         endOffset,
         label: 0,
         user: 0,
       });
+      this.id++;
     },
     updateEntity(id: number) {
       console.log(id);
