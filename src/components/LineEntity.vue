@@ -14,6 +14,7 @@
       :color="entity.entityLabel.color"
       :text="entity.entityLabel.text"
       @click:entity="$emit('click:entity', entity.entity)"
+      @contextmenu:entity="$emit('contextmenu:entity', entity.entity)"
     />
   </g>
 </template>

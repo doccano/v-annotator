@@ -16,6 +16,7 @@
           :key="index"
           :style="{ height: item.size + 'px' }"
           @click:entity="clicked"
+          @contextmenu:entity="$emit('contextmenu:entity', $event)"
         />
       </template>
     </RecycleScroller>
@@ -37,7 +38,10 @@ import { EntityLabels } from "@/domain/models/Line/Shape";
 import { TextWidthCalculator } from "../domain/models/Line/Strategy";
 import { TextLine, Span } from "@/domain/models/Line/TextLine";
 import { TextLines } from "@/domain/models/Line/Observer";
-import { BaseLineSplitter, TextLineSplitter } from "@/domain/models/Line/TextLineSplitter";
+import {
+  BaseLineSplitter,
+  TextLineSplitter,
+} from "@/domain/models/Line/TextLineSplitter";
 
 interface GeometricLine {
   id: string;

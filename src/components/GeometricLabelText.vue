@@ -1,5 +1,9 @@
 <template>
-  <g style="cursor: pointer; userselect: none" @click="$emit('click:entity')">
+  <g
+    style="cursor: pointer; userselect: none"
+    @click="$emit('click:entity')"
+    @contextmenu.prevent="$emit('contextmenu:entity')"
+  >
     <circle :r="r" :fill="color" :cx="cx" :cy="y" />
     <text :x="x" :y="y" fill="grey" :dx="dx" dy="0.35em" v-text="text" />
   </g>

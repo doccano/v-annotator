@@ -1,12 +1,12 @@
 <template>
   <div id="app">
-    <button @click="showLabelText = !showLabelText">{{ showLabelText }}</button>
     <v-annotator
       :text="text"
       :entities="entities"
       :entity-labels="entityLabels"
       @add:entity="addEntity"
       @click:entity="updateEntity"
+      @contextmenu:entity="deleteEntity"
     />
   </div>
 </template>
@@ -14,6 +14,7 @@
 <script lang="ts">
 import Vue from "vue";
 import VAnnotator from "./components/VAnnotator.vue";
+import { Entity } from "./domain/models/Label/Entity";
 
 export default Vue.extend({
   name: "App",
@@ -24,7 +25,6 @@ export default Vue.extend({
 
   data() {
     return {
-      showLabelText: true,
       text: "we must respect the will of the individual.\nTake it easy I can assure you that everything will turn out to be fine.\n".repeat(
         10000
       ),
@@ -105,6 +105,9 @@ export default Vue.extend({
     },
     updateEntity(id: number) {
       console.log(id);
+    },
+    deleteEntity(entity: Entity) {
+      this.entities = this.entities.filter((e) => e.id !== entity.id);
     },
   },
 });

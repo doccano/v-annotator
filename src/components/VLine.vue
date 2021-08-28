@@ -7,6 +7,7 @@
         :key="gEntity.entity.id"
         :entity="gEntity"
         @click:entity="$emit('click:entity', $event)"
+        @contextmenu:entity="$emit('contextmenu:entity', $event)"
       />
     </g>
   </svg>
