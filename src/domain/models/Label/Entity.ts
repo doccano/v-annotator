@@ -95,36 +95,40 @@ export class Entities extends EntitySubject {
 
   update(others: Entity[]): void {
     const oldEntities = this.list();
-    // add entities
-    const addedEntities = differenceBy(others, oldEntities, "id");
-    addedEntities.forEach((entity) => {
-      this.add(entity);
-      this.notify(this, { entity, mode: "add" });
-    });
+    const newMapping: { [key: number]: Entity } = {};
+    for (let i = 0; i < others.length; i++) {
+      newMapping[others[i].id] = others[i];
+    }
     // delete entities
-    const deletedEntities = differenceBy(oldEntities, others, "id");
-    deletedEntities.forEach((entity) => {
-      this.delete(entity);
-      this.notify(this, { entity, mode: "delete" });
-    });
-    // update entities
-    const mapping = Object.assign(
-      {},
-      ...oldEntities.map((e) => ({ [e.id]: e }))
-    );
-    others.forEach((entity) => {
-      if (entity.id in mapping) {
-        const f = mapping[entity.id];
+    const oldMapping: { [key: number]: Entity } = {};
+    for (let i = 0; i < oldEntities.length; i++) {
+      const entity = oldEntities[i];
+      oldMapping[entity.id] = entity;
+      if (!(entity.id in newMapping)) {
+        this.delete(entity);
+        this.notify(this, { entity, mode: "delete" });
+      }
+    }
+    // add or update entities
+    for (let i = 0; i < others.length; i++) {
+      const entity = others[i];
+      if (entity.id in oldMapping) {
+        const other = oldMapping[entity.id];
         if (
-          f.label !== entity.label ||
-          f.startOffset !== entity.startOffset ||
-          f.endOffset !== entity.endOffset
+          !(
+            entity.label === other.label &&
+            entity.startOffset === other.startOffset &&
+            entity.endOffset === other.endOffset
+          )
         ) {
-          this.replace(f, entity);
+          this.replace(other, entity);
           this.notify(this, { entity, mode: "update" });
         }
+      } else {
+        this.add(entity);
+        this.notify(this, { entity, mode: "add" });
       }
-    });
+    }
   }
 
   getAt(startOffset: number): Entity[] {
