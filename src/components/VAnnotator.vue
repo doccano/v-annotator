@@ -66,7 +66,7 @@ export default Vue.extend({
       required: true,
     },
     entities: {
-      type: String,//Array as PropType<Entity[]>,
+      type: String,
       default: () => [],
       required: true,
     },

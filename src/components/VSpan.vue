@@ -1,8 +1,6 @@
 <template>
-  <tspan
-    :dx="span.dx"
-    v-text="text.substring(span.startOffset, span.endOffset)"
-  />
+  <tspan v-if="snippet" :dx="span.dx" v-text="snippet" />
+  <tspan v-else :dx="span.dx" style="font-size: 6px">⮐</tspan>
 </template>
 
 <script lang="ts">
@@ -19,6 +17,12 @@ export default Vue.extend({
       type: String,
       default: "",
       required: true,
+    },
+  },
+
+  computed: {
+    snippet(): string {
+      return this.text.substring(this.span.startOffset, this.span.endOffset);
     },
   },
 
