@@ -1,4 +1,3 @@
-import differenceBy from "lodash/differenceBy";
 import IntervalTree from "@flatten-js/interval-tree";
 import { EntityObserver, EntityObserverHint } from "../Line/Observer";
 
