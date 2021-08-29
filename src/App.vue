@@ -2,7 +2,7 @@
   <div id="app">
     <v-annotator
       :text="text"
-      :entities="entities"
+      :entities="JSON.stringify(entities)"
       :entity-labels="entityLabels"
       @add:entity="addEntity"
       @click:entity="updateEntity"

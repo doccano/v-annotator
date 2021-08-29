@@ -66,7 +66,7 @@ export default Vue.extend({
       required: true,
     },
     entities: {
-      type: Array as PropType<Entity[]>,
+      type: String,//Array as PropType<Entity[]>,
       default: () => [],
       required: true,
     },
@@ -132,7 +132,7 @@ export default Vue.extend({
       const splitter = new TextLineSplitter(calculator, this._entityLabels);
       const geometricLines: GeometricLine[] = [];
       textLines.updateSplitter(splitter);
-      entityList.update(this.entities);
+      entityList.update(this._entities.list());
       const lines = textLines.list();
       for (let i = 0; i < lines.length; i++) {
         geometricLines.push({
@@ -144,7 +144,7 @@ export default Vue.extend({
       return geometricLines;
     },
     _entities(): Entities {
-      return Entities.valueOf(this.entities);
+      return Entities.valueOf(JSON.parse(this.entities as string));
     },
     _entityLabels(): EntityLabels | null {
       if (this.font) {
