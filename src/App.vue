@@ -26,7 +26,7 @@ export default Vue.extend({
   data() {
     return {
       id: 5,
-      text: "we must respect the will of the individual.\n\n\nTake it easy I can assure you that everything will turn out to be fine.\n".repeat(
+      text: "we must respect the will of the individual.\nTake it easy I can assure you that everything will turn out to be fine.\n".repeat(
         10000
       ),
       entities: [

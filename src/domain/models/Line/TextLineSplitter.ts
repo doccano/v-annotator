@@ -25,6 +25,7 @@ export class TextLineSplitter implements BaseLineSplitter {
     entities: Entities
   ): Iterable<TextLine> {
     let dx = 0;
+    let x = 0;
     let line = new TextLine();
     this.widthCalculator.reset();
     this.resetLevels();
@@ -32,12 +33,13 @@ export class TextLineSplitter implements BaseLineSplitter {
     for (let i = startOffset; i < text.length; i++) {
       const ch = text[i];
       if (this.needsNewline(i, ch, entities)) {
-        line.addSpan(dx, startOffset, i);
+        line.addSpan(x, dx, startOffset, i);
         line.level = this.levelManager.maxLevel;
         yield line;
         line = new TextLine();
         startOffset = ch === "\n" ? i + 1 : i;
         dx = 0;
+        x = this.widthCalculator.width;
         this.widthCalculator.reset();
         this.resetLevels();
       }
@@ -50,15 +52,16 @@ export class TextLineSplitter implements BaseLineSplitter {
         this.widthCalculator.addWidth(_dx);
         _entities.forEach((e) => this.updateLevel(e));
         if (startOffset !== i) {
-          line.addSpan(dx, startOffset, i);
+          line.addSpan(x, dx, startOffset, i);
         }
         startOffset = i;
         dx = _dx;
+        x = this.widthCalculator.width;
       }
       this.widthCalculator.add(ch);
     }
     if (this.widthCalculator.remains()) {
-      line.addSpan(dx, startOffset, text.length);
+      line.addSpan(x, dx, startOffset, text.length);
       line.level = this.levelManager.maxLevel;
       yield line;
     }
