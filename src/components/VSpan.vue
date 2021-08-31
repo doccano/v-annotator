@@ -1,6 +1,6 @@
 <template>
-  <tspan v-if="snippet" :x="span.x" v-text="snippet" />
-  <tspan v-else x="0" style="font-size: 6px">⮐</tspan>
+  <tspan v-if="snippet" :dx="span.dx" v-text="snippet" />
+  <tspan v-else :dx="span.dx" style="font-size: 6px">⮐</tspan>
 </template>
 
 <script lang="ts">

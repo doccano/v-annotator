@@ -38,8 +38,8 @@ export class TextLine {
     return true;
   }
 
-  addSpan(x: number, dx: number, startOffset: number, endOffset: number): void {
-    const span = new Span(x, dx, startOffset, endOffset);
+  addSpan(dx: number, startOffset: number, endOffset: number): void {
+    const span = new Span(dx, startOffset, endOffset);
     this._spans.push(span);
   }
 
@@ -69,7 +69,6 @@ export class TextLine {
 
 export class Span {
   constructor(
-    readonly x: number,
     readonly dx: number,
     readonly startOffset: number,
     readonly endOffset: number
