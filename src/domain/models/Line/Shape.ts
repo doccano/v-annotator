@@ -1,5 +1,3 @@
-import { Font } from "./Font";
-
 export class Circle {
   constructor(readonly radius: number = 3, readonly color: string = "grey") {}
 
@@ -17,11 +15,7 @@ export class Line {
 }
 
 export class LabelText {
-  constructor(readonly text: string, readonly font: Font) {}
-
-  get width(): number {
-    return this.font.widthOf(this.text);
-  }
+  constructor(readonly text: string, readonly width: number) {}
 }
 
 export class EntityLabel {
@@ -63,9 +57,6 @@ export class EntityLabels {
   }
 
   maxLabelWidth(ids: number[]): number {
-    return Math.max(
-      ...ids.map((id) => this.getById(id)).map((e) => e!.width),
-      0
-    );
+    return Math.max(...ids.map((id) => this.getById(id)!.width), 0);
   }
 }

@@ -1,6 +1,7 @@
 import { Font } from "./Font";
 
 export class TextLine {
+  private _level = 0;
   constructor(private _spans: Span[] = []) {}
 
   get startOffset(): number {
@@ -13,6 +14,28 @@ export class TextLine {
 
   get spans(): Span[] {
     return this._spans;
+  }
+  get level(): number {
+    return this._level;
+  }
+
+  set level(level: number) {
+    this._level = level;
+  }
+
+  equal(line: TextLine): boolean {
+    if (line.spans.length !== this.spans.length) {
+      return false;
+    }
+    if (line.level !== this.level) {
+      return false;
+    }
+    for (let i = 0; i < line.spans.length; i++) {
+      if (!line.spans[i].equalTo(this.spans[i])) {
+        return false;
+      }
+    }
+    return true;
   }
 
   addSpan(dx: number, startOffset: number, endOffset: number): void {
@@ -38,7 +61,7 @@ export class TextLine {
       x1 +
       font.widthOf(content.substring(s, e)) +
       this.spans
-        .filter((span) => s < span.startOffset && span.startOffset <= e)
+        .filter((span) => s < span.startOffset && span.startOffset < e)
         .reduce((p, span) => p + span.dx, 0);
     return [x1, x2];
   }
@@ -50,4 +73,12 @@ export class Span {
     readonly startOffset: number,
     readonly endOffset: number
   ) {}
+
+  equalTo(other: Span): boolean {
+    return (
+      this.dx === other.dx &&
+      this.startOffset === other.startOffset &&
+      this.endOffset === other.endOffset
+    );
+  }
 }

@@ -14,7 +14,7 @@ describe("Entities", () => {
       new Entity(0, 0, 0, 0, content.length + 1),
     ]);
     const actual = entities.filterByRange(0, content.length);
-    expect(actual).toEqual(expected);
+    expect(actual).toEqual(expected.list());
   });
 
   it("is empty", () => {
@@ -35,10 +35,10 @@ describe("Entities", () => {
 
   it("get at", () => {
     const entities = new Entities([new Entity(0, 0, 0, 0, 5)]);
-    expect(entities.getAt(0)).toEqual(entities);
+    expect(entities.getAt(0)).toEqual(entities.list());
 
     const expected = new Entities([]);
-    expect(entities.getAt(1)).toEqual(expected);
+    expect(entities.getAt(1)).toEqual(expected.list());
   });
 
   it("can list", () => {
@@ -49,16 +49,53 @@ describe("Entities", () => {
 
   it("can filter by range", () => {
     const entities = new Entities([new Entity(0, 0, 0, 1, 5)]);
-    expect(entities.filterByRange(0, 1).isEmpty()).toBeTruthy();
-    expect(entities.filterByRange(1, 5).isEmpty()).toBeFalsy();
-    expect(entities.filterByRange(1, 6).isEmpty()).toBeFalsy();
-    expect(entities.filterByRange(4, 6).isEmpty()).toBeFalsy();
-    expect(entities.filterByRange(5, 6).isEmpty()).toBeTruthy();
+    expect(entities.filterByRange(0, 1).length == 0).toBeTruthy();
+    expect(entities.filterByRange(1, 5).length == 0).toBeFalsy();
+    expect(entities.filterByRange(1, 6).length == 0).toBeFalsy();
+    expect(entities.filterByRange(4, 6).length == 0).toBeFalsy();
+    expect(entities.filterByRange(5, 6).length == 0).toBeTruthy();
   });
 
   it("can get size", () => {
     const entities = new Entities([new Entity(0, 0, 0, 0, 0)]);
     expect(entities.size).toEqual(1);
+  });
+
+  it("delete", () => {
+    const entities = new Entities([
+      new Entity(0, 0, 0, 0, 5),
+      new Entity(1, 0, 0, 0, 5),
+    ]);
+    const expected = [new Entity(1, 0, 0, 0, 5)];
+    entities.delete(entities.list()[0]);
+    expect(entities.list()).toEqual(expected);
+  });
+
+  it("add", () => {
+    const entities = new Entities([]);
+    entities.add(new Entity(1, 0, 0, 0, 5));
+    const expected = [new Entity(1, 0, 0, 0, 5)];
+    expect(entities.list()).toEqual(expected);
+  });
+
+  it("replace", () => {
+    const oldEntity = new Entity(0, 0, 0, 0, 5);
+    const newEntity = new Entity(0, 0, 0, 3, 5);
+    const entities = new Entities([oldEntity]);
+    entities.replace(oldEntity, newEntity);
+    const expected = [newEntity];
+    expect(entities.list()).toEqual(expected);
+  });
+
+  it("update", () => {
+    const entities = new Entities([
+      new Entity(0, 0, 0, 0, 5),
+      new Entity(1, 0, 0, 3, 5),
+      new Entity(2, 0, 0, 3, 5),
+    ]);
+    const newEntities = [new Entity(1, 0, 0, 3, 5), new Entity(2, 0, 0, 4, 5)];
+    entities.update(newEntities);
+    expect(entities.list()).toEqual(newEntities);
   });
 });
 

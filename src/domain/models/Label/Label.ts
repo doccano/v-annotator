@@ -6,12 +6,6 @@ export class Label {
   ) {}
 }
 
-export interface ILabel {
-  id: number;
-  text: string;
-  color: string;
-}
-
 export class Labels {
   private id2Label: { [key: number]: Label } = {};
 
@@ -21,7 +15,7 @@ export class Labels {
     }
   }
 
-  static valueOf(labels: ILabel[]): Labels {
+  static valueOf(labels: Label[]): Labels {
     return new Labels(
       labels.map((label) => new Label(label.id, label.text, label.color))
     );

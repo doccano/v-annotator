@@ -19,7 +19,7 @@ describe("LabelText", () => {
       width.set(ch, 1);
     }
     const font = new Font(0, "", "", 0, width);
-    const labelText = new LabelText(text, font);
+    const labelText = new LabelText(text, font.widthOf(text));
     expect(labelText.width).toEqual(text.length);
   });
 });

@@ -1,13 +1,12 @@
 <template>
   <div id="app">
-    <button @click="showLabelText = !showLabelText">Switch</button>
     <v-annotator
       :text="text"
-      :entities="entities"
+      :entities="JSON.stringify(entities)"
       :entity-labels="entityLabels"
-      :show-label-text="showLabelText"
       @add:entity="addEntity"
       @click:entity="updateEntity"
+      @contextmenu:entity="deleteEntity"
     />
   </div>
 </template>
@@ -15,6 +14,7 @@
 <script lang="ts">
 import Vue from "vue";
 import VAnnotator from "./components/VAnnotator.vue";
+import { Entity } from "./domain/models/Label/Entity";
 
 export default Vue.extend({
   name: "App",
@@ -25,9 +25,9 @@ export default Vue.extend({
 
   data() {
     return {
-      showLabelText: false,
-      text: "we must respect the will of the individual.\nTake it easy I can assure you that everything will turn out to be fine.\n".repeat(
-        5000
+      id: 5,
+      text: "we must respect the will of the individual.\n\n\nTake it easy I can assure you that everything will turn out to be fine.\n".repeat(
+        10000
       ),
       entities: [
         {
@@ -81,31 +81,29 @@ export default Vue.extend({
     };
   },
 
+  created() {
+    for (let i = 0; i < 10000; i++) {
+      this.addEntity(i * 10 + 100, i * 10 + 105);
+    }
+  },
+
   methods: {
     addEntity(startOffset: number, endOffset: number) {
-      const id = Math.floor(Math.random() * 10000);
       this.entities.push({
-        id,
+        id: this.id,
         startOffset,
         endOffset,
         label: 0,
         user: 0,
       });
+      this.id++;
     },
     updateEntity(id: number) {
       console.log(id);
     },
+    deleteEntity(entity: Entity) {
+      this.entities = this.entities.filter((e) => e.id !== entity.id);
+    },
   },
 });
 </script>
-
-<style>
-#app {
-  /* font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale; */
-  /* text-align: center; */
-  /* color: #2c3e50; */
-  /* margin-top: 60px; */
-}
-</style>

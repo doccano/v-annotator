@@ -4,33 +4,11 @@ import { Entities, Entity, LevelManager } from "../Label/Entity";
 import { EntityLabels } from "./Shape";
 
 export interface BaseLineSplitter {
-  split(text: string): TextLine[];
-}
-
-export class SimpleLineSplitter implements BaseLineSplitter {
-  constructor(private widthCalculator: WidthCalculator) {}
-
-  split(text: string): TextLine[] {
-    let line = new TextLine();
-    let startIndex = 0;
-    const lines = [] as TextLine[];
-
-    for (const [i, ch] of Array.from(text).entries()) {
-      if (this.widthCalculator.needsNewline(ch, 0)) {
-        line.addSpan(0, startIndex, i);
-        lines.push(line);
-        line = new TextLine();
-        startIndex = ch === "\n" ? i + 1 : i;
-        this.widthCalculator.reset();
-      }
-      this.widthCalculator.add(ch);
-    }
-    if (this.widthCalculator.remains()) {
-      line.addSpan(0, startIndex, text.length);
-      lines.push(line);
-    }
-    return lines;
-  }
+  split(
+    text: string,
+    startOffset: number,
+    entities?: Entities
+  ): Iterable<TextLine>;
 }
 
 export class TextLineSplitter implements BaseLineSplitter {
@@ -38,50 +16,61 @@ export class TextLineSplitter implements BaseLineSplitter {
   private levelManager = new LevelManager();
   constructor(
     private widthCalculator: WidthCalculator,
-    private entities: Entities,
     private entityLabels: EntityLabels
   ) {}
 
-  split(text: string): TextLine[] {
+  *split(
+    text: string,
+    startOffset = 0,
+    entities: Entities
+  ): Iterable<TextLine> {
     let dx = 0;
     let line = new TextLine();
-    let startIndex = 0;
-    const lines = [] as TextLine[];
+    this.widthCalculator.reset();
+    this.resetLevels();
 
-    for (const [i, ch] of Array.from(text).entries()) {
-      if (this.needsNewline(i, ch)) {
-        line.addSpan(dx, startIndex, i);
-        lines.push(line);
+    for (let i = startOffset; i < text.length; i++) {
+      const ch = text[i];
+      if (this.needsNewline(i, ch, entities)) {
+        line.addSpan(dx, startOffset, i);
+        line.level = this.levelManager.maxLevel;
+        yield line;
         line = new TextLine();
-        startIndex = ch === "\n" ? i + 1 : i;
+        startOffset = ch === "\n" ? i + 1 : i;
         dx = 0;
         this.widthCalculator.reset();
         this.resetLevels();
       }
-      if (this.entities.startsAt(i)) {
-        const entities = this.entities.getAt(i);
-        entities.list().forEach((entity) => {
+      if (entities.startsAt(i)) {
+        const _entities = entities.getAt(i);
+        _entities.forEach((entity) => {
           this.levelManager.update(entity);
         });
-        const _dx = this.calculateMaxDx(entities);
+        const _dx = this.calculateMaxDx(_entities);
         this.widthCalculator.addWidth(_dx);
-        this.updateLevels(entities);
-        line.addSpan(dx, startIndex, i);
-        startIndex = i;
+        _entities.forEach((e) => this.updateLevel(e));
+        if (startOffset !== i) {
+          line.addSpan(dx, startOffset, i);
+        }
+        startOffset = i;
         dx = _dx;
       }
       this.widthCalculator.add(ch);
     }
     if (this.widthCalculator.remains()) {
-      line.addSpan(dx, startIndex, text.length);
-      lines.push(line);
+      line.addSpan(dx, startOffset, text.length);
+      line.level = this.levelManager.maxLevel;
+      yield line;
     }
-    return lines;
   }
 
-  private needsNewline(i: number, ch: string): boolean {
-    const entities = this.entities.getAt(i);
-    const labelIds = entities.list().map((e) => e.label);
+  private needsNewline(i: number, ch: string, entities: Entities): boolean {
+    const _entities = entities.getAt(i);
+    // For performance.
+    if (_entities.length === 0) {
+      return this.widthCalculator.needsNewline(ch, 0);
+    }
+    const labelIds = _entities.map((e) => e.label);
     const maxLabelWidth = this.entityLabels.maxLabelWidth(labelIds);
     return this.widthCalculator.needsNewline(ch, maxLabelWidth);
   }
@@ -96,10 +85,9 @@ export class TextLineSplitter implements BaseLineSplitter {
     return false;
   }
 
-  private calculateMaxDx(entities: Entities): number {
+  private calculateMaxDx(entities: Entity[]): number {
     return Math.max(
       ...entities
-        .list()
         .filter((e) => this.isOverlapping(e))
         .map((e) => this.calculateDx(e)),
       0
@@ -111,10 +99,6 @@ export class TextLineSplitter implements BaseLineSplitter {
     const x = this.widthCalculator.width;
     const endX = this.levels.get(level)!;
     return endX - x;
-  }
-
-  private updateLevels(entities: Entities): void {
-    entities.list().map((e) => this.updateLevel(e));
   }
 
   private updateLevel(entity: Entity): void {
