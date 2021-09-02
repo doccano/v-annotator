@@ -1,9 +1,9 @@
-import { Font } from "./Font";
+import { widthOf } from "../View/fontFactory";
 import { Labels } from "../Label/Label";
 import { Circle, LabelText, EntityLabel, EntityLabels } from "./Shape";
 
 export function createEntityLabels(
-  font: Font,
+  tspanElement: SVGTSpanElement,
   labels: Labels,
   radius = 3,
   margin = 5
@@ -11,7 +11,7 @@ export function createEntityLabels(
   const entityLabels = [];
   for (const label of labels.list()) {
     const circle = new Circle(radius, label.color);
-    const text = new LabelText(label.text, font.widthOf(label.text));
+    const text = new LabelText(label.text, widthOf(label.text, tspanElement));
     const entityLabel = new EntityLabel(label.id, circle, text, margin);
     entityLabels.push(entityLabel);
   }

@@ -9,7 +9,7 @@
               item.textLine.endOffset
             )
           "
-          :entityLabels="_entityLabels"
+          :entityLabels="entityLabels_"
           :font="font"
           :text="text"
           :textLine="item.textLine"
@@ -20,6 +20,9 @@
         />
       </template>
     </RecycleScroller>
+    <svg version="1.1" xmlns="http://www.w3.org/2000/svg">
+      <text><tspan id="textWidth" /></text>
+    </svg>
   </div>
 </template>
 
@@ -101,14 +104,19 @@ export default Vue.extend({
     return {
       font: null as Font | null,
       maxWidth: 0,
+      entityLabels_: null as EntityLabels | null,
     };
   },
 
   mounted() {
     this.$nextTick(() => {
       const containerElement = document.getElementById("container")!;
-      const labelText = this.entityLabels.map((label) => label.text).join("");
-      this.font = createFont(this.text + labelText, containerElement);
+      this.font = createFont(this.text, containerElement);
+      const tspanElement = document.getElementById(
+        "textWidth"
+      )! as unknown as SVGTSpanElement;
+      const labels = Labels.valueOf(this.entityLabels);
+      this.entityLabels_ = createEntityLabels(tspanElement, labels);
     });
     window.addEventListener("resize", _.debounce(this.setMaxWidth, 500));
     this.setMaxWidth();
@@ -125,11 +133,11 @@ export default Vue.extend({
 
   computed: {
     lines(): GeometricLine[] {
-      if (!this.font || !this._entityLabels) {
+      if (!this.font || !this.entityLabels_) {
         return [];
       }
       const calculator = new TextWidthCalculator(this.font, this.maxWidth);
-      const splitter = new TextLineSplitter(calculator, this._entityLabels);
+      const splitter = new TextLineSplitter(calculator, this.entityLabels_);
       const geometricLines: GeometricLine[] = [];
       textLines.updateSplitter(splitter);
       entityList.update(this._entities.list());
@@ -145,14 +153,6 @@ export default Vue.extend({
     },
     _entities(): Entities {
       return Entities.valueOf(JSON.parse(this.entities as string));
-    },
-    _entityLabels(): EntityLabels | null {
-      if (this.font) {
-        const labels = Labels.valueOf(this.entityLabels);
-        return createEntityLabels(this.font, labels);
-      } else {
-        return null;
-      }
     },
   },
 

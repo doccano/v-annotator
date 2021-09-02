@@ -34,3 +34,12 @@ export function createFont(text: string, container: HTMLElement): Font {
   tspanElement.remove();
   return new Font(fontSize, fontFamily, fontWeight, lineHeight, width);
 }
+
+export function widthOf(text: string, tspanElement: SVGTSpanElement): number {
+  let width = 0;
+  tspanElement.textContent = text;
+  for (let i = 0; i < text.length; i++) {
+    width += tspanElement.getExtentOfChar(i).width;
+  }
+  return width;
+}
