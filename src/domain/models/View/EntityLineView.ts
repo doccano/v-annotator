@@ -37,7 +37,9 @@ export class EntityLineView {
       this.levelManager.update(
         entity,
         x1,
-        x1 + this.entityLabels.getById(entity.label)!.width
+        entity.startOffset < this.textLine.startOffset // entity continue from the previous line
+          ? x2
+          : x1 + this.entityLabels.getById(entity.label)!.width
       );
       const entityLabel = this.entityLabels.getById(entity.label)!;
       const lineY = this.calculateLineY(entity);
