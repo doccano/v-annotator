@@ -24,7 +24,7 @@ export class TextLineSplitter implements BaseLineSplitter {
     startOffset = 0,
     entities: Entities
   ): Iterable<TextLine> {
-    let dx = 0;
+    const dx = 0;
     let line = new TextLine();
     this.widthCalculator.reset();
     this.resetLevels();
@@ -37,23 +37,24 @@ export class TextLineSplitter implements BaseLineSplitter {
         yield line;
         line = new TextLine();
         startOffset = ch === "\n" ? i + 1 : i;
-        dx = 0;
         this.widthCalculator.reset();
         this.resetLevels();
       }
       if (entities.startsAt(i)) {
         const _entities = entities.getAt(i);
         _entities.forEach((entity) => {
-          this.levelManager.update(entity);
+          this.levelManager.update(
+            entity,
+            this.widthCalculator.width,
+            this.widthCalculator.width +
+              this.entityLabels.getById(entity.label)!.width
+          );
         });
-        const _dx = this.calculateMaxDx(_entities);
-        this.widthCalculator.addWidth(_dx);
         _entities.forEach((e) => this.updateLevel(e));
         if (startOffset !== i) {
           line.addSpan(dx, startOffset, i);
         }
         startOffset = i;
-        dx = _dx;
       }
       this.widthCalculator.add(ch);
     }
@@ -73,32 +74,6 @@ export class TextLineSplitter implements BaseLineSplitter {
     const labelIds = _entities.map((e) => e.label);
     const maxLabelWidth = this.entityLabels.maxLabelWidth(labelIds);
     return this.widthCalculator.needsNewline(ch, maxLabelWidth);
-  }
-
-  private isOverlapping(entity: Entity): boolean {
-    const level = this.levelManager.fetchLevel(entity)!;
-    if (this.levels.has(level)) {
-      const x = this.widthCalculator.width;
-      const endX = this.levels.get(level)!;
-      return endX > x;
-    }
-    return false;
-  }
-
-  private calculateMaxDx(entities: Entity[]): number {
-    return Math.max(
-      ...entities
-        .filter((e) => this.isOverlapping(e))
-        .map((e) => this.calculateDx(e)),
-      0
-    );
-  }
-
-  private calculateDx(entity: Entity): number {
-    const level = this.levelManager.fetchLevel(entity)!;
-    const x = this.widthCalculator.width;
-    const endX = this.levels.get(level)!;
-    return endX - x;
   }
 
   private updateLevel(entity: Entity): void {

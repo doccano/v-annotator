@@ -21,14 +21,11 @@ export class EntityLineView {
     private entityLabels: EntityLabels,
     private textLine: TextLine,
     private font: Font
-  ) {
-    entities.forEach((entity) => {
-      this.levelManager.update(entity);
-    });
-  }
+  ) {}
 
   render(content: string): GeometricEntity[] {
     const geometricEntities: GeometricEntity[] = [];
+    this.levelManager.clear();
     for (let i = 0; i < this.entities.length; i++) {
       const entity = this.entities[i];
       const [x1, x2] = this.textLine.range(
@@ -36,6 +33,11 @@ export class EntityLineView {
         content,
         entity.startOffset,
         entity.endOffset
+      );
+      this.levelManager.update(
+        entity,
+        x1,
+        x1 + this.entityLabels.getById(entity.label)!.width
       );
       const entityLabel = this.entityLabels.getById(entity.label)!;
       const lineY = this.calculateLineY(entity);

@@ -158,15 +158,15 @@ export class LevelManager {
   private endOffsetPerLevel: Map<number, number> = new Map(); // <level, endOffset>
   private entityLevel: Map<number, number> = new Map(); // <entity.id, level>
 
-  update(entity: Entity): void {
-    for (const [level, endOffset] of this.endOffsetPerLevel) {
-      if (endOffset <= entity.startOffset) {
-        this.endOffsetPerLevel.set(level, entity.endOffset);
+  update(entity: Entity, x1: number, x2: number): void {
+    for (const [level, endPos] of this.endOffsetPerLevel) {
+      if (endPos <= x1) {
+        this.endOffsetPerLevel.set(level, x2);
         this.entityLevel.set(entity.id, level);
         return;
       }
     }
-    this.endOffsetPerLevel.set(this.endOffsetPerLevel.size, entity.endOffset);
+    this.endOffsetPerLevel.set(this.endOffsetPerLevel.size, x2);
     this.entityLevel.set(
       entity.id,
       Math.max(Math.max(...this.entityLevel.values()) + 1, 0)
