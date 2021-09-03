@@ -49,20 +49,10 @@ export class TextLine {
     startOffset: number,
     endOffset: number
   ): [number, number] {
-    const calcPosition = (start: number, end: number) =>
-      font.widthOf(content.substring(start, end)) + // sum of character width
-      this.spans // sum of dx
-        .filter((span) => span.startOffset <= end)
-        .reduce((p, span) => p + span.dx, 0);
     const s = Math.max(startOffset, this.startOffset);
     const e = Math.min(endOffset, this.endOffset);
-    const x1 = calcPosition(this.startOffset, s);
-    const x2 =
-      x1 +
-      font.widthOf(content.substring(s, e)) +
-      this.spans
-        .filter((span) => s < span.startOffset && span.startOffset < e)
-        .reduce((p, span) => p + span.dx, 0);
+    const x1 = font.widthOf(content.substring(this.startOffset, s));
+    const x2 = x1 + font.widthOf(content.substring(s, e));
     return [x1, x2];
   }
 }
