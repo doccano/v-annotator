@@ -1,7 +1,7 @@
 <template>
   <svg version="1.1" xmlns="http://www.w3.org/2000/svg">
     <g :transform="translate">
-      <line-text :spans="textLine.spans" :text="text" />
+      <line-text :text-line="textLine" :text="text" />
       <line-entity
         v-for="gEntity in geometricEntities"
         :key="gEntity.entity.id"

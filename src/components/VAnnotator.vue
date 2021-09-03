@@ -39,7 +39,7 @@ import { createFont } from "@/domain/models/View/fontFactory";
 import { createEntityLabels } from "../domain/models/Line/ShapeFactory";
 import { EntityLabels } from "@/domain/models/Line/Shape";
 import { TextWidthCalculator } from "../domain/models/Line/Strategy";
-import { TextLine, Span } from "@/domain/models/Line/TextLine";
+import { TextLine } from "@/domain/models/Line/TextLine";
 import { TextLines } from "@/domain/models/Line/Observer";
 import {
   BaseLineSplitter,
@@ -193,10 +193,11 @@ export default Vue.extend({
       let endOffset: number;
       try {
         const startLine = (
-          startElement as unknown as { annotatorElement: Span }
+          startElement as unknown as { annotatorElement: TextLine }
         ).annotatorElement;
-        const endLine = (endElement as unknown as { annotatorElement: Span })
-          .annotatorElement;
+        const endLine = (
+          endElement as unknown as { annotatorElement: TextLine }
+        ).annotatorElement;
         startOffset = startLine.startOffset + selection!.anchorOffset;
         endOffset = endLine.startOffset + selection!.focusOffset;
       } catch (e) {

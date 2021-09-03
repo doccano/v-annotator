@@ -1,36 +1,44 @@
 <template>
-  <text>
-    <tspan x="0">
-      <v-span
-        v-for="(span, index) in spans"
-        :key="index"
-        :span="span"
-        :text="text"
-      />
-    </tspan>
-  </text>
+  <text v-if="snippet" v-text="snippet" />
+  <text v-else style="font-size: 6px">⮐</text>
 </template>
 
 <script lang="ts">
-import { Span } from "@/domain/models/Line/TextLine";
+import { TextLine } from "@/domain/models/Line/TextLine";
 import Vue, { PropType } from "vue";
-import VSpan from "./VSpan.vue";
 
 export default Vue.extend({
-  components: {
-    VSpan,
-  },
-
   props: {
     text: {
       type: String,
       default: "",
       required: true,
     },
-    spans: {
-      type: [] as PropType<Span[]>,
-      default: [],
+    textLine: {
+      type: Object as PropType<TextLine>,
       required: true,
+    },
+  },
+
+  computed: {
+    snippet(): string {
+      return this.text.substring(
+        this.textLine.startOffset,
+        this.textLine.endOffset
+      );
+    },
+  },
+
+  watch: {
+    span: {
+      immediate: true,
+      handler() {
+        this.$nextTick(() => {
+          (
+            this.$el as unknown as { annotatorElement: TextLine }
+          ).annotatorElement = this.textLine;
+        });
+      },
     },
   },
 });
