@@ -1,12 +1,14 @@
 <template>
-  <svg version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <svg version="1.1" xmlns="http://www.w3.org/2000/svg" :direction="direction">
     <g :transform="translate">
-      <line-text :text-line="textLine" :text="text" />
+      <line-text :text-line="textLine" :text="text" :x="x" />
       <line-entity
         v-for="gEntity in geometricEntities"
         :key="gEntity.entity.id"
         :entity="gEntity"
         :has-text-label="hasTextLabel(gEntity.entity)"
+        :rtl="rtl"
+        :x="x"
         @click:entity="$emit('click:entity', $event)"
         @contextmenu:entity="$emit('contextmenu:entity', $event)"
       />
@@ -55,6 +57,14 @@ export default Vue.extend({
       type: Object as PropType<EntityLabels>,
       required: true,
     },
+    rtl: {
+      type: Boolean,
+      default: false,
+    },
+    x: {
+      type: Number,
+      default: 0,
+    },
   },
 
   data() {
@@ -75,6 +85,9 @@ export default Vue.extend({
         this.font
       );
       return view.render(this.text);
+    },
+    direction(): string {
+      return this.rtl ? "rtl" : "ltr";
     },
   },
 

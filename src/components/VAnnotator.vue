@@ -11,8 +11,10 @@
           "
           :entityLabels="entityLabels_"
           :font="font"
+          :rtl="rtl"
           :text="text"
           :textLine="item.textLine"
+          :x="x"
           :key="index"
           :style="{ height: item.size + 'px' }"
           @click:entity="clicked"
@@ -98,6 +100,10 @@ export default Vue.extend({
       default: false,
       required: false,
     },
+    rtl: {
+      type: Boolean,
+      default: false,
+    },
   },
 
   data() {
@@ -105,6 +111,7 @@ export default Vue.extend({
       font: null as Font | null,
       maxWidth: 0,
       entityLabels_: null as EntityLabels | null,
+      x: 0,
     };
   },
 
@@ -119,7 +126,9 @@ export default Vue.extend({
       this.entityLabels_ = createEntityLabels(tspanElement, labels);
     });
     window.addEventListener("resize", _.debounce(this.setMaxWidth, 500));
+    window.addEventListener("resize", _.debounce(this.setX, 500));
     this.setMaxWidth();
+    this.setX();
   },
 
   watch: {
@@ -177,6 +186,16 @@ export default Vue.extend({
       this.$nextTick(() => {
         const containerElement = document.getElementById("container")!;
         this.maxWidth = containerElement.clientWidth;
+      });
+    },
+    setX() {
+      this.$nextTick(() => {
+        if (this.rtl) {
+          const containerElement = document.getElementById("container")!;
+          this.x = containerElement.getBoundingClientRect().right - 8; // 8 is margin;
+        } else {
+          this.x = 0;
+        }
       });
     },
     open(): void {

@@ -4,6 +4,7 @@
       :text="text"
       :entities="JSON.stringify(entities)"
       :entity-labels="entityLabels"
+      :rtl="rtl"
       @add:entity="addEntity"
       @click:entity="updateEntity"
       @contextmenu:entity="deleteEntity"
@@ -26,9 +27,11 @@ export default Vue.extend({
   data() {
     return {
       id: 5,
-      text: "we must respect the will of the individual.\nTake it easy I can assure you that everything will turn out to be fine.\n".repeat(
-        10000
-      ),
+      text: "من ويكيبيديا، الموسوعة الحرة",
+      rtl: true,
+      // text: "we must respect the will of the individual.\nTake it easy I can assure you that everything will turn out to be fine.\n".repeat(
+      //   10000
+      // ),
       entities: [
         {
           id: 0,
@@ -37,34 +40,34 @@ export default Vue.extend({
           startOffset: 3,
           endOffset: 7,
         },
-        {
-          id: 4,
-          user: 0,
-          label: 0,
-          startOffset: 35,
-          endOffset: 46,
-        },
-        {
-          id: 1,
-          user: 0,
-          label: 1,
-          startOffset: 59,
-          endOffset: 62,
-        },
-        {
-          id: 2,
-          user: 0,
-          label: 0,
-          startOffset: 79,
-          endOffset: 89,
-        },
-        {
-          id: 3,
-          user: 0,
-          label: 1,
-          startOffset: 79,
-          endOffset: 94,
-        },
+        // {
+        //   id: 4,
+        //   user: 0,
+        //   label: 0,
+        //   startOffset: 35,
+        //   endOffset: 46,
+        // },
+        // {
+        //   id: 1,
+        //   user: 0,
+        //   label: 1,
+        //   startOffset: 59,
+        //   endOffset: 62,
+        // },
+        // {
+        //   id: 2,
+        //   user: 0,
+        //   label: 0,
+        //   startOffset: 79,
+        //   endOffset: 89,
+        // },
+        // {
+        //   id: 3,
+        //   user: 0,
+        //   label: 1,
+        //   startOffset: 79,
+        //   endOffset: 94,
+        // },
       ],
       entityLabels: [
         {
@@ -82,9 +85,9 @@ export default Vue.extend({
   },
 
   created() {
-    for (let i = 0; i < 10000; i++) {
-      this.addEntity(i * 10 + 100, i * 10 + 105);
-    }
+    // for (let i = 0; i < 10000; i++) {
+    //   this.addEntity(i * 10 + 100, i * 10 + 105);
+    // }
   },
 
   methods: {
