@@ -27,7 +27,7 @@ export default Vue.extend({
   data() {
     return {
       id: 5,
-      text: "من ويكيبيديا، الموسوعة الحرة",
+      text: "من ويكيبيديا، الموسوعة الحرة\nداستان SVG Tiny 1.2 طولا ني است.",
       rtl: true,
       // rtl: false,
       // text: "we must respect the will of the individual.\nTake it easy I can assure you that everything will turn out to be fine.\n".repeat(
