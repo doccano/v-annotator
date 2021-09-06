@@ -29,6 +29,7 @@ export default Vue.extend({
       id: 5,
       text: "من ويكيبيديا، الموسوعة الحرة",
       rtl: true,
+      // rtl: false,
       // text: "we must respect the will of the individual.\nTake it easy I can assure you that everything will turn out to be fine.\n".repeat(
       //   10000
       // ),

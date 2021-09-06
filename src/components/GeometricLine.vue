@@ -34,10 +34,12 @@ export default Vue.extend({
 
   computed: {
     _x1(): number {
-      return this.x1 + this.height / 2;
+      const x = this.x1 < this.x2 ? this.x1 : this.x2;
+      return x + this.height / 2;
     },
     _x2(): number {
-      return this.x2 - this.height / 2;
+      const x = this.x1 < this.x2 ? this.x2 : this.x1;
+      return x - this.height / 2;
     },
   },
 });

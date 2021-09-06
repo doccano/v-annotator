@@ -1,7 +1,12 @@
 <template>
   <svg version="1.1" xmlns="http://www.w3.org/2000/svg" :direction="direction">
     <g :transform="translate">
-      <line-text :text-line="textLine" :text="text" :x="x" />
+      <line-text
+        :id="textLine.startOffset"
+        :text-line="textLine"
+        :text="text"
+        :x="x"
+      />
       <line-entity
         v-for="gEntity in geometricEntities"
         :key="gEntity.entity.id"
@@ -70,7 +75,13 @@ export default Vue.extend({
   data() {
     return {
       height: 0,
+      element: null as SVGTextElement | null,
     };
+  },
+
+  mounted() {
+    const id = this.textLine.startOffset.toString();
+    this.element = document.getElementById(id) as unknown as SVGTextElement;
   },
 
   computed: {
@@ -78,13 +89,17 @@ export default Vue.extend({
       return `translate(0, ${this.font.lineHeight})`;
     },
     geometricEntities(): GeometricEntity[] {
-      const view = new EntityLineView(
-        this.entities,
-        this.entityLabels,
-        this.textLine,
-        this.font
-      );
-      return view.render(this.text);
+      if (this.element) {
+        const view = new EntityLineView(
+          this.entities,
+          this.entityLabels,
+          this.textLine,
+          this.font
+        );
+        return view.render(this.element);
+      } else {
+        return [];
+      }
     },
     direction(): string {
       return this.rtl ? "rtl" : "ltr";

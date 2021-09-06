@@ -13,6 +13,7 @@
       :y="entity.textY"
       :dx="dx"
       :color="entity.entityLabel.color"
+      :rtl="rtl"
       :text="entity.entityLabel.text"
       @click:entity="$emit('click:entity', entity.entity)"
       @contextmenu:entity="$emit('contextmenu:entity', entity.entity)"
@@ -51,10 +52,6 @@ export default Vue.extend({
     },
   },
 
-  created() {
-    console.log(this.x1, this.x2, this.x2 - this.x1)
-  },
-
   computed: {
     x1(): number {
       return this.rtl ? this.x - this.entity.x1 : this.entity.x1;
@@ -63,7 +60,11 @@ export default Vue.extend({
       return this.rtl ? this.x - this.entity.x2 : this.entity.x2;
     },
     dx(): number {
-      return this.rtl ? 0 : this.entity.entityLabel.marginLeft;
+      if (this.rtl) {
+        return -this.entity.entityLabel.marginLeft;
+      } else {
+        return this.entity.entityLabel.marginLeft;
+      }
     },
   },
 });

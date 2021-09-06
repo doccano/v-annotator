@@ -38,11 +38,15 @@ export default Vue.extend({
       type: String,
       required: true,
     },
+    rtl: {
+      type: Boolean,
+      default: false,
+    },
   },
 
   computed: {
     cx(): number {
-      return this.x + this.r;
+      return this.rtl ? this.x - this.r : this.x + this.r;
     },
   },
 });

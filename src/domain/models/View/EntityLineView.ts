@@ -23,14 +23,13 @@ export class EntityLineView {
     private font: Font
   ) {}
 
-  render(content: string): GeometricEntity[] {
+  render(element: SVGTextElement): GeometricEntity[] {
     const geometricEntities: GeometricEntity[] = [];
     this.levelManager.clear();
     for (let i = 0; i < this.entities.length; i++) {
       const entity = this.entities[i];
       const [x1, x2] = this.textLine.range(
-        this.font,
-        content,
+        element,
         entity.startOffset,
         entity.endOffset
       );
