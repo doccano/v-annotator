@@ -31,7 +31,7 @@ export function createFont(text: string, container: HTMLElement): Font {
   const fontFamily = window.getComputedStyle(tspanElement).fontFamily;
   const fontWeight = window.getComputedStyle(tspanElement).fontWeight;
   const lineHeight = tspanElement.getBoundingClientRect().height;
-  tspanElement.remove();
+  svgElement.remove();
   return new Font(fontSize, fontFamily, fontWeight, lineHeight, width);
 }
 
@@ -41,5 +41,6 @@ export function widthOf(text: string, tspanElement: SVGTSpanElement): number {
   for (let i = 0; i < text.length; i++) {
     width += tspanElement.getExtentOfChar(i).width;
   }
+  tspanElement.textContent = "";
   return width;
 }
