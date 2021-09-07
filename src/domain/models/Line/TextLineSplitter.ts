@@ -14,6 +14,7 @@ export interface BaseLineSplitter {
 export class TextLineSplitter implements BaseLineSplitter {
   private levels: Map<number, number> = new Map();
   private levelManager = new LevelManager();
+  private chunkWidth: Map<number, number> = new Map();
   constructor(
     private widthCalculator: WidthCalculator,
     private entityLabels: EntityLabels
@@ -24,6 +25,7 @@ export class TextLineSplitter implements BaseLineSplitter {
     startOffset = 0,
     entities: Entities
   ): Iterable<TextLine> {
+    this.calculateChunkWidth(text);
     this.widthCalculator.reset();
     this.resetLevels();
 
@@ -58,15 +60,48 @@ export class TextLineSplitter implements BaseLineSplitter {
     }
   }
 
+  private calculateChunkWidth(text: string): void {
+    let isInsideWord = false;
+    let start = 0;
+    this.widthCalculator.reset();
+    for (let i = 0; i < text.length; i++) {
+      const ch = text[i];
+      if (!isInsideWord && ch !== " ") {
+        // word starts
+        isInsideWord = true;
+        start = i;
+        this.widthCalculator.add(ch);
+      } else if (!isInsideWord && ch === " ") {
+        // space is continuous.
+      } else if (isInsideWord && ch !== " ") {
+        this.widthCalculator.add(ch);
+      } else if (isInsideWord && ch === " ") {
+        isInsideWord = false;
+        this.chunkWidth.set(start, this.widthCalculator.width);
+        this.widthCalculator.reset();
+      }
+    }
+    if (isInsideWord) {
+      this.chunkWidth.set(start, this.widthCalculator.width);
+    }
+  }
+
   private needsNewline(i: number, ch: string, entities: Entities): boolean {
+    // check whether the word exceeds the maxWidth
+    const wordWidth = this.chunkWidth.get(i) || 0;
+    if (this.widthCalculator.needsNewline(ch, wordWidth)) {
+      return true;
+    }
+
+    // check whether the label exceeds the maxWidth
     const _entities = entities.getAt(i);
-    // For performance.
     if (_entities.length === 0) {
       return this.widthCalculator.needsNewline(ch, 0);
+    } else {
+      const labelIds = _entities.map((e) => e.label);
+      const maxLabelWidth = this.entityLabels.maxLabelWidth(labelIds);
+      return this.widthCalculator.needsNewline(ch, maxLabelWidth);
     }
-    const labelIds = _entities.map((e) => e.label);
-    const maxLabelWidth = this.entityLabels.maxLabelWidth(labelIds);
-    return this.widthCalculator.needsNewline(ch, maxLabelWidth);
   }
 
   private updateLevel(entity: Entity): void {
