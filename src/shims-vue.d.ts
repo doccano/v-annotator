@@ -4,3 +4,4 @@ declare module "*.vue" {
 }
 declare module "lodash";
 declare module "vue-virtual-scroller";
+declare module "unicode-bidirectional";

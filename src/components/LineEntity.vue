@@ -1,15 +1,17 @@
 <template>
   <g>
     <geometric-line
-      :x1="x1"
-      :x2="x2"
+      v-for="(range, index) in entity.ranges"
+      :key="index"
+      :x1="x1(range[0])"
+      :x2="x2(range[1])"
       :y="entity.lineY"
       :color="entity.entityLabel.color"
     />
     <geometric-label-text
       v-if="hasTextLabel"
       :r="entity.entityLabel.circle.radius"
-      :x="x1"
+      :x="x1(entity.ranges[0][0])"
       :y="entity.textY"
       :dx="dx"
       :color="entity.entityLabel.color"
@@ -53,18 +55,21 @@ export default Vue.extend({
   },
 
   computed: {
-    x1(): number {
-      return this.rtl ? this.x - this.entity.x1 : this.entity.x1;
-    },
-    x2(): number {
-      return this.rtl ? this.x - this.entity.x2 : this.entity.x2;
-    },
     dx(): number {
       if (this.rtl) {
         return -this.entity.entityLabel.marginLeft;
       } else {
         return this.entity.entityLabel.marginLeft;
       }
+    },
+  },
+
+  methods: {
+    x1(x: number): number {
+      return this.rtl ? this.x - x : x;
+    },
+    x2(x: number): number {
+      return this.rtl ? this.x - x : x;
     },
   },
 });

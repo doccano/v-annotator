@@ -12,6 +12,7 @@
     "@flatten-js/interval-tree": "^1.0.14",
     "core-js": "^3.6.5",
     "lodash": "^4.17.21",
+    "unicode-bidirectional": "^2.0.5",
     "vue": "^2.6.11",
     "vue-virtual-scroller": "^1.0.10"
   },
