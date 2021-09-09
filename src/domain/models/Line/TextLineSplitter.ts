@@ -25,7 +25,7 @@ export class TextLineSplitter implements BaseLineSplitter {
     startOffset = 0,
     entities: Entities
   ): Iterable<TextLine> {
-    this.calculateChunkWidth(text);
+    // this.calculateChunkWidth(text);
     this.widthCalculator.reset();
     this.resetLevels();
 
@@ -88,10 +88,10 @@ export class TextLineSplitter implements BaseLineSplitter {
 
   private needsNewline(i: number, ch: string, entities: Entities): boolean {
     // check whether the word exceeds the maxWidth
-    const wordWidth = this.chunkWidth.get(i) || 0;
-    if (this.widthCalculator.needsNewline(ch, wordWidth)) {
-      return true;
-    }
+    // const wordWidth = this.chunkWidth.get(i) || 0;
+    // if (this.widthCalculator.needsNewline(ch, wordWidth)) {
+    //   return true;
+    // }
 
     // check whether the label exceeds the maxWidth
     const _entities = entities.getAt(i);
