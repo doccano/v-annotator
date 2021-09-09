@@ -117,8 +117,6 @@ export default Vue.extend({
 
   mounted() {
     this.$nextTick(() => {
-      const containerElement = document.getElementById("container")!;
-      this.font = createFont(this.text, containerElement);
       const tspanElement = document.getElementById(
         "textWidth"
       )! as unknown as SVGTSpanElement;
@@ -135,6 +133,10 @@ export default Vue.extend({
     text: {
       handler() {
         textLines.updateText(this.text);
+        this.$nextTick(() => {
+          const containerElement = document.getElementById("container")!;
+          this.font = createFont(this.text, containerElement);
+        });
       },
       immediate: true,
     },

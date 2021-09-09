@@ -19,6 +19,7 @@ export class TextLines implements EntityObserver {
 
   updateText(text: string): void {
     this.text = text;
+    this.lines = [];
   }
 
   updateSplitter(splitter: BaseLineSplitter): void {
