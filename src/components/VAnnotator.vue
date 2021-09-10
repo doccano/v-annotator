@@ -1,6 +1,6 @@
 <template>
   <div id="container" @click="open">
-    <RecycleScroller page-mode class="scroller" :items="lines">
+    <RecycleScroller page-mode class="scroller" :items="items">
       <template v-slot="{ item, index }">
         <v-line
           :entities="
@@ -16,7 +16,6 @@
           :textLine="item.textLine"
           :x="x"
           :key="index"
-          :style="{ height: item.size + 'px' }"
           @click:entity="clicked"
           @contextmenu:entity="$emit('contextmenu:entity', $event)"
         />
@@ -124,9 +123,7 @@ export default Vue.extend({
       this.entityLabels_ = createEntityLabels(tspanElement, labels);
     });
     window.addEventListener("resize", _.debounce(this.setMaxWidth, 500));
-    window.addEventListener("resize", _.debounce(this.setX, 500));
     this.setMaxWidth();
-    this.setX();
   },
 
   watch: {
@@ -143,7 +140,7 @@ export default Vue.extend({
   },
 
   computed: {
-    lines(): GeometricLine[] {
+    items(): GeometricLine[] {
       if (!this.font || !this.entityLabels_) {
         return [];
       }
@@ -188,16 +185,9 @@ export default Vue.extend({
       this.$nextTick(() => {
         const containerElement = document.getElementById("container")!;
         this.maxWidth = containerElement.clientWidth;
-      });
-    },
-    setX() {
-      this.$nextTick(() => {
-        if (this.rtl) {
-          const containerElement = document.getElementById("container")!;
-          this.x = containerElement.getBoundingClientRect().right - 8; // 8 is margin;
-        } else {
-          this.x = 0;
-        }
+        this.x = this.rtl
+          ? 0
+          : containerElement.getBoundingClientRect().right - 8; // 8 is margin
       });
     },
     open(): void {
