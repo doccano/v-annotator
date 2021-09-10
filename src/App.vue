@@ -1,6 +1,7 @@
 <template>
   <div id="app">
     <button @click="changeText">Change text</button>
+    <button @click="resetEntity">Reset entity</button>
     <v-annotator
       :text="text"
       :entities="JSON.stringify(entities)"
@@ -87,9 +88,9 @@ export default Vue.extend({
   },
 
   created() {
-    // for (let i = 0; i < 10000; i++) {
-    //   this.addEntity(i * 10 + 100, i * 10 + 105);
-    // }
+    for (let i = 0; i < 10000; i++) {
+      this.addEntity(i * 10 + 100, i * 10 + 105);
+    }
   },
 
   methods: {
@@ -111,6 +112,9 @@ export default Vue.extend({
     },
     changeText() {
       this.text = "The president Obama came to Japan.";
+      this.entities = [];
+    },
+    resetEntity() {
       this.entities = [];
     },
   },

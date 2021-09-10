@@ -9,8 +9,6 @@ const marginTop = 5;
 
 export interface GeometricEntity {
   entity: Entity;
-  // x1: number;
-  // x2: number;
   ranges: [number, number][];
   lineY: number;
   textY: number;
@@ -31,7 +29,10 @@ function createPermutation(text: string, rtl = false): number[] {
 }
 
 function calculateWidth(element: SVGTextElement): number[] {
-  const widths = [];
+  const widths: number[] = [];
+  if (element.textLength.baseVal.value === 0) {
+    return widths;
+  }
   for (let i = 0; i < element.textContent!.length; i++) {
     widths.push(element.getExtentOfChar(i).width);
   }
@@ -70,18 +71,15 @@ export class EntityLineView {
         logicalWidth,
         visualWidth
       );
-      const [x1, x2] = this.textLine.range(
-        element,
-        entity.startOffset,
-        entity.endOffset
-      );
-      this.levelManager.update(
-        entity,
-        x1,
-        entity.startOffset < this.textLine.startOffset // entity continue from the previous line
-          ? x2
-          : x1 + this.entityLabels.getById(entity.label)!.width
-      );
+      for (const [x1, x2] of ranges) {
+        this.levelManager.update(
+          entity,
+          x1,
+          entity.startOffset < this.textLine.startOffset // entity continue from the previous line
+            ? x2
+            : x1 + this.entityLabels.getById(entity.label)!.width
+        );
+      }
       const entityLabel = this.entityLabels.getById(entity.label)!;
       const lineY = this.calculateLineY(entity);
       const textY = lineY + this.font.fontSize / 2 + marginTop;
