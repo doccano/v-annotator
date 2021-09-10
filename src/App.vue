@@ -36,13 +36,13 @@ export default Vue.extend({
         10000
       ),
       entities: [
-        {
-          id: 0,
-          user: 0,
-          label: 0,
-          startOffset: 3,
-          endOffset: 7,
-        },
+        // {
+        //   id: 0,
+        //   user: 0,
+        //   label: 0,
+        //   startOffset: 3,
+        //   endOffset: 7,
+        // },
         // {
         //   id: 4,
         //   user: 0,
@@ -88,9 +88,9 @@ export default Vue.extend({
   },
 
   created() {
-    for (let i = 0; i < 10000; i++) {
-      this.addEntity(i * 10 + 100, i * 10 + 105);
-    }
+    // for (let i = 0; i < 10000; i++) {
+    //   this.addEntity(i * 10 + 100, i * 10 + 105);
+    // }
   },
 
   methods: {

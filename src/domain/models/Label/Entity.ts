@@ -26,7 +26,7 @@ export abstract class EntitySubject {
     this.observers.push(observer);
   }
 
-  notify(entities: Entities, hint: EntityObserverHint): void {
+  notify(entities: Entities, hint?: EntityObserverHint): void {
     for (const observer of this.observers) {
       observer.update(entities, hint);
     }
@@ -127,6 +127,10 @@ export class Entities extends EntitySubject {
         this.add(entity);
         this.notify(this, { entity, mode: "add" });
       }
+    }
+
+    if (oldEntities.length === 0 && others.length === 0) {
+      this.notify(this);
     }
   }
 

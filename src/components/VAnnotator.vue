@@ -142,6 +142,7 @@ export default Vue.extend({
           size: this.getHeight(lines[i]),
         });
       }
+      console.log(geometricLines)
       return geometricLines;
     },
     _entities(): Entities {
@@ -170,7 +171,7 @@ export default Vue.extend({
       this.$nextTick(() => {
         const containerElement = document.getElementById("container")!;
         this.maxWidth = containerElement.clientWidth;
-        this.x = this.rtl
+        this.x = !this.rtl
           ? 0
           : containerElement.getBoundingClientRect().right - 8; // 8 is margin
       });

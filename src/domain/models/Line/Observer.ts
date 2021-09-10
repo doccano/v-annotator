@@ -10,7 +10,7 @@ export interface EntityObserverHint {
 }
 
 export interface EntityObserver {
-  update(entities: Entities, hint: EntityObserverHint): void;
+  update(entities: Entities, hint?: EntityObserverHint): void;
 }
 
 export class TextLines implements EntityObserver {
