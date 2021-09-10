@@ -74,27 +74,12 @@ export default Vue.extend({
       default: () => [],
       required: true,
     },
-    relations: {
-      type: Array,
-      default: () => [],
-      required: false,
-    },
     entityLabels: {
       type: Array as PropType<Label[]>,
       default: () => [],
       required: true,
     },
-    relationLabels: {
-      type: Array,
-      default: () => [],
-      required: false,
-    },
     allowOverlapping: {
-      type: Boolean,
-      default: false,
-      required: false,
-    },
-    allowMultipleRelation: {
       type: Boolean,
       default: false,
       required: false,
