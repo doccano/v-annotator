@@ -30,13 +30,14 @@ function createPermutation(text: string, rtl = false): number[] {
 
 function calculateWidth(element: SVGTextElement): number[] {
   const widths: number[] = [];
-  if (element.textLength.baseVal.value === 0) {
-    return widths;
-  }
   for (let i = 0; i < element.textContent!.length; i++) {
     widths.push(element.getExtentOfChar(i).width);
   }
   return widths;
+}
+
+function elementExists(element: SVGTextElement): boolean {
+  return element.textLength.baseVal.value !== 0;
 }
 
 export class EntityLineView {
@@ -49,6 +50,9 @@ export class EntityLineView {
   ) {}
 
   render(element: SVGTextElement, rtl = false): GeometricEntity[] {
+    if (!elementExists(element)) {
+      return [];
+    }
     const geometricEntities: GeometricEntity[] = [];
     this.levelManager.clear();
     const permutation = createPermutation(element.textContent!, rtl);
