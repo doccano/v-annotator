@@ -129,7 +129,7 @@ export class Entities extends EntitySubject {
       }
     }
 
-    if (oldEntities.length === 0 && others.length === 0) {
+    if (oldEntities.length === others.length) {
       this.notify(this);
     }
   }

@@ -45,6 +45,10 @@ export class TextLines implements EntityObserver {
     return this.lines;
   }
 
+  reset(): void {
+    this.lines = [];
+  }
+
   private findByEntity(entity: Entity): number {
     const i = _.sortedIndexBy(this.lines, entity, "startOffset");
     if (i === 0) {

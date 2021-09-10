@@ -122,6 +122,9 @@ export default Vue.extend({
       },
       immediate: true,
     },
+    maxWidth() {
+      textLines.reset();
+    }
   },
 
   computed: {
@@ -142,7 +145,6 @@ export default Vue.extend({
           size: this.getHeight(lines[i]),
         });
       }
-      console.log(geometricLines)
       return geometricLines;
     },
     _entities(): Entities {
