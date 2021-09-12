@@ -4,12 +4,12 @@
       <template v-slot="{ item, index }">
         <v-line
           :entities="
-            _entities.filterByRange(
+            entityList.filterByRange(
               item.textLine.startOffset,
               item.textLine.endOffset
             )
           "
-          :entityLabels="entityLabels_"
+          :entityLabels="entityLabelList"
           :font="font"
           :rtl="rtl"
           :text="text"
@@ -22,7 +22,7 @@
       </template>
     </RecycleScroller>
     <svg version="1.1" xmlns="http://www.w3.org/2000/svg">
-      <text><tspan id="textWidth" /></text>
+      <text id="text" />
     </svg>
   </div>
 </template>
@@ -47,7 +47,7 @@ import {
   TextLineSplitter,
 } from "@/domain/models/Line/TextLineSplitter";
 
-interface GeometricLine {
+interface ViewLine {
   id: string;
   textLine: TextLine;
   size: number;
@@ -94,19 +94,15 @@ export default Vue.extend({
     return {
       font: null as Font | null,
       maxWidth: 0,
-      entityLabels_: null as EntityLabels | null,
       x: 0,
+      textElement: null as SVGTextElement | null,
     };
   },
 
   mounted() {
-    this.$nextTick(() => {
-      const tspanElement = document.getElementById(
-        "textWidth"
-      )! as unknown as SVGTSpanElement;
-      const labels = Labels.valueOf(this.entityLabels);
-      this.entityLabels_ = createEntityLabels(tspanElement, labels);
-    });
+    this.textElement = document.getElementById(
+      "text"
+    ) as unknown as SVGTextElement;
     window.addEventListener("resize", _.debounce(this.setMaxWidth, 500));
     this.setMaxWidth();
   },
@@ -116,38 +112,45 @@ export default Vue.extend({
       handler() {
         textLines.updateText(this.text);
         this.$nextTick(() => {
-          const containerElement = document.getElementById("container")!;
-          this.font = createFont(this.text, containerElement);
+          this.font = createFont(this.text, this.textElement!);
         });
       },
       immediate: true,
     },
     maxWidth() {
       textLines.reset();
-    }
+    },
   },
 
   computed: {
-    items(): GeometricLine[] {
-      if (!this.font || !this.entityLabels_) {
+    entityLabelList(): EntityLabels | null {
+      if (this.textElement) {
+        const labels = Labels.valueOf(this.entityLabels);
+        return createEntityLabels(this.textElement, labels);
+      } else {
+        return null;
+      }
+    },
+    items(): ViewLine[] {
+      if (!this.font || !this.entityLabelList) {
         return [];
       }
       const calculator = new TextWidthCalculator(this.font, this.maxWidth);
-      const splitter = new TextLineSplitter(calculator, this.entityLabels_);
-      const geometricLines: GeometricLine[] = [];
+      const splitter = new TextLineSplitter(calculator, this.entityLabelList);
+      const viewLines: ViewLine[] = [];
       textLines.updateSplitter(splitter);
-      entityList.update(this._entities.list());
+      entityList.update(this.entityList.list());
       const lines = textLines.list();
       for (let i = 0; i < lines.length; i++) {
-        geometricLines.push({
+        viewLines.push({
           id: `${lines[i].startOffset}:${lines[i].endOffset}:${lines[i].level}`,
           textLine: lines[i],
           size: this.getHeight(lines[i]),
         });
       }
-      return geometricLines;
+      return viewLines;
     },
-    _entities(): Entities {
+    entityList(): Entities {
       return Entities.valueOf(JSON.parse(this.entities as string));
     },
   },
