@@ -43,3 +43,9 @@ export default Vue.extend({
   },
 });
 </script>
+
+<style scoped>
+text {
+  white-space: pre;
+}
+</style>
