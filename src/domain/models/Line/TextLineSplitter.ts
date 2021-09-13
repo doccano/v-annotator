@@ -65,6 +65,10 @@ export class TextLineSplitter implements BaseLineSplitter {
     this.chunkWidth.clear();
   }
 
+  private isWhitespace(ch: string): boolean {
+    return /^\s$/.test(ch);
+  }
+
   private calculateChunkWidth(text: string): void {
     if (this.chunkWidth.size > 0) return;
     let isInsideWord = false;
@@ -72,16 +76,16 @@ export class TextLineSplitter implements BaseLineSplitter {
     this.widthManager.reset();
     for (let i = 0; i < text.length; i++) {
       const ch = text[i];
-      if (!isInsideWord && ch !== " ") {
+      if (!isInsideWord && !this.isWhitespace(ch)) {
         // word starts
         isInsideWord = true;
         start = i;
         this.widthManager.add(ch);
-      } else if (!isInsideWord && ch === " ") {
+      } else if (!isInsideWord && this.isWhitespace(ch)) {
         // space is continuous.
-      } else if (isInsideWord && ch !== " ") {
+      } else if (isInsideWord && !this.isWhitespace(ch)) {
         this.widthManager.add(ch);
-      } else if (isInsideWord && ch === " ") {
+      } else if (isInsideWord && this.isWhitespace(ch)) {
         isInsideWord = false;
         this.chunkWidth.set(start, this.widthManager.width);
         this.widthManager.reset();

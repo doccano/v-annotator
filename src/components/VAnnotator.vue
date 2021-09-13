@@ -42,10 +42,7 @@ import { EntityLabels } from "@/domain/models/Line/Shape";
 import { LineWidthManager } from "../domain/models/Line/WidthManager";
 import { TextLine } from "@/domain/models/Line/TextLine";
 import { TextLines } from "@/domain/models/Line/Observer";
-import {
-  BaseLineSplitter,
-  TextLineSplitter,
-} from "@/domain/models/Line/TextLineSplitter";
+import { TextLineSplitter } from "@/domain/models/Line/TextLineSplitter";
 
 interface ViewLine {
   id: string;
