@@ -29,14 +29,21 @@ export class TextLineSplitter implements BaseLineSplitter {
     this.calculateChunkWidth(text);
     this.widthManager.reset();
     this.resetLevels();
-
-    for (let i = startOffset; i < text.length; i++) {
+    let i = startOffset;
+    while (i < text.length) {
       const ch = text[i];
       if (this.needsNewline(i, ch, entities)) {
         const line = new TextLine(startOffset, i);
         line.level = this.levelManager.maxLevel;
         yield line;
-        startOffset = ch === "\n" ? i + 1 : i;
+        if (this.isCRLF(text.substr(i, 2))) {
+          startOffset = i + 2;
+          i++;
+        } else if (this.isLF(ch) || this.isCR(ch)) {
+          startOffset = i + 1;
+        } else {
+          startOffset = i;
+        }
         this.widthManager.reset();
         this.resetLevels();
       }
@@ -53,6 +60,7 @@ export class TextLineSplitter implements BaseLineSplitter {
         _entities.forEach((e) => this.updateLevel(e));
       }
       this.widthManager.add(ch);
+      i++;
     }
     if (!this.widthManager.isEmpty()) {
       const line = new TextLine(startOffset, text.length);
@@ -67,6 +75,18 @@ export class TextLineSplitter implements BaseLineSplitter {
 
   private isWhitespace(ch: string): boolean {
     return /^\s$/.test(ch);
+  }
+
+  private isLF(ch: string): boolean {
+    return ch === "\n";
+  }
+
+  private isCR(ch: string): boolean {
+    return ch === "\r";
+  }
+
+  private isCRLF(text: string): boolean {
+    return text === "\r\n";
   }
 
   private calculateChunkWidth(text: string): void {
@@ -97,7 +117,7 @@ export class TextLineSplitter implements BaseLineSplitter {
   }
 
   private needsNewline(i: number, ch: string, entities: Entities): boolean {
-    if (ch === "\n") {
+    if (this.isLF(ch) || this.isCR(ch)) {
       return true;
     }
     // check whether the word exceeds the maxWidth
