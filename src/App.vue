@@ -34,7 +34,7 @@ export default Vue.extend({
       // rtl: true,
       rtl: false,
       text: "we must respect the will of the individual.\nTake it easy I can assure you that everything will turn out to be fine.\n".repeat(
-        10000
+        10 //000
       ),
       entities: [
         {
@@ -89,9 +89,9 @@ export default Vue.extend({
   },
 
   created() {
-    for (let i = 0; i < 10000; i++) {
-      this.addEntity(i * 10 + 100, i * 10 + 105);
-    }
+    // for (let i = 0; i < 10000; i++) {
+    //   this.addEntity(i * 10 + 100, i * 10 + 105);
+    // }
   },
 
   methods: {

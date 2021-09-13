@@ -53,7 +53,7 @@ export class TextLineSplitter implements BaseLineSplitter {
       }
       this.widthManager.add(ch);
     }
-    if (this.widthManager.remains()) {
+    if (!this.widthManager.isEmpty()) {
       const line = new TextLine(startOffset, text.length);
       line.level = this.levelManager.maxLevel;
       yield line;
@@ -87,6 +87,9 @@ export class TextLineSplitter implements BaseLineSplitter {
   }
 
   private needsNewline(i: number, ch: string, entities: Entities): boolean {
+    if (ch === "\n") {
+      return true;
+    }
     // check whether the word exceeds the maxWidth
     // const wordWidth = this.chunkWidth.get(i) || 0;
     // if (this.widthManager.needsNewline(ch, wordWidth)) {
@@ -96,11 +99,11 @@ export class TextLineSplitter implements BaseLineSplitter {
     // check whether the label exceeds the maxWidth
     const _entities = entities.getAt(i);
     if (_entities.length === 0) {
-      return this.widthManager.needsNewline(ch, 0);
+      return this.widthManager.isFull(0);
     } else {
       const labelIds = _entities.map((e) => e.label);
       const maxLabelWidth = this.entityLabels.maxLabelWidth(labelIds);
-      return this.widthManager.needsNewline(ch, maxLabelWidth);
+      return this.widthManager.isFull(maxLabelWidth);
     }
   }
 

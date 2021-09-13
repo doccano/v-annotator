@@ -1,45 +1,34 @@
 import { Font } from "./Font";
 export interface WidthManager {
   width: number;
-  calculateWidth(ch: string): number;
   add(ch: string): void;
-  addWidth(width: number): void;
   reset(): void;
-  needsNewline(ch: string, maxLabelWidth: number): boolean;
-  remains(): boolean;
+  isFull(wordOrLabelWidth: number): boolean;
+  isEmpty(): boolean;
 }
 
 export class LineWidthManager implements WidthManager {
-  private accumulatedWidth = 0;
-  constructor(private font: Font, private maxWidth: number) {}
+  private totalWidth = 0;
+
+  constructor(private font: Font, private maxLineWidth: number) {}
 
   get width(): number {
-    return this.accumulatedWidth;
-  }
-
-  calculateWidth(ch: string): number {
-    return this.font.widthOfChar(ch);
+    return this.totalWidth;
   }
 
   add(ch: string): void {
-    this.accumulatedWidth += this.calculateWidth(ch);
-  }
-
-  addWidth(width: number): void {
-    this.accumulatedWidth += width;
+    this.totalWidth += this.font.widthOfChar(ch);
   }
 
   reset(): void {
-    this.accumulatedWidth = 0;
+    this.totalWidth = 0;
   }
 
-  needsNewline(ch: string, maxLabelWidth = 0): boolean {
-    return (
-      this.accumulatedWidth + maxLabelWidth >= this.maxWidth || ch === "\n"
-    );
+  isFull(wordOrLabelWidth = 0): boolean {
+    return this.maxLineWidth <= this.totalWidth + wordOrLabelWidth;
   }
 
-  remains(): boolean {
-    return this.accumulatedWidth > 0;
+  isEmpty(): boolean {
+    return this.totalWidth === 0;
   }
 }
