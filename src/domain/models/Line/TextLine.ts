@@ -11,11 +11,10 @@ export class TextLine {
   }
 
   equal(line: TextLine): boolean {
-    if (line.level !== this.level) {
-      return false;
-    }
     return (
-      line.startOffset === this.startOffset && line.endOffset === this.endOffset
+      this.level === line.level &&
+      this.startOffset === line.startOffset &&
+      this.endOffset === line.endOffset
     );
   }
 }
