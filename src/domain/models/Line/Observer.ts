@@ -15,11 +15,12 @@ export interface EntityObserver {
 
 export class TextLines implements EntityObserver {
   private lines: TextLine[] = [];
-  constructor(private text: string = "", private splitter: BaseLineSplitter) {}
+  constructor(private text: string = "", private splitter?: BaseLineSplitter) {}
 
   updateText(text: string): void {
     this.text = text;
     this.lines = [];
+    this.splitter?.reset();
   }
 
   updateSplitter(splitter: BaseLineSplitter): void {
@@ -29,7 +30,7 @@ export class TextLines implements EntityObserver {
   update(entities: Entities, hint?: EntityObserverHint): void {
     const updatedLines = [];
     const startOffset = hint ? this.findByEntity(hint.entity) : 0;
-    const lines = this.splitter.split(this.text, startOffset, entities);
+    const lines = this.splitter!.split(this.text, startOffset, entities);
     for (const line of lines) {
       if (this.meetStopCriteria(line)) {
         break;

@@ -53,7 +53,7 @@ interface ViewLine {
   size: number;
 }
 
-const textLines = new TextLines("", {} as BaseLineSplitter);
+const textLines = new TextLines("");
 const entityList = new Entities([]);
 entityList.register(textLines);
 

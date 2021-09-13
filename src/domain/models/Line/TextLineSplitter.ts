@@ -9,6 +9,7 @@ export interface BaseLineSplitter {
     startOffset: number,
     entities?: Entities
   ): Iterable<TextLine>;
+  reset(): void;
 }
 
 export class TextLineSplitter implements BaseLineSplitter {
@@ -25,7 +26,7 @@ export class TextLineSplitter implements BaseLineSplitter {
     startOffset = 0,
     entities: Entities
   ): Iterable<TextLine> {
-    // this.calculateChunkWidth(text);
+    this.calculateChunkWidth(text);
     this.widthManager.reset();
     this.resetLevels();
 
@@ -60,7 +61,12 @@ export class TextLineSplitter implements BaseLineSplitter {
     }
   }
 
+  reset(): void {
+    this.chunkWidth.clear();
+  }
+
   private calculateChunkWidth(text: string): void {
+    if (this.chunkWidth.size > 0) return;
     let isInsideWord = false;
     let start = 0;
     this.widthManager.reset();
@@ -91,10 +97,10 @@ export class TextLineSplitter implements BaseLineSplitter {
       return true;
     }
     // check whether the word exceeds the maxWidth
-    // const wordWidth = this.chunkWidth.get(i) || 0;
-    // if (this.widthManager.needsNewline(ch, wordWidth)) {
-    //   return true;
-    // }
+    const wordWidth = this.chunkWidth.get(i) || 0;
+    if (this.widthManager.isFull(wordWidth)) {
+      return true;
+    }
 
     // check whether the label exceeds the maxWidth
     const _entities = entities.getAt(i);
