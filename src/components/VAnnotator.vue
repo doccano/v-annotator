@@ -211,6 +211,12 @@ export default Vue.extend({
       if (startOffset >= endOffset) {
         return;
       }
+      if (!this.allowOverlapping) {
+        const entities = this.entityList.filterByRange(startOffset, endOffset);
+        if (entities.length > 0) {
+          return;
+        }
+      }
       this.$emit("add:entity", startOffset, endOffset);
       selection?.removeAllRanges();
     },
