@@ -1,7 +1,7 @@
-import { TextWidthCalculator } from "@/domain/models/Line/Strategy";
+import { LineWidthManager } from "@/domain/models/Line/WidthManager";
 import { Font } from "@/domain/models/Line/Font";
 
-let calculator: TextWidthCalculator;
+let calculator: LineWidthManager;
 const maxWidth = 3;
 
 beforeEach(() => {
@@ -11,7 +11,7 @@ beforeEach(() => {
     width.set(ch, 1);
   }
   const font = new Font(0, "0", "0", 0, width);
-  calculator = new TextWidthCalculator(font, maxWidth);
+  calculator = new LineWidthManager(font, maxWidth);
 });
 
 describe("Width", () => {

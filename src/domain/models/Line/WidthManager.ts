@@ -1,5 +1,5 @@
 import { Font } from "./Font";
-export interface WidthCalculator {
+export interface WidthManager {
   width: number;
   calculateWidth(ch: string): number;
   add(ch: string): void;
@@ -9,7 +9,7 @@ export interface WidthCalculator {
   remains(): boolean;
 }
 
-export class TextWidthCalculator implements WidthCalculator {
+export class LineWidthManager implements WidthManager {
   private accumulatedWidth = 0;
   constructor(private font: Font, private maxWidth: number) {}
 

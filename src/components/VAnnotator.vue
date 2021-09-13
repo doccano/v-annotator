@@ -39,7 +39,7 @@ import { Font } from "@/domain/models/Line/Font";
 import { createFont } from "@/domain/models/View/fontFactory";
 import { createEntityLabels } from "../domain/models/Line/ShapeFactory";
 import { EntityLabels } from "@/domain/models/Line/Shape";
-import { TextWidthCalculator } from "../domain/models/Line/Strategy";
+import { LineWidthManager } from "../domain/models/Line/WidthManager";
 import { TextLine } from "@/domain/models/Line/TextLine";
 import { TextLines } from "@/domain/models/Line/Observer";
 import {
@@ -135,7 +135,7 @@ export default Vue.extend({
       if (!this.font || !this.entityLabelList) {
         return [];
       }
-      const calculator = new TextWidthCalculator(this.font, this.maxWidth);
+      const calculator = new LineWidthManager(this.font, this.maxWidth);
       const splitter = new TextLineSplitter(calculator, this.entityLabelList);
       const viewLines: ViewLine[] = [];
       textLines.updateSplitter(splitter);

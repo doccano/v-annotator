@@ -1,5 +1,5 @@
 import { TextLineSplitter } from "@/domain/models/Line/TextLineSplitter";
-import { TextWidthCalculator } from "@/domain/models/Line/Strategy";
+import { LineWidthManager } from "@/domain/models/Line/WidthManager";
 import { Font } from "@/domain/models/Line/Font";
 import { EntityLabel, EntityLabels } from "@/domain/models/Line/Shape";
 import { Entity, Entities } from "@/domain/models/Label/Entity";
@@ -42,7 +42,7 @@ describe("TextLineSplitter", () => {
   });
   const entityLabels = new EntityLabelsMock();
 
-  const calculator = new TextWidthCalculator(font, maxWidth);
+  const calculator = new LineWidthManager(font, maxWidth);
   const splitter = new TextLineSplitter(calculator, entityLabels);
   const entities = new Entities([new Entity(0, 0, 0, 0, 5)]);
 
