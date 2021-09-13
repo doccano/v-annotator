@@ -2,6 +2,7 @@
   <div id="app">
     <button @click="changeText">Change text</button>
     <button @click="resetEntity">Reset entity</button>
+    <button @click="changeLabel">Change label</button>
     <v-annotator
       :text="text"
       :entities="JSON.stringify(entities)"
@@ -116,6 +117,10 @@ export default Vue.extend({
     },
     resetEntity() {
       this.entities = [];
+    },
+    changeLabel() {
+      this.entityLabels[0].color = "#FF5733";
+      this.entityLabels[0].text = "Misc";
     },
   },
 });
