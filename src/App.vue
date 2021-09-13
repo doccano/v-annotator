@@ -3,7 +3,11 @@
     <button @click="changeText">Change text</button>
     <button @click="resetEntity">Reset entity</button>
     <button @click="changeLabel">Change label</button>
+    <button @click="allowOverlapping = !allowOverlapping">
+      Allow overlapping({{ allowOverlapping }})
+    </button>
     <v-annotator
+      :allow-overlapping="allowOverlapping"
       :text="text"
       :entities="JSON.stringify(entities)"
       :entity-labels="entityLabels"
@@ -29,6 +33,7 @@ export default Vue.extend({
 
   data() {
     return {
+      allowOverlapping: false,
       id: 5,
       // text: "من ويكيبيديا، الموسوعة الحرة\nداستان SVG Tiny 1.2 طولا ني است.",
       // rtl: true,
