@@ -1,4 +1,3 @@
-import { resolve, reorderPermutation } from "unicode-bidirectional";
 import { Entity, LevelManager } from "../Label/Entity";
 import { TextLine } from "../Line/TextLine";
 import { EntityLabels, EntityLabel } from "../Line/Shape";
@@ -13,27 +12,6 @@ export interface GeometricEntity {
   lineY: number;
   textY: number;
   entityLabel: EntityLabel;
-}
-
-function createPermutation(text: string, rtl = false): number[] {
-  const codepoints = [];
-  for (const ch of text) {
-    codepoints.push(ch.codePointAt(0));
-  }
-  const levels = resolve(codepoints, rtl);
-  const permutation = reorderPermutation(levels);
-  if (rtl) {
-    permutation.reverse();
-  }
-  return permutation;
-}
-
-function calculateWidth(element: SVGTextElement): number[] {
-  const widths: number[] = [];
-  for (let i = 0; i < element.textContent!.length; i++) {
-    widths.push(element.getExtentOfChar(i).width);
-  }
-  return widths;
 }
 
 function elementExists(element: SVGTextElement): boolean {
@@ -55,26 +33,9 @@ export class EntityLineView {
     }
     const geometricEntities: GeometricEntity[] = [];
     this.levelManager.clear();
-    const permutation = createPermutation(element.textContent!, rtl);
-    const widths = calculateWidth(element);
-    const visualWidth = [0];
-    const logicalWidth = [0];
-    let logicalSum = 0;
-    let visualSum = 0;
-    for (let i = 0; i < widths.length; i++) {
-      logicalSum += widths[i];
-      visualSum += widths[permutation[i]];
-      logicalWidth.push(logicalSum);
-      visualWidth.push(visualSum);
-    }
     for (let i = 0; i < this.entities.length; i++) {
       const entity = this.entities[i];
-      const ranges = this.createRanges(
-        entity,
-        permutation,
-        logicalWidth,
-        visualWidth
-      );
+      const ranges = this.createRanges(element, entity);
       for (const [x1, x2] of ranges) {
         this.levelManager.update(
           entity,
@@ -105,49 +66,26 @@ export class EntityLineView {
   }
 
   private createRanges(
-    entity: Entity,
-    permutation: number[],
-    logicalWidth: number[],
-    visualWidth: number[]
+    element: SVGTextElement,
+    entity: Entity
   ): [number, number][] {
-    let logicalStart = 0;
-    let visualStart = 0;
-    let visualEnd = 0;
-    let isInsideEntity = false;
-    const queue = new Set();
+    const ranges: [number, number][] = [];
+    const node = element.firstChild!;
     const s =
       Math.max(entity.startOffset, this.textLine.startOffset) -
       this.textLine.startOffset;
     const e =
       Math.min(entity.endOffset, this.textLine.endOffset) -
       this.textLine.startOffset;
-    for (let i = s; i < e; i++) {
-      queue.add(i);
+    if (node.textContent && node.textContent.length < e) {
+      return [[0, 0]];
     }
-    const ranges: [number, number][] = [];
-    for (const [i, v] of permutation.entries()) {
-      if (!isInsideEntity && queue.has(v)) {
-        isInsideEntity = true;
-        logicalStart = i;
-        visualStart = v;
-        visualEnd = v;
-        queue.delete(v);
-      } else if (isInsideEntity && queue.has(v)) {
-        visualStart = v < visualStart ? v : visualStart;
-        visualEnd = v > visualEnd ? v : visualEnd;
-        queue.delete(v);
-      } else if (isInsideEntity && !queue.has(v)) {
-        isInsideEntity = false;
-        const x1 = visualWidth[logicalStart];
-        const x2 = x1 + logicalWidth[visualEnd + 1] - logicalWidth[visualStart];
-        ranges.push([x1, x2]);
-      }
-      if (queue.size === 0) break;
-    }
-    if (isInsideEntity) {
-      const x1 = visualWidth[logicalStart];
-      const x2 = x1 + logicalWidth[visualEnd + 1] - logicalWidth[visualStart];
-      ranges.push([x1, x2]);
+    const range = document.createRange();
+    range.setStart(node, s);
+    range.setEnd(node, e);
+    const rects = range.getClientRects();
+    for (const rect of rects) {
+      ranges.push([rect.left, rect.right]);
     }
     return ranges;
   }

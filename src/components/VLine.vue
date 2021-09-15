@@ -1,12 +1,7 @@
 <template>
   <svg version="1.1" xmlns="http://www.w3.org/2000/svg" :direction="direction">
     <g :transform="translate">
-      <line-text
-        :id="textLine.startOffset"
-        :text-line="textLine"
-        :text="text"
-        :x="x"
-      />
+      <line-text :id="id" :text-line="textLine" :text="text" :x="x" />
       <line-entity
         v-for="gEntity in geometricEntities"
         :key="gEntity.entity.id"
@@ -74,14 +69,21 @@ export default Vue.extend({
 
   data() {
     return {
-      height: 0,
       element: null as SVGTextElement | null,
     };
   },
 
   mounted() {
-    const id = this.textLine.startOffset.toString();
-    this.element = document.getElementById(id) as unknown as SVGTextElement;
+    this.setElement();
+  },
+
+  watch: {
+    textLine: {
+      handler() {
+        this.setElement();
+      },
+      deep: true,
+    },
   },
 
   computed: {
@@ -104,12 +106,22 @@ export default Vue.extend({
     direction(): string {
       return this.rtl ? "rtl" : "ltr";
     },
+    id(): string {
+      return `${this.textLine.startOffset}:${this.textLine.endOffset}`;
+    },
   },
 
   methods: {
     hasTextLabel(entity: Entity): boolean {
       // Do not show a label text if the entity continues from the previous line.
       return this.textLine.startOffset <= entity.startOffset;
+    },
+    setElement() {
+      this.$nextTick(() => {
+        this.element = document.getElementById(
+          this.id
+        ) as unknown as SVGTextElement;
+      });
     },
   },
 });

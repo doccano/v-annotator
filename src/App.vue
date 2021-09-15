@@ -38,8 +38,8 @@ export default Vue.extend({
       // text: "من ويكيبيديا، الموسوعة الحرة\nداستان SVG Tiny 1.2 طولا ني است.",
       // rtl: true,
       rtl: false,
-      text: "we must respect the will of the individual.\nTake it easy I can assure you that everything will turn out to be fine.\n".repeat(
-        10 //000
+      text: "we must respect ✊ the will of the individual.\nTake it easy I can assure you that everything will turn out to be fine.\n".repeat(
+        10000
       ),
       entities: [
         {
@@ -94,9 +94,9 @@ export default Vue.extend({
   },
 
   created() {
-    // for (let i = 0; i < 10000; i++) {
-    //   this.addEntity(i * 10 + 100, i * 10 + 105);
-    // }
+    for (let i = 0; i < 10000; i++) {
+      this.addEntity(i * 10 + 100, i * 10 + 105);
+    }
   },
 
   methods: {
