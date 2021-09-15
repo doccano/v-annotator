@@ -27,7 +27,7 @@ export class EntityLineView {
     private font: Font
   ) {}
 
-  render(element: SVGTextElement, rtl = false): GeometricEntity[] {
+  render(element: SVGTextElement): GeometricEntity[] {
     if (!elementExists(element)) {
       return [];
     }
