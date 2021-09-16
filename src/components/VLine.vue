@@ -1,14 +1,14 @@
 <template>
   <svg version="1.1" xmlns="http://www.w3.org/2000/svg" :direction="direction">
     <g :transform="translate">
-      <line-text :id="id" :text-line="textLine" :text="text" :x="x" />
+      <line-text :id="id" :text-line="textLine" :text="text" :x="baseX" />
       <line-entity
         v-for="gEntity in geometricEntities"
         :key="gEntity.entity.id"
         :entity="gEntity"
         :has-text-label="hasTextLabel(gEntity.entity)"
         :rtl="rtl"
-        :x="x"
+        :base-x="baseX"
         @click:entity="$emit('click:entity', $event)"
         @contextmenu:entity="$emit('contextmenu:entity', $event)"
       />
@@ -61,7 +61,7 @@ export default Vue.extend({
       type: Boolean,
       default: false,
     },
-    x: {
+    baseX: {
       type: Number,
       default: 0,
     },

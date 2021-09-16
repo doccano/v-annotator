@@ -14,7 +14,7 @@
           :rtl="rtl"
           :text="text"
           :textLine="item.textLine"
-          :x="x"
+          :base-x="baseX"
           :key="index"
           @click:entity="clicked"
           @contextmenu:entity="$emit('contextmenu:entity', $event)"
@@ -91,7 +91,7 @@ export default Vue.extend({
     return {
       font: null as Font | null,
       maxWidth: 0,
-      x: 0,
+      baseX: 0,
       textElement: null as SVGTextElement | null,
     };
   },
@@ -173,7 +173,7 @@ export default Vue.extend({
       this.$nextTick(() => {
         const containerElement = document.getElementById("container")!;
         this.maxWidth = containerElement.clientWidth;
-        this.x = !this.rtl
+        this.baseX = !this.rtl
           ? containerElement.getBoundingClientRect().left
           : containerElement.getBoundingClientRect().right - 8; // 8 is margin
       });

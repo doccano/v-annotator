@@ -48,7 +48,7 @@ export default Vue.extend({
       type: Boolean,
       default: false,
     },
-    x: {
+    baseX: {
       type: Number,
       default: 0,
     },
@@ -66,10 +66,10 @@ export default Vue.extend({
 
   methods: {
     x1(x: number): number {
-      return this.rtl ? this.x - x : x - this.x;
+      return this.rtl ? this.baseX - x : x - this.baseX;
     },
     x2(x: number): number {
-      return this.rtl ? this.x - x : x - this.x;
+      return this.rtl ? this.baseX - x : x - this.baseX;
     },
   },
 });
