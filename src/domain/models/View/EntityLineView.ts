@@ -8,10 +8,31 @@ const marginTop = 5;
 
 export interface GeometricEntity {
   entity: Entity;
-  ranges: [number, number][];
+  ranges: Ranges;
   lineY: number;
   textY: number;
   entityLabel: EntityLabel;
+}
+
+class Range {
+  constructor(readonly x1: number, readonly x2: number) {}
+}
+
+class Ranges {
+  private _items: Range[] = [];
+
+  get items(): Range[] {
+    return this._items;
+  }
+
+  add(x1: number, x2: number): void {
+    const range = new Range(x1, x2);
+    this._items.push(range);
+  }
+
+  get first(): Range {
+    return this._items[0];
+  }
 }
 
 function elementExists(element: SVGTextElement): boolean {
@@ -36,13 +57,13 @@ export class EntityLineView {
     for (let i = 0; i < this.entities.length; i++) {
       const entity = this.entities[i];
       const ranges = this.createRanges(element, entity);
-      for (const [x1, x2] of ranges) {
+      for (const range of ranges.items) {
         this.levelManager.update(
           entity,
-          x1,
+          range.x1,
           entity.startOffset < this.textLine.startOffset // entity continue from the previous line
-            ? x2
-            : x1 + this.entityLabels.getById(entity.label)!.width
+            ? range.x2
+            : range.x1 + this.entityLabels.getById(entity.label)!.width
         );
       }
       const entityLabel = this.entityLabels.getById(entity.label)!;
@@ -65,11 +86,8 @@ export class EntityLineView {
     return lineWidth + (lineWidth + this.font.fontSize + marginBottom) * level;
   }
 
-  private createRanges(
-    element: SVGTextElement,
-    entity: Entity
-  ): [number, number][] {
-    const ranges: [number, number][] = [];
+  private createRanges(element: SVGTextElement, entity: Entity): Ranges {
+    const ranges = new Ranges();
     const node = element.firstChild!;
     const s =
       Math.max(entity.startOffset, this.textLine.startOffset) -
@@ -78,14 +96,15 @@ export class EntityLineView {
       Math.min(entity.endOffset, this.textLine.endOffset) -
       this.textLine.startOffset;
     if (node.textContent && node.textContent.length < e) {
-      return [[0, 0]];
+      ranges.add(0, 0);
+      return ranges;
     }
     const range = document.createRange();
     range.setStart(node, s);
     range.setEnd(node, e);
     const rects = range.getClientRects();
     for (const rect of rects) {
-      ranges.push([rect.left, rect.right]);
+      ranges.add(rect.left, rect.right);
     }
     return ranges;
   }

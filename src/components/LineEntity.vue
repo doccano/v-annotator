@@ -1,17 +1,17 @@
 <template>
   <g>
     <geometric-line
-      v-for="(range, index) in entity.ranges"
+      v-for="(range, index) in entity.ranges.items"
       :key="index"
-      :x1="x1(range[0])"
-      :x2="x2(range[1])"
+      :x1="x1(range.x1)"
+      :x2="x2(range.x2)"
       :y="entity.lineY"
       :color="entity.entityLabel.color"
     />
     <geometric-label-text
       v-if="hasTextLabel"
       :r="entity.entityLabel.circle.radius"
-      :x="x1(entity.ranges[0][0])"
+      :x="x1(entity.ranges.first.x1)"
       :y="entity.textY"
       :dx="dx"
       :color="entity.entityLabel.color"
