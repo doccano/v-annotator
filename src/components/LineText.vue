@@ -30,7 +30,7 @@ export default Vue.extend({
   },
 
   watch: {
-    span: {
+    textLine: {
       immediate: true,
       handler() {
         this.$nextTick(() => {
