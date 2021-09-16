@@ -81,7 +81,11 @@ export default Vue.extend({
       return config.lineWidth;
     },
     textX(): number {
-      return this.x(this.ranges.first.x1);
+      if (this.rtl) {
+        return this.x(this.ranges.first.x2);
+      } else {
+        return this.x(this.ranges.first.x1);
+      }
     },
     coordinates(): [number, number][] {
       return this.ranges.items.map((range) => [
@@ -93,7 +97,7 @@ export default Vue.extend({
 
   methods: {
     x(x: number): number {
-      return this.rtl ? this.baseX - x : x - this.baseX;
+      return x - this.baseX;
     },
   },
 });

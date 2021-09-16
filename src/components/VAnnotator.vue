@@ -175,7 +175,7 @@ export default Vue.extend({
         this.maxWidth = containerElement.clientWidth;
         this.baseX = !this.rtl
           ? containerElement.getBoundingClientRect().left
-          : containerElement.getBoundingClientRect().right - 8; // 8 is margin
+          : containerElement.getBoundingClientRect().right;
       });
     },
     open(): void {

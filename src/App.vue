@@ -38,45 +38,45 @@ export default Vue.extend({
       // text: "من ويكيبيديا، الموسوعة الحرة\nداستان SVG Tiny 1.2 طولا ني است.",
       // rtl: true,
       rtl: false,
-      text: "we must respect ✊ the will of the individual.\nTake it easy I can assure you that everything will turn out to be fine.\n".repeat(
-        10000
+      text: "👶🏻👦🏻👧🏻👨🏻👩🏻👱🏻‍♀️👱🏻👴🏻👵🏻👲🏻👳🏻‍♀️👳🏻👮🏻‍♀️👮🏻👷🏻‍♀️👷🏻💂🏻‍♀️💂🏻🕵🏻‍♀️👩🏻‍⚕️👨🏻‍⚕️👩🏻‍🌾👨🏻‍🌾👨🏻‍🌾👨🏻‍🌾👨🏻‍🌾👨🏻‍🌾👨🏻‍🌾👨🏻‍🌾👨🏻‍🌾👨🏻‍🌾👨🏻‍🌾👨🏻‍🌾👨🏻‍🌾👨🏻‍🌾👨🏻‍🌾👨🏻‍🌾\nwe must respect ✊ the will of the individual.\nTake it easy I can assure you that everything will turn out to be fine.\n".repeat(
+        1 //0000
       ),
       entities: [
-        {
-          id: 0,
-          user: 0,
-          label: 0,
-          startOffset: 3,
-          endOffset: 7,
-        },
-        {
-          id: 4,
-          user: 0,
-          label: 0,
-          startOffset: 35,
-          endOffset: 46,
-        },
-        {
-          id: 1,
-          user: 0,
-          label: 1,
-          startOffset: 59,
-          endOffset: 62,
-        },
-        {
-          id: 2,
-          user: 0,
-          label: 0,
-          startOffset: 79,
-          endOffset: 89,
-        },
-        {
-          id: 3,
-          user: 0,
-          label: 1,
-          startOffset: 79,
-          endOffset: 94,
-        },
+        // {
+        //   id: 0,
+        //   user: 0,
+        //   label: 0,
+        //   startOffset: 3,
+        //   endOffset: 7,
+        // },
+        // {
+        //   id: 4,
+        //   user: 0,
+        //   label: 0,
+        //   startOffset: 35,
+        //   endOffset: 46,
+        // },
+        // {
+        //   id: 1,
+        //   user: 0,
+        //   label: 1,
+        //   startOffset: 59,
+        //   endOffset: 62,
+        // },
+        // {
+        //   id: 2,
+        //   user: 0,
+        //   label: 0,
+        //   startOffset: 79,
+        //   endOffset: 89,
+        // },
+        // {
+        //   id: 3,
+        //   user: 0,
+        //   label: 1,
+        //   startOffset: 79,
+        //   endOffset: 94,
+        // },
       ],
       entityLabels: [
         {
@@ -94,9 +94,9 @@ export default Vue.extend({
   },
 
   created() {
-    for (let i = 0; i < 10000; i++) {
-      this.addEntity(i * 10 + 100, i * 10 + 105);
-    }
+    // for (let i = 0; i < 10000; i++) {
+    //   this.addEntity(i * 10 + 100, i * 10 + 105);
+    // }
   },
 
   methods: {
