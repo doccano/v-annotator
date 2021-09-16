@@ -1,16 +1,20 @@
 <template>
   <svg version="1.1" xmlns="http://www.w3.org/2000/svg" :direction="direction">
     <g :transform="translate">
-      <line-text :id="id" :text-line="textLine" :text="text" :x="baseX" />
+      <line-text :id="id" :text-line="textLine" :text="text" />
       <line-entity
         v-for="gEntity in geometricEntities"
         :key="gEntity.entity.id"
-        :entity="gEntity"
-        :has-text-label="hasTextLabel(gEntity.entity)"
+        :ranges="gEntity.ranges"
+        :color="color(gEntity.entity)"
+        :label="labelText(gEntity.entity)"
+        :no-text="noText(gEntity.entity)"
         :rtl="rtl"
         :base-x="baseX"
-        @click:entity="$emit('click:entity', $event)"
-        @contextmenu:entity="$emit('contextmenu:entity', $event)"
+        :line-y="gEntity.lineY"
+        :text-y="gEntity.textY"
+        @click:entity="$emit('click:entity', gEntity.entity)"
+        @contextmenu:entity="$emit('contextmenu:entity', gEntity.entity)"
       />
     </g>
   </svg>
@@ -112,9 +116,9 @@ export default Vue.extend({
   },
 
   methods: {
-    hasTextLabel(entity: Entity): boolean {
+    noText(entity: Entity): boolean {
       // Do not show a label text if the entity continues from the previous line.
-      return this.textLine.startOffset <= entity.startOffset;
+      return entity.startOffset < this.textLine.startOffset;
     },
     setElement() {
       this.$nextTick(() => {
@@ -122,6 +126,12 @@ export default Vue.extend({
           this.id
         ) as unknown as SVGTextElement;
       });
+    },
+    color(entity: Entity): string {
+      return this.entityLabels.getColor(entity.label);
+    },
+    labelText(entity: Entity): string {
+      return this.entityLabels.getText(entity.label);
     },
   },
 });

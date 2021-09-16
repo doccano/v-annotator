@@ -1,9 +1,8 @@
 import { Entity, LevelManager } from "../Label/Entity";
 import { TextLine } from "../Line/TextLine";
-import { EntityLabels, EntityLabel } from "../Line/Shape";
+import { EntityLabels } from "../Line/Shape";
 import { Font } from "../Line/Font";
-
-const lineWidth = 5;
+import config from "@/domain/models/Config/Config";
 const marginTop = 5;
 
 export interface GeometricEntity {
@@ -11,14 +10,13 @@ export interface GeometricEntity {
   ranges: Ranges;
   lineY: number;
   textY: number;
-  entityLabel: EntityLabel;
 }
 
 class Range {
   constructor(readonly x1: number, readonly x2: number) {}
 }
 
-class Ranges {
+export class Ranges {
   private _items: Range[] = [];
 
   get items(): Range[] {
@@ -66,7 +64,6 @@ export class EntityLineView {
             : range.x1 + this.entityLabels.getById(entity.label)!.width
         );
       }
-      const entityLabel = this.entityLabels.getById(entity.label)!;
       const lineY = this.calculateLineY(entity);
       const textY = lineY + this.font.fontSize / 2 + marginTop;
       geometricEntities.push({
@@ -74,7 +71,6 @@ export class EntityLineView {
         ranges,
         lineY,
         textY,
-        entityLabel,
       });
     }
     return geometricEntities;
@@ -83,7 +79,10 @@ export class EntityLineView {
   private calculateLineY(entity: Entity): number {
     const level = this.levelManager.fetchLevel(entity)!;
     const marginBottom = 8;
-    return lineWidth + (lineWidth + this.font.fontSize + marginBottom) * level;
+    return (
+      config.lineWidth +
+      (config.lineWidth + this.font.fontSize + marginBottom) * level
+    );
   }
 
   private createRanges(element: SVGTextElement, entity: Entity): Ranges {

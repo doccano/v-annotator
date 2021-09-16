@@ -1,45 +1,23 @@
-export class Circle {
-  constructor(readonly radius: number = 3, readonly color: string = "grey") {}
-
-  get width(): number {
-    return this.radius * 2;
-  }
-}
-
-export class Line {
-  constructor(
-    readonly width: number,
-    readonly height: number = 5,
-    readonly color: string = "grey"
-  ) {}
-}
-
-export class LabelText {
-  constructor(readonly text: string, readonly width: number) {}
-}
+import config from "@/domain/models/Config/Config";
+import { Label } from "@/domain/models/Label/Label";
 
 export class EntityLabel {
-  constructor(
-    readonly id: number,
-    readonly circle: Circle,
-    readonly labelText: LabelText,
-    readonly margin = 5
-  ) {}
+  constructor(readonly label: Label, readonly textWidth: number) {}
 
   get width(): number {
-    return this.circle.width + this.marginLeft + this.labelText.width;
+    return config.diameter + config.labelMargin + this.textWidth;
   }
 
-  get text(): string {
-    return this.labelText.text;
-  }
-
-  get marginLeft(): number {
-    return this.margin + this.circle.radius;
+  get id(): number {
+    return this.label.id;
   }
 
   get color(): string {
-    return this.circle.color;
+    return this.label.color;
+  }
+
+  get text(): string {
+    return this.label.text;
   }
 }
 
@@ -54,6 +32,14 @@ export class EntityLabels {
 
   getById(id: number): EntityLabel | undefined {
     return this.mapping.get(id);
+  }
+
+  getColor(id: number): string {
+    return this.getById(id)!.color;
+  }
+
+  getText(id: number): string {
+    return this.getById(id)!.text;
   }
 
   maxLabelWidth(ids: number[]): number {
