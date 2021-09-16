@@ -28,7 +28,7 @@
 import Vue, { PropType } from "vue";
 import GeometricLabelText from "./GeometricLabelText.vue";
 import GeometricLine from "./GeometricLine.vue";
-import { Ranges } from "@/domain/models/View/EntityLineView";
+import { Ranges } from "@/domain/models/Line/EntityLine";
 import config from "@/domain/models/Config/Config";
 
 export default Vue.extend({

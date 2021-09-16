@@ -36,7 +36,7 @@ import { RecycleScroller } from "vue-virtual-scroller";
 import { Labels, Label } from "@/domain/models/Label/Label";
 import { Entities, Entity } from "@/domain/models/Label/Entity";
 import { Font } from "@/domain/models/Line/Font";
-import { createFont } from "@/domain/models/View/fontFactory";
+import { createFont } from "@/domain/models/Line/fontFactory";
 import { createEntityLabels } from "../domain/models/Line/ShapeFactory";
 import { EntityLabels } from "@/domain/models/Line/Shape";
 import { LineWidthManager } from "../domain/models/Line/WidthManager";

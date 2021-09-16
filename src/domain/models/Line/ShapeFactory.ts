@@ -1,4 +1,4 @@
-import { widthOf } from "../View/fontFactory";
+import { widthOf } from "./fontFactory";
 import { Labels } from "../Label/Label";
 import { EntityLabel, EntityLabels } from "./Shape";
 

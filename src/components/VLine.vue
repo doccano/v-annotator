@@ -31,7 +31,7 @@ import LineText from "./LineText.vue";
 import {
   EntityLineView,
   GeometricEntity,
-} from "@/domain/models/View/EntityLineView";
+} from "@/domain/models/Line/EntityLine";
 
 export default Vue.extend({
   components: {

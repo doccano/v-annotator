@@ -1,4 +1,4 @@
-import { Font } from "../Line/Font";
+import { Font } from "./Font";
 
 export function createFont(text: string, textElement: SVGTextElement): Font {
   // Calculate font width
