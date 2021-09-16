@@ -122,7 +122,8 @@ export class TextLineSplitter implements BaseLineSplitter {
     }
     // check whether the word exceeds the maxWidth
     const wordWidth = this.chunkWidth.get(i) || 0;
-    if (this.widthManager.isFull(wordWidth)) {
+    const isShortWord = wordWidth <= this.widthManager.width;
+    if (isShortWord && this.widthManager.isFull(wordWidth)) {
       return true;
     }
 
