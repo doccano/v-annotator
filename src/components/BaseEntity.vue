@@ -1,6 +1,6 @@
 <template>
   <g>
-    <geometric-line
+    <BaseEntityLine
       v-for="([x1, x2], index) in coordinates"
       :key="index"
       :x1="x1"
@@ -9,7 +9,7 @@
       :color="color"
       :height="height"
     />
-    <geometric-label-text
+    <BaseEntityText
       v-if="!noText"
       :r="r"
       :x="textX"
@@ -26,15 +26,15 @@
 
 <script lang="ts">
 import Vue, { PropType } from "vue";
-import GeometricLabelText from "./GeometricLabelText.vue";
-import GeometricLine from "./GeometricLine.vue";
+import BaseEntityText from "./BaseEntityText.vue";
+import BaseEntityLine from "./BaseEntityLine.vue";
 import { Ranges } from "@/domain/models/Line/EntityLine";
 import config from "@/domain/models/Config/Config";
 
 export default Vue.extend({
   components: {
-    GeometricLabelText,
-    GeometricLine,
+    BaseEntityText,
+    BaseEntityLine,
   },
 
   props: {

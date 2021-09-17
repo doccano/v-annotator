@@ -1,8 +1,8 @@
 <template>
   <svg version="1.1" xmlns="http://www.w3.org/2000/svg" :direction="direction">
     <g :transform="translate">
-      <line-text :id="id" :text-line="textLine" :text="text" :x="baseX" />
-      <line-entity
+      <BaseText :id="id" :text-line="textLine" :text="text" :x="baseX" />
+      <BaseEntity
         v-for="gEntity in geometricEntities"
         :key="gEntity.entity.id"
         :ranges="gEntity.ranges"
@@ -26,8 +26,8 @@ import { Entity } from "@/domain/models/Label/Entity";
 import { Font } from "@/domain/models/Line/Font";
 import { EntityLabels } from "@/domain/models/Line/Shape";
 import { TextLine } from "@/domain/models/Line/TextLine";
-import LineEntity from "./LineEntity.vue";
-import LineText from "./LineText.vue";
+import BaseEntity from "./BaseEntity.vue";
+import BaseText from "./BaseText.vue";
 import {
   EntityLineView,
   GeometricEntity,
@@ -35,8 +35,8 @@ import {
 
 export default Vue.extend({
   components: {
-    LineEntity,
-    LineText,
+    BaseEntity,
+    BaseText,
   },
 
   props: {
