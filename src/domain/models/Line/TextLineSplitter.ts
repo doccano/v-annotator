@@ -50,12 +50,13 @@ export class TextLineSplitter implements BaseLineSplitter {
       if (entities.startsAt(i)) {
         const _entities = entities.getAt(i);
         _entities.forEach((entity) => {
-          this.levelManager.update(
-            entity,
-            this.widthManager.width,
-            this.widthManager.width +
-              this.entityLabels.getById(entity.label)!.width
-          );
+          this.levelManager.update(entity, [
+            [
+              this.widthManager.width,
+              this.widthManager.width +
+                this.entityLabels.getById(entity.label)!.width,
+            ],
+          ]);
         });
         _entities.forEach((e) => this.updateLevel(e));
       }

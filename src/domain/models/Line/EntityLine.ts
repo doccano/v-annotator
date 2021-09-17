@@ -55,15 +55,21 @@ export class EntityLineView {
     for (let i = 0; i < this.entities.length; i++) {
       const entity = this.entities[i];
       const ranges = this.createRanges(element, entity);
-      for (const range of ranges.items) {
-        this.levelManager.update(
-          entity,
-          range.x1,
-          entity.startOffset < this.textLine.startOffset // entity continue from the previous line
-            ? range.x2
-            : range.x1 + this.entityLabels.getById(entity.label)!.width
-        );
-      }
+      this.levelManager.update(
+        entity,
+        ranges.items.map((range, index) =>
+          index === 0 // If it's the first element,
+            ? [
+                range.x1,
+                // consider label length,
+                Math.max(
+                  range.x2,
+                  range.x1 + this.entityLabels.getById(entity.label)!.width
+                ),
+              ]
+            : [range.x1, range.x2]
+        )
+      );
       const lineY = this.calculateLineY(entity);
       const textY = lineY + this.font.fontSize / 2 + marginTop;
       geometricEntities.push({

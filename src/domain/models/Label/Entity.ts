@@ -159,22 +159,25 @@ export class Entities extends EntitySubject {
 }
 
 export class LevelManager {
-  private endOffsetPerLevel: Map<number, number> = new Map(); // <level, endOffset>
+  private labelIntervalPerLevel: IntervalTree[] = [];
   private entityLevel: Map<number, number> = new Map(); // <entity.id, level>
 
-  update(entity: Entity, x1: number, x2: number): void {
-    for (const [level, endPos] of this.endOffsetPerLevel) {
-      if (endPos <= x1) {
-        this.endOffsetPerLevel.set(level, x2);
+  update(entity: Entity, ranges: [number, number][]): void {
+    for (const [level, tree] of this.labelIntervalPerLevel.entries()) {
+      if (ranges.every((range) => !tree.intersect_any(range))) {
+        ranges.forEach((range) => {
+          tree.insert(range);
+        });
         this.entityLevel.set(entity.id, level);
         return;
       }
     }
-    this.endOffsetPerLevel.set(this.endOffsetPerLevel.size, x2);
-    this.entityLevel.set(
-      entity.id,
-      Math.max(Math.max(...this.entityLevel.values()) + 1, 0)
-    );
+    this.entityLevel.set(entity.id, this.labelIntervalPerLevel.length);
+    const tree = new IntervalTree();
+    ranges.forEach((range) => {
+      tree.insert(range);
+    });
+    this.labelIntervalPerLevel.push(tree);
   }
 
   fetchLevel(entity: Entity): number | undefined {
@@ -186,7 +189,7 @@ export class LevelManager {
   }
 
   clear(): void {
-    this.endOffsetPerLevel.clear();
+    this.labelIntervalPerLevel = [];
     this.entityLevel.clear();
   }
 }
