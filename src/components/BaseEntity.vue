@@ -68,6 +68,10 @@ export default Vue.extend({
     textY: {
       type: Number,
     },
+    margin: {
+      type: Number,
+      default: 0,
+    },
   },
 
   computed: {
@@ -97,7 +101,7 @@ export default Vue.extend({
 
   methods: {
     x(x: number): number {
-      return x - this.baseX;
+      return this.rtl ? x - this.margin : x - this.baseX;
     },
   },
 });

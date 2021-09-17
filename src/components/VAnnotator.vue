@@ -15,6 +15,7 @@
           :text="text"
           :textLine="item.textLine"
           :base-x="baseX"
+          :margin="marginLeft"
           :key="index"
           @click:entity="clicked"
           @contextmenu:entity="$emit('contextmenu:entity', $event)"
@@ -93,6 +94,7 @@ export default Vue.extend({
       font: null as Font | null,
       maxWidth: 0,
       baseX: 0,
+      marginLeft: 0,
       textElement: null as SVGTextElement | null,
     };
   },
@@ -177,6 +179,7 @@ export default Vue.extend({
         this.baseX = !this.rtl
           ? containerElement.getBoundingClientRect().left
           : containerElement.getBoundingClientRect().right;
+        this.marginLeft = containerElement.getBoundingClientRect().left;
       });
     },
     open(): void {

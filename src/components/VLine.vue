@@ -11,6 +11,7 @@
         :no-text="noText(gEntity.entity)"
         :rtl="rtl"
         :base-x="baseX"
+        :margin="margin"
         :line-y="gEntity.lineY"
         :text-y="gEntity.textY"
         @click:entity="$emit('click:entity', gEntity.entity)"
@@ -66,6 +67,10 @@ export default Vue.extend({
       default: false,
     },
     baseX: {
+      type: Number,
+      default: 0,
+    },
+    margin: {
       type: Number,
       default: 0,
     },
