@@ -18,9 +18,10 @@ class Range {
 
 export class Ranges {
   private _items: Range[] = [];
+  constructor(readonly rtl = false) {}
 
   get items(): Range[] {
-    return this._items;
+    return this.rtl ? this._items.reverse() : this._items;
   }
 
   add(x1: number, x2: number): void {
@@ -29,7 +30,7 @@ export class Ranges {
   }
 
   get first(): Range {
-    return this._items[0];
+    return this.items[0];
   }
 }
 
@@ -46,7 +47,7 @@ export class EntityLineView {
     private font: Font
   ) {}
 
-  render(element: SVGTextElement): GeometricEntity[] {
+  render(element: SVGTextElement, rtl=false): GeometricEntity[] {
     if (!elementExists(element)) {
       return [];
     }
@@ -54,7 +55,7 @@ export class EntityLineView {
     this.levelManager.clear();
     for (let i = 0; i < this.entities.length; i++) {
       const entity = this.entities[i];
-      const ranges = this.createRanges(element, entity);
+      const ranges = this.createRanges(element, entity, rtl);
       this.levelManager.update(
         entity,
         ranges.items.map((range, index) =>
@@ -91,8 +92,8 @@ export class EntityLineView {
     );
   }
 
-  private createRanges(element: SVGTextElement, entity: Entity): Ranges {
-    const ranges = new Ranges();
+  private createRanges(element: SVGTextElement, entity: Entity, rtl: boolean): Ranges {
+    const ranges = new Ranges(rtl);
     const node = element.firstChild!;
     const s =
       Math.max(entity.startOffset, this.textLine.startOffset) -

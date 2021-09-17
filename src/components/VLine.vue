@@ -107,7 +107,7 @@ export default Vue.extend({
           this.textLine,
           this.font
         );
-        return view.render(this.element);
+        return view.render(this.element, this.rtl);
       } else {
         return [];
       }
