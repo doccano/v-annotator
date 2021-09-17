@@ -47,7 +47,7 @@ export class EntityLineView {
     private font: Font
   ) {}
 
-  render(element: SVGTextElement, rtl=false): GeometricEntity[] {
+  render(element: SVGTextElement, rtl = false): GeometricEntity[] {
     if (!elementExists(element)) {
       return [];
     }
@@ -92,7 +92,11 @@ export class EntityLineView {
     );
   }
 
-  private createRanges(element: SVGTextElement, entity: Entity, rtl: boolean): Ranges {
+  private createRanges(
+    element: SVGTextElement,
+    entity: Entity,
+    rtl: boolean
+  ): Ranges {
     const ranges = new Ranges(rtl);
     const node = element.firstChild!;
     const s =
