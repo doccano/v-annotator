@@ -43,6 +43,7 @@ import { LineWidthManager } from "../domain/models/Line/WidthManager";
 import { TextLine } from "@/domain/models/Line/TextLine";
 import { TextLines } from "@/domain/models/Line/Observer";
 import { TextLineSplitter } from "@/domain/models/Line/TextLineSplitter";
+import { getSelection } from "@/domain/models/EventHandler/TextSelectionHandler";
 
 interface ViewLine {
   id: string;
@@ -179,43 +180,24 @@ export default Vue.extend({
       });
     },
     open(): void {
-      const selection = window.getSelection();
-      let startElement = null;
-      let endElement = null;
       try {
-        startElement = selection!.anchorNode!.parentNode;
-        endElement = selection!.focusNode!.parentNode;
-      } catch (e) {
-        return;
-      }
-      let startOffset: number;
-      let endOffset: number;
-      try {
-        const startLine = (
-          startElement as unknown as { annotatorElement: TextLine }
-        ).annotatorElement;
-        const endLine = (
-          endElement as unknown as { annotatorElement: TextLine }
-        ).annotatorElement;
-        startOffset = startLine.startOffset + selection!.anchorOffset;
-        endOffset = endLine.startOffset + selection!.focusOffset;
-      } catch (e) {
-        return;
-      }
-      if (startOffset > endOffset) {
-        [startOffset, endOffset] = [endOffset, startOffset];
-      }
-      if (startOffset >= endOffset) {
-        return;
-      }
-      if (!this.allowOverlapping) {
-        const entities = this.entityList.filterByRange(startOffset, endOffset);
-        if (entities.length > 0) {
+        const [startOffset, endOffset] = getSelection();
+        if (startOffset >= endOffset) {
           return;
         }
+        if (!this.allowOverlapping) {
+          const entities = this.entityList.filterByRange(
+            startOffset,
+            endOffset
+          );
+          if (entities.length > 0) {
+            return;
+          }
+        }
+        this.$emit("add:entity", startOffset, endOffset);
+      } catch (e) {
+        console.log(e);
       }
-      this.$emit("add:entity", startOffset, endOffset);
-      selection?.removeAllRanges();
     },
   },
 });
