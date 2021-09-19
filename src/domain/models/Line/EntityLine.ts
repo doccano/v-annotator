@@ -1,6 +1,6 @@
 import { Entity, LevelManager } from "../Label/Entity";
+import { LabelList } from "../Label/Label";
 import { TextLine } from "./TextLine";
-import { EntityLabels } from "./Shape";
 import { Font } from "./Font";
 import config from "@/domain/models/Config/Config";
 const marginTop = 5;
@@ -42,7 +42,7 @@ export class EntityLineView {
   private levelManager = new LevelManager();
   constructor(
     private entities: Entity[],
-    private entityLabels: EntityLabels,
+    private entityLabels: LabelList,
     private textLine: TextLine,
     private font: Font
   ) {}

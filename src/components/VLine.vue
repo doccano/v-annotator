@@ -25,7 +25,7 @@
 import Vue, { PropType } from "vue";
 import { Entity } from "@/domain/models/Label/Entity";
 import { Font } from "@/domain/models/Line/Font";
-import { EntityLabels } from "@/domain/models/Line/Shape";
+import { EntityLabelList } from "@/domain/models/Label/Label";
 import { TextLine } from "@/domain/models/Line/TextLine";
 import BaseEntity from "./BaseEntity.vue";
 import BaseText from "./BaseText.vue";
@@ -59,7 +59,7 @@ export default Vue.extend({
       required: true,
     },
     entityLabels: {
-      type: Object as PropType<EntityLabels>,
+      type: Object as PropType<EntityLabelList>,
       required: true,
     },
     rtl: {

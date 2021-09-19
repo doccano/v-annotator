@@ -1,31 +1,73 @@
-export class Label {
+import config from "@/domain/models/Config/Config";
+export interface Label {
+  readonly id: number;
+  readonly text: string;
+  readonly color: string;
+}
+
+export interface LabelListItem {
+  readonly id: number;
+  readonly text: string;
+  readonly color: string;
+  readonly textWidth: number;
+  width: number;
+}
+
+export class EntityLabelListItem implements LabelListItem {
   constructor(
     readonly id: number,
     readonly text: string,
-    readonly color: string
+    readonly color: string,
+    readonly textWidth: number
   ) {}
+
+  get width(): number {
+    return config.diameter + config.labelMargin + this.textWidth;
+  }
 }
 
-export class Labels {
-  private id2Label: { [key: number]: Label } = {};
+export abstract class LabelList {
+  private id2Label: { [key: number]: LabelListItem } = {};
 
-  constructor(private labels: Label[]) {
+  constructor(private labels: LabelListItem[]) {
     for (const label of labels) {
       this.id2Label[label.id] = label;
     }
   }
 
-  static valueOf(labels: Label[]): Labels {
-    return new Labels(
-      labels.map((label) => new Label(label.id, label.text, label.color))
-    );
-  }
-
-  getById(id: number): Label | undefined {
+  getById(id: number): LabelListItem | undefined {
     return this.id2Label[id];
   }
 
-  list(): Label[] {
+  getColor(id: number): string {
+    return this.getById(id)!.color;
+  }
+
+  getText(id: number): string {
+    return this.getById(id)!.text;
+  }
+
+  maxLabelWidth(ids: number[]): number {
+    return Math.max(...ids.map((id) => this.getById(id)!.width), 0);
+  }
+
+  list(): LabelListItem[] {
     return this.labels;
+  }
+}
+
+export class EntityLabelList extends LabelList {
+  static valueOf(labels: Label[], widths: number[]): EntityLabelList {
+    return new EntityLabelList(
+      labels.map(
+        (label, index) =>
+          new EntityLabelListItem(
+            label.id,
+            label.text,
+            label.color,
+            widths[index]
+          )
+      )
+    );
   }
 }

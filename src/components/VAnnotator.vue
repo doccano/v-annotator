@@ -34,12 +34,10 @@ import Vue, { PropType } from "vue";
 import VLine from "./VLine.vue";
 import "vue-virtual-scroller/dist/vue-virtual-scroller.css";
 import { RecycleScroller } from "vue-virtual-scroller";
-import { Labels, Label } from "@/domain/models/Label/Label";
+import { Label, EntityLabelList } from "@/domain/models/Label/Label";
 import { Entities, Entity } from "@/domain/models/Label/Entity";
 import { Font } from "@/domain/models/Line/Font";
-import { createFont } from "@/domain/models/Line/fontFactory";
-import { createEntityLabels } from "../domain/models/Line/ShapeFactory";
-import { EntityLabels } from "@/domain/models/Line/Shape";
+import { createFont, widthOf } from "@/domain/models/Line/fontFactory";
 import { LineWidthManager } from "../domain/models/Line/WidthManager";
 import { TextLine } from "@/domain/models/Line/TextLine";
 import { TextLines } from "@/domain/models/Line/Observer";
@@ -123,10 +121,12 @@ export default Vue.extend({
   },
 
   computed: {
-    entityLabelList(): EntityLabels | null {
+    entityLabelList(): EntityLabelList | null {
       if (this.textElement) {
-        const labels = Labels.valueOf(this.entityLabels);
-        return createEntityLabels(this.textElement, labels);
+        const widths = this.entityLabels.map((label) =>
+          widthOf(label.text, this.textElement!)
+        );
+        return EntityLabelList.valueOf(this.entityLabels, widths);
       } else {
         return null;
       }

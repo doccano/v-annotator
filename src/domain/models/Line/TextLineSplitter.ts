@@ -1,7 +1,7 @@
 import { TextLine } from "./TextLine";
 import { WidthManager } from "./WidthManager";
 import { Entities, Entity, LevelManager } from "../Label/Entity";
-import { EntityLabels } from "./Shape";
+import { LabelList } from "../Label/Label";
 
 export interface BaseLineSplitter {
   split(
@@ -18,7 +18,7 @@ export class TextLineSplitter implements BaseLineSplitter {
   private chunkWidth: Map<number, number> = new Map();
   constructor(
     private widthManager: WidthManager,
-    private entityLabels: EntityLabels
+    private entityLabels: LabelList
   ) {}
 
   *split(
