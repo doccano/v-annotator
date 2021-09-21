@@ -1,6 +1,6 @@
 import { TextLine } from "./TextLine";
 import { WidthManager } from "./WidthManager";
-import { Entities, Entity, LevelManager } from "../Label/Entity";
+import { Entities } from "../Label/Entity";
 import { LabelList } from "../Label/Label";
 
 export interface BaseLineSplitter {
