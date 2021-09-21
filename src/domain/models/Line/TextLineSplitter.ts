@@ -1,36 +1,26 @@
 import { TextLine } from "./TextLine";
 import { WidthManager } from "./WidthManager";
 import { Entities } from "../Label/Entity";
-import { LabelList } from "../Label/Label";
 
 export interface BaseLineSplitter {
-  split(
-    text: string,
-    startOffset: number,
-    entities?: Entities
-  ): Iterable<TextLine>;
+  split(text: string, startOffset: number, entities?: Entities): TextLine[];
   reset(): void;
 }
 
 export class TextLineSplitter implements BaseLineSplitter {
   private chunkWidth: Map<number, number> = new Map();
-  constructor(
-    private widthManager: WidthManager,
-    private entityLabels: LabelList
-  ) {}
+  constructor(private widthManager: WidthManager) {}
 
-  *split(
-    text: string,
-    startOffset = 0,
-    entities: Entities
-  ): Iterable<TextLine> {
+  split(text: string): TextLine[] {
     this.calculateChunkWidth(text);
     this.widthManager.reset();
+    let startOffset = 0;
     let i = startOffset;
+    const lines: TextLine[] = [];
     while (i < text.length) {
       const ch = text[i];
-      if (this.needsNewline(i, ch, entities)) {
-        yield new TextLine(startOffset, i);
+      if (this.needsNewline(i, ch)) {
+        lines.push(new TextLine(startOffset, i));
         if (this.isCRLF(text.substr(i, 2))) {
           startOffset = i + 2;
           i++;
@@ -45,8 +35,9 @@ export class TextLineSplitter implements BaseLineSplitter {
       i++;
     }
     if (!this.widthManager.isEmpty()) {
-      yield new TextLine(startOffset, text.length);
+      lines.push(new TextLine(startOffset, text.length));
     }
+    return lines;
   }
 
   reset(): void {
@@ -96,7 +87,7 @@ export class TextLineSplitter implements BaseLineSplitter {
     }
   }
 
-  private needsNewline(i: number, ch: string, entities: Entities): boolean {
+  private needsNewline(i: number, ch: string): boolean {
     if (this.isLF(ch) || this.isCR(ch)) {
       return true;
     }
@@ -106,15 +97,6 @@ export class TextLineSplitter implements BaseLineSplitter {
     if (isShortWord && this.widthManager.isFull(wordWidth)) {
       return true;
     }
-
-    // check whether the label exceeds the maxWidth
-    const _entities = entities.getAt(i);
-    if (_entities.length === 0) {
-      return this.widthManager.isFull(0);
-    } else {
-      const labelIds = _entities.map((e) => e.label);
-      const maxLabelWidth = this.entityLabels.maxLabelWidth(labelIds);
-      return this.widthManager.isFull(maxLabelWidth);
-    }
+    return false;
   }
 }

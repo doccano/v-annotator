@@ -47,8 +47,8 @@ export abstract class LabelList {
     return this.getById(id)!.text;
   }
 
-  maxLabelWidth(ids: number[]): number {
-    return Math.max(...ids.map((id) => this.getById(id)!.width), 0);
+  maxLabelWidth(): number {
+    return Math.max(...this.labels.map((label) => label.width), 0);
   }
 
   list(): LabelListItem[] {

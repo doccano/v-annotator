@@ -41,7 +41,6 @@ import { Font } from "@/domain/models/Line/Font";
 import { createFont, widthOf } from "@/domain/models/Line/fontFactory";
 import { LineWidthManager } from "../domain/models/Line/WidthManager";
 import { TextLine } from "@/domain/models/Line/TextLine";
-import { TextLines } from "@/domain/models/Line/Observer";
 import { TextLineSplitter } from "@/domain/models/Line/TextLineSplitter";
 import { getSelection } from "@/domain/models/EventHandler/TextSelectionHandler";
 
@@ -51,9 +50,7 @@ interface ViewLine {
   size: number;
 }
 
-const textLines = new TextLines("");
 const entityList = new Entities([]);
-entityList.register(textLines);
 
 export default Vue.extend({
   components: {
@@ -110,16 +107,12 @@ export default Vue.extend({
   watch: {
     text: {
       handler() {
-        textLines.updateText(this.text);
         this.heights = {};
         this.$nextTick(() => {
           this.font = createFont(this.text, this.textElement!);
         });
       },
       immediate: true,
-    },
-    maxWidth() {
-      textLines.reset();
     },
   },
 
@@ -138,17 +131,13 @@ export default Vue.extend({
       if (!this.font || !this.entityLabelList) {
         return [];
       }
-      const calculator = new LineWidthManager(this.font, this.maxWidth);
-      const splitter = new TextLineSplitter(calculator, this.entityLabelList);
       const viewLines: ViewLine[] = [];
-      textLines.updateSplitter(splitter);
       entityList.update(this.entityList.list());
-      const lines = textLines.list();
-      for (let i = 0; i < lines.length; i++) {
-        const id = `${lines[i].startOffset}:${lines[i].endOffset}`;
+      for (let i = 0; i < this.textLines.length; i++) {
+        const id = `${this.textLines[i].startOffset}:${this.textLines[i].endOffset}`;
         viewLines.push({
           id,
-          textLine: lines[i],
+          textLine: this.textLines[i],
           size: this.heights[id] || 64,
         });
       }
@@ -156,6 +145,20 @@ export default Vue.extend({
     },
     entityList(): Entities {
       return Entities.valueOf(JSON.parse(this.entities as string));
+    },
+    textLines(): TextLine[] {
+      if (!this.font || !this.entityLabelList) {
+        return [];
+      } else {
+        const maxLabelWidth = this.entityLabelList.maxLabelWidth();
+        const calculator = new LineWidthManager(
+          this.font,
+          this.maxWidth,
+          maxLabelWidth
+        );
+        const splitter = new TextLineSplitter(calculator);
+        return splitter.split(this.text);
+      }
     },
   },
 

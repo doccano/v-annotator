@@ -1,5 +1,4 @@
 import IntervalTree from "@flatten-js/interval-tree";
-import { EntityObserver, EntityObserverHint } from "../Line/Observer";
 
 export class Entity {
   constructor(
@@ -19,29 +18,12 @@ export class Entity {
   }
 }
 
-export abstract class EntitySubject {
-  private observers: EntityObserver[] = [];
-
-  register(observer: EntityObserver): void {
-    this.observers.push(observer);
-  }
-
-  notify(entities: Entities, hint?: EntityObserverHint): void {
-    for (const observer of this.observers) {
-      observer.update(entities, hint);
-    }
-  }
-}
-
-export class Entities extends EntitySubject {
+export class Entities {
   private tree: IntervalTree<Entity> = new IntervalTree();
-  private start2entity: { [key: number]: Entity[] } = {};
 
   constructor(entities: Entity[]) {
-    super();
     for (const entity of entities) {
       this.tree.insert([entity.startOffset, entity.endOffset], entity);
-      this.addStart2Entity(entity);
     }
   }
 
@@ -64,32 +46,17 @@ export class Entities extends EntitySubject {
     return this.tree.size;
   }
 
-  isEmpty(): boolean {
-    return this.size === 0;
-  }
-
   delete(entity: Entity): void {
     this.tree.remove([entity.startOffset, entity.endOffset], entity);
-    this.start2entity[entity.startOffset] = this.start2entity[
-      entity.startOffset
-    ].filter((e) => e.id !== entity.id);
   }
 
   add(entity: Entity): void {
     this.tree.insert([entity.startOffset, entity.endOffset], entity);
-    this.addStart2Entity(entity);
   }
 
   replace(oldEntity: Entity, newEntity: Entity): void {
     this.delete(oldEntity);
     this.add(newEntity);
-  }
-
-  private addStart2Entity(entity: Entity): void {
-    if (!(entity.startOffset in this.start2entity)) {
-      this.start2entity[entity.startOffset] = [];
-    }
-    this.start2entity[entity.startOffset].push(entity);
   }
 
   update(others: Entity[]): void {
@@ -105,7 +72,6 @@ export class Entities extends EntitySubject {
       oldMapping[entity.id] = entity;
       if (!(entity.id in newMapping)) {
         this.delete(entity);
-        this.notify(this, { entity, mode: "delete" });
       }
     }
     // add or update entities
@@ -121,30 +87,11 @@ export class Entities extends EntitySubject {
           )
         ) {
           this.replace(other, entity);
-          this.notify(this, { entity, mode: "update" });
         }
       } else {
         this.add(entity);
-        this.notify(this, { entity, mode: "add" });
       }
     }
-
-    if (oldEntities.length === others.length) {
-      this.notify(this);
-    }
-  }
-
-  getAt(startOffset: number): Entity[] {
-    if (startOffset in this.start2entity) {
-      return this.start2entity[startOffset];
-    } else {
-      return [];
-    }
-  }
-
-  startsAt(startOffset: number): boolean {
-    const entities = this.getAt(startOffset);
-    return entities.length !== 0;
   }
 
   list(): Entity[] {

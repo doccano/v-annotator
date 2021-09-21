@@ -10,7 +10,11 @@ export interface WidthManager {
 export class LineWidthManager implements WidthManager {
   private totalWidth = 0;
 
-  constructor(private font: Font, private maxLineWidth: number) {}
+  constructor(
+    private font: Font,
+    private maxLineWidth: number,
+    private maxLabelWidth: number
+  ) {}
 
   get width(): number {
     return this.totalWidth;
@@ -25,7 +29,10 @@ export class LineWidthManager implements WidthManager {
   }
 
   isFull(wordOrLabelWidth = 0): boolean {
-    return this.maxLineWidth <= this.totalWidth + wordOrLabelWidth;
+    return (
+      this.maxLineWidth - this.maxLabelWidth <=
+      this.totalWidth + wordOrLabelWidth
+    );
   }
 
   isEmpty(): boolean {
