@@ -19,6 +19,7 @@
           :key="index"
           @click:entity="clicked"
           @contextmenu:entity="$emit('contextmenu:entity', $event)"
+          @update:height="updateHeight"
         />
       </template>
     </RecycleScroller>
@@ -90,6 +91,7 @@ export default Vue.extend({
   data() {
     return {
       font: null as Font | null,
+      heights: {} as { [id: string]: number },
       maxWidth: 0,
       baseX: 0,
       marginLeft: 0,
@@ -109,6 +111,7 @@ export default Vue.extend({
     text: {
       handler() {
         textLines.updateText(this.text);
+        this.heights = {};
         this.$nextTick(() => {
           this.font = createFont(this.text, this.textElement!);
         });
@@ -142,10 +145,11 @@ export default Vue.extend({
       entityList.update(this.entityList.list());
       const lines = textLines.list();
       for (let i = 0; i < lines.length; i++) {
+        const id = `${lines[i].startOffset}:${lines[i].endOffset}`;
         viewLines.push({
-          id: `${lines[i].startOffset}:${lines[i].endOffset}:${lines[i].level}`,
+          id,
           textLine: lines[i],
-          size: this.getHeight(lines[i]),
+          size: this.heights[id] || 64,
         });
       }
       return viewLines;
@@ -163,15 +167,6 @@ export default Vue.extend({
     clicked(entity: Entity) {
       console.log(entity);
     },
-    getHeight(line: TextLine): number {
-      const marginBottom = 8;
-      const lineWidth = 5;
-      return (
-        44 +
-        (lineWidth + this.font!.lineHeight) * line.level +
-        Math.max(marginBottom * (line.level - 1), 0)
-      );
-    },
     setMaxWidth() {
       this.$nextTick(() => {
         const containerElement = document.getElementById("container")!;
@@ -181,6 +176,9 @@ export default Vue.extend({
           : containerElement.getBoundingClientRect().right;
         this.marginLeft = containerElement.getBoundingClientRect().left;
       });
+    },
+    updateHeight(id: string, height: number) {
+      this.heights[id] = height;
     },
     open(): void {
       try {
@@ -209,6 +207,9 @@ export default Vue.extend({
 <style scoped>
 #container {
   width: 100%;
+  height: 100vh;
+}
+.scroller >>> .vue-recycle-scroller__item-wrapper {
   height: 100vh;
 }
 </style>

@@ -13,8 +13,6 @@ export interface BaseLineSplitter {
 }
 
 export class TextLineSplitter implements BaseLineSplitter {
-  private levels: Map<number, number> = new Map();
-  private levelManager = new LevelManager();
   private chunkWidth: Map<number, number> = new Map();
   constructor(
     private widthManager: WidthManager,
@@ -28,14 +26,11 @@ export class TextLineSplitter implements BaseLineSplitter {
   ): Iterable<TextLine> {
     this.calculateChunkWidth(text);
     this.widthManager.reset();
-    this.resetLevels();
     let i = startOffset;
     while (i < text.length) {
       const ch = text[i];
       if (this.needsNewline(i, ch, entities)) {
-        const line = new TextLine(startOffset, i);
-        line.level = this.levelManager.maxLevel;
-        yield line;
+        yield new TextLine(startOffset, i);
         if (this.isCRLF(text.substr(i, 2))) {
           startOffset = i + 2;
           i++;
@@ -45,28 +40,12 @@ export class TextLineSplitter implements BaseLineSplitter {
           startOffset = i;
         }
         this.widthManager.reset();
-        this.resetLevels();
-      }
-      if (entities.startsAt(i)) {
-        const _entities = entities.getAt(i);
-        _entities.forEach((entity) => {
-          this.levelManager.update(entity, [
-            [
-              this.widthManager.width,
-              this.widthManager.width +
-                this.entityLabels.getById(entity.label)!.width,
-            ],
-          ]);
-        });
-        _entities.forEach((e) => this.updateLevel(e));
       }
       this.widthManager.add(ch);
       i++;
     }
     if (!this.widthManager.isEmpty()) {
-      const line = new TextLine(startOffset, text.length);
-      line.level = this.levelManager.maxLevel;
-      yield line;
+      yield new TextLine(startOffset, text.length);
     }
   }
 
@@ -137,17 +116,5 @@ export class TextLineSplitter implements BaseLineSplitter {
       const maxLabelWidth = this.entityLabels.maxLabelWidth(labelIds);
       return this.widthManager.isFull(maxLabelWidth);
     }
-  }
-
-  private updateLevel(entity: Entity): void {
-    const level = this.levelManager.fetchLevel(entity)!;
-    const entityLabel = this.entityLabels.getById(entity.label)!;
-    const x = this.widthManager.width;
-    this.levels.set(level, x + entityLabel.width);
-  }
-
-  private resetLevels(): void {
-    this.levels.clear();
-    this.levelManager.clear();
   }
 }

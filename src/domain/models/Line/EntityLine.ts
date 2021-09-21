@@ -38,7 +38,7 @@ function elementExists(element: SVGTextElement): boolean {
   return element.textLength.baseVal.value !== 0;
 }
 
-export class EntityLineView {
+export class EntityLine {
   private levelManager = new LevelManager();
   constructor(
     private entities: Entity[],
@@ -72,7 +72,7 @@ export class EntityLineView {
         )
       );
       const lineY = this.calculateLineY(entity);
-      const textY = lineY + this.font.fontSize / 2 + marginTop;
+      const textY = this.calculateTextY(entity);
       geometricEntities.push({
         entity,
         ranges,
@@ -90,6 +90,11 @@ export class EntityLineView {
       config.lineWidth +
       (config.lineWidth + this.font.fontSize + marginBottom) * level
     );
+  }
+
+  private calculateTextY(entity: Entity): number {
+    const lineY = this.calculateLineY(entity);
+    return lineY + this.font.fontSize / 2 + marginTop;
   }
 
   private createRanges(

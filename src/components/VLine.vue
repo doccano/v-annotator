@@ -1,5 +1,5 @@
 <template>
-  <svg version="1.1" xmlns="http://www.w3.org/2000/svg" :direction="direction">
+  <svg version="1.1" xmlns="http://www.w3.org/2000/svg" :direction="direction" :id="svgId">
     <g :transform="translate">
       <BaseText :id="id" :text-line="textLine" :text="text" :x="baseX" />
       <BaseEntity
@@ -29,10 +29,7 @@ import { EntityLabelList } from "@/domain/models/Label/Label";
 import { TextLine } from "@/domain/models/Line/TextLine";
 import BaseEntity from "./BaseEntity.vue";
 import BaseText from "./BaseText.vue";
-import {
-  EntityLineView,
-  GeometricEntity,
-} from "@/domain/models/Line/EntityLine";
+import { EntityLine, GeometricEntity } from "@/domain/models/Line/EntityLine";
 
 export default Vue.extend({
   components: {
@@ -93,6 +90,20 @@ export default Vue.extend({
       },
       deep: true,
     },
+    entities: {
+      handler() {
+        this.$nextTick(() => {
+          const svg = document.getElementById(
+            this.svgId
+          ) as unknown as SVGSVGElement;
+          const height = svg.getBBox().height + 30;
+          svg.setAttribute("style", `height: ${height}px`);
+          this.$emit("update:height", this.id, height);
+        });
+      },
+      deep: true,
+      immediate: true,
+    },
   },
 
   computed: {
@@ -101,7 +112,7 @@ export default Vue.extend({
     },
     geometricEntities(): GeometricEntity[] {
       if (this.element) {
-        const view = new EntityLineView(
+        const view = new EntityLine(
           this.entities,
           this.entityLabels,
           this.textLine,
@@ -117,6 +128,9 @@ export default Vue.extend({
     },
     id(): string {
       return `${this.textLine.startOffset}:${this.textLine.endOffset}`;
+    },
+    svgId(): string {
+      return "svg" + this.id;
     },
   },
 
