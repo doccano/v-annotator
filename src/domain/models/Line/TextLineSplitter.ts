@@ -1,9 +1,8 @@
 import { TextLine } from "./TextLine";
 import { WidthManager } from "./WidthManager";
-import { Entities } from "../Label/Entity";
 
 export interface BaseLineSplitter {
-  split(text: string, startOffset: number, entities?: Entities): TextLine[];
+  split(text: string): TextLine[];
   reset(): void;
 }
 

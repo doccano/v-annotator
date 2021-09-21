@@ -1,4 +1,5 @@
 import { Font } from "./Font";
+
 export interface WidthManager {
   width: number;
   add(ch: string): void;
