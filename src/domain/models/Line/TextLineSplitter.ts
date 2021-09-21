@@ -3,7 +3,6 @@ import { WidthManager } from "./WidthManager";
 
 export interface BaseLineSplitter {
   split(text: string): TextLine[];
-  reset(): void;
 }
 
 export class TextLineSplitter implements BaseLineSplitter {
@@ -37,10 +36,6 @@ export class TextLineSplitter implements BaseLineSplitter {
       lines.push(new TextLine(startOffset, text.length));
     }
     return lines;
-  }
-
-  reset(): void {
-    this.chunkWidth.clear();
   }
 
   private isWhitespace(ch: string): boolean {
