@@ -11,7 +11,7 @@ beforeEach(() => {
     width.set(ch, 1);
   }
   const font = new Font(0, "0", "0", 0, width);
-  calculator = new LineWidthManager(font, maxWidth);
+  calculator = new LineWidthManager(font, maxWidth, 0);
 });
 
 describe("Width", () => {
