@@ -59,7 +59,8 @@ export class EntityLine {
       this.levelManager.update(
         entity,
         ranges.items.map((range, index) =>
-          index === 0 // If it's the first element,
+          // If it's the first element,
+          index === 0 && this.textLine.startOffset <= entity.startOffset
             ? [
                 range.x1,
                 // consider label length,
