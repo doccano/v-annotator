@@ -6,6 +6,7 @@ export function createFont(text: string, textElement: SVGTextElement): Font {
   const width = new Map();
   characterSet.delete("\n");
   const characterArray = Array.from(characterSet);
+  characterArray.sort();
   textElement.textContent = characterArray.join("");
   characterArray.forEach((ch: string, index: number) => {
     width.set(ch, textElement.getExtentOfChar(index).width);

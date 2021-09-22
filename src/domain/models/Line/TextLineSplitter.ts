@@ -1,3 +1,4 @@
+import GraphemeSplitter from "grapheme-splitter";
 import { TextLine } from "./TextLine";
 import { WidthManager } from "./WidthManager";
 
@@ -12,11 +13,12 @@ export class TextLineSplitter implements BaseLineSplitter {
   split(text: string): TextLine[] {
     this.calculateChunkWidth(text);
     this.widthManager.reset();
+    const splitter = new GraphemeSplitter();
+    const letters: string[] = splitter.splitGraphemes(text);
     let startOffset = 0;
     let i = startOffset;
     const lines: TextLine[] = [];
-    while (i < text.length) {
-      const ch = text[i];
+    for (const ch of letters) {
       if (this.needsNewline(i, ch)) {
         lines.push(new TextLine(startOffset, i));
         if (this.isCRLF(text.substr(i, 2))) {
@@ -29,8 +31,8 @@ export class TextLineSplitter implements BaseLineSplitter {
         }
         this.widthManager.reset();
       }
-      this.widthManager.add(ch);
-      i++;
+      this.widthManager.add(ch, ch.length > 1);
+      i += ch.length;
     }
     if (!this.widthManager.isEmpty()) {
       lines.push(new TextLine(startOffset, text.length));
@@ -65,11 +67,11 @@ export class TextLineSplitter implements BaseLineSplitter {
         // word starts
         isInsideWord = true;
         start = i;
-        this.widthManager.add(ch);
+        this.widthManager.add(ch, ch.length > 1);
       } else if (!isInsideWord && this.isWhitespace(ch)) {
         // space is continuous.
       } else if (isInsideWord && !this.isWhitespace(ch)) {
-        this.widthManager.add(ch);
+        this.widthManager.add(ch, ch.length > 1);
       } else if (isInsideWord && this.isWhitespace(ch)) {
         isInsideWord = false;
         this.chunkWidth.set(start, this.widthManager.width);

@@ -2,7 +2,7 @@ import { Font } from "./Font";
 
 export interface WidthManager {
   width: number;
-  add(ch: string): void;
+  add(ch: string, return_max: boolean): void;
   reset(): void;
   isFull(wordOrLabelWidth: number): boolean;
   isEmpty(): boolean;
@@ -18,11 +18,12 @@ export class LineWidthManager implements WidthManager {
   ) {}
 
   get width(): number {
+    // console.log(this.maxLineWidth, this.maxLabelWidth)
     return this.totalWidth;
   }
 
-  add(ch: string): void {
-    this.totalWidth += this.font.widthOfChar(ch);
+  add(ch: string, return_max = false): void {
+    this.totalWidth += this.font.widthOf(ch, return_max);
   }
 
   reset(): void {
