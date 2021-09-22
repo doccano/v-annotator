@@ -24,7 +24,7 @@
       </template>
     </RecycleScroller>
     <svg version="1.1" xmlns="http://www.w3.org/2000/svg">
-      <text id="text" />
+      <text id="text" style="white-space: pre" />
     </svg>
   </div>
 </template>
@@ -128,7 +128,7 @@ export default Vue.extend({
       }
     },
     items(): ViewLine[] {
-      if (!this.font || !this.entityLabelList) {
+      if (!this.textLines) {
         return [];
       }
       const viewLines: ViewLine[] = [];
@@ -181,7 +181,7 @@ export default Vue.extend({
       });
     },
     updateHeight(id: string, height: number) {
-      this.heights[id] = height;
+      this.$set(this.heights, id, height);
     },
     open(): void {
       try {
@@ -200,7 +200,7 @@ export default Vue.extend({
         }
         this.$emit("add:entity", startOffset, endOffset);
       } catch (e) {
-        console.log(e);
+        return;
       }
     },
   },

@@ -8,9 +8,10 @@ export function createFont(text: string, textElement: SVGTextElement): Font {
   const characterArray = Array.from(characterSet);
   characterArray.sort();
   textElement.textContent = characterArray.join("");
-  characterArray.forEach((ch: string, index: number) => {
-    width.set(ch, textElement.getExtentOfChar(index).width);
-  });
+  for (let i = 0; i < textElement.getNumberOfChars(); i++) {
+    const ch = textElement.textContent.charAt(i);
+    width.set(ch, textElement.getExtentOfChar(i).width);
+  }
   width.set("\n", 0);
 
   // Extract font information
