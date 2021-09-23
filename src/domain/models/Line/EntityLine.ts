@@ -34,10 +34,6 @@ export class Ranges {
   }
 }
 
-function elementExists(element: SVGTextElement): boolean {
-  return element.textLength.baseVal.value !== 0;
-}
-
 export class EntityLine {
   private levelManager = new LevelManager();
   constructor(
@@ -48,9 +44,6 @@ export class EntityLine {
   ) {}
 
   render(element: SVGTextElement, rtl = false): GeometricEntity[] {
-    if (!elementExists(element)) {
-      return [];
-    }
     const geometricEntities: GeometricEntity[] = [];
     this.levelManager.clear();
     for (let i = 0; i < this.entities.length; i++) {
