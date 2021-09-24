@@ -50,8 +50,6 @@ interface ViewLine {
   size: number;
 }
 
-const entityList = new Entities([]);
-
 export default Vue.extend({
   components: {
     RecycleScroller,
@@ -132,7 +130,6 @@ export default Vue.extend({
         return [];
       }
       const viewLines: ViewLine[] = [];
-      entityList.update(this.entityList.list());
       for (let i = 0; i < this.textLines.length; i++) {
         const id = `${this.textLines[i].startOffset}:${this.textLines[i].endOffset}`;
         viewLines.push({

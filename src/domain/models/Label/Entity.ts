@@ -46,54 +46,6 @@ export class Entities {
     return this.tree.size;
   }
 
-  delete(entity: Entity): void {
-    this.tree.remove([entity.startOffset, entity.endOffset], entity);
-  }
-
-  add(entity: Entity): void {
-    this.tree.insert([entity.startOffset, entity.endOffset], entity);
-  }
-
-  replace(oldEntity: Entity, newEntity: Entity): void {
-    this.delete(oldEntity);
-    this.add(newEntity);
-  }
-
-  update(others: Entity[]): void {
-    const oldEntities = this.list();
-    const newMapping: { [key: number]: Entity } = {};
-    for (let i = 0; i < others.length; i++) {
-      newMapping[others[i].id] = others[i];
-    }
-    // delete entities
-    const oldMapping: { [key: number]: Entity } = {};
-    for (let i = 0; i < oldEntities.length; i++) {
-      const entity = oldEntities[i];
-      oldMapping[entity.id] = entity;
-      if (!(entity.id in newMapping)) {
-        this.delete(entity);
-      }
-    }
-    // add or update entities
-    for (let i = 0; i < others.length; i++) {
-      const entity = others[i];
-      if (entity.id in oldMapping) {
-        const other = oldMapping[entity.id];
-        if (
-          !(
-            entity.label === other.label &&
-            entity.startOffset === other.startOffset &&
-            entity.endOffset === other.endOffset
-          )
-        ) {
-          this.replace(other, entity);
-        }
-      } else {
-        this.add(entity);
-      }
-    }
-  }
-
   list(): Entity[] {
     return this.tree.values;
   }

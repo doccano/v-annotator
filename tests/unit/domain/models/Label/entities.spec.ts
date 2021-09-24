@@ -36,41 +36,4 @@ describe("Entities", () => {
     const entities = new Entities([new Entity(0, 0, 0, 0, 0)]);
     expect(entities.size).toEqual(1);
   });
-
-  it("delete", () => {
-    const entities = new Entities([
-      new Entity(0, 0, 0, 0, 5),
-      new Entity(1, 0, 0, 0, 5),
-    ]);
-    const expected = [new Entity(1, 0, 0, 0, 5)];
-    entities.delete(entities.list()[0]);
-    expect(entities.list()).toEqual(expected);
-  });
-
-  it("add", () => {
-    const entities = new Entities([]);
-    entities.add(new Entity(1, 0, 0, 0, 5));
-    const expected = [new Entity(1, 0, 0, 0, 5)];
-    expect(entities.list()).toEqual(expected);
-  });
-
-  it("replace", () => {
-    const oldEntity = new Entity(0, 0, 0, 0, 5);
-    const newEntity = new Entity(0, 0, 0, 3, 5);
-    const entities = new Entities([oldEntity]);
-    entities.replace(oldEntity, newEntity);
-    const expected = [newEntity];
-    expect(entities.list()).toEqual(expected);
-  });
-
-  it("update", () => {
-    const entities = new Entities([
-      new Entity(0, 0, 0, 0, 5),
-      new Entity(1, 0, 0, 3, 5),
-      new Entity(2, 0, 0, 3, 5),
-    ]);
-    const newEntities = [new Entity(1, 0, 0, 3, 5), new Entity(2, 0, 0, 4, 5)];
-    entities.update(newEntities);
-    expect(entities.list()).toEqual(newEntities);
-  });
 });
