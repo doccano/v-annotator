@@ -5,7 +5,7 @@ import { Font } from "@/domain/models/Line/Font";
 import { Entity, Entities } from "@/domain/models/Label/Entity";
 
 jest.mock("@/domain/models/Line/Font");
-const FontMock = Font as jest.Mock;
+const FontMock = Font as unknown as jest.Mock;
 
 describe("Subject", () => {
   const text =
@@ -17,6 +17,9 @@ describe("Subject", () => {
   FontMock.mockImplementationOnce(() => {
     return {
       widthOfChar: (): number => {
+        return 1;
+      },
+      widthOf: (): number => {
         return 1;
       },
     };

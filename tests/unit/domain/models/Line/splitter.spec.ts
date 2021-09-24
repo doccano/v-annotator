@@ -3,7 +3,7 @@ import { LineWidthManager } from "@/domain/models/Line/WidthManager";
 import { Font } from "@/domain/models/Line/Font";
 
 jest.mock("@/domain/models/Line/Font");
-const FontMock = Font as jest.Mock;
+const FontMock = Font as unknown as jest.Mock;
 
 describe("TextLineSplitter", () => {
   const text = "Biden";
@@ -12,6 +12,9 @@ describe("TextLineSplitter", () => {
   FontMock.mockImplementationOnce(() => {
     return {
       widthOfChar: (): number => {
+        return 1;
+      },
+      widthOf: (): number => {
         return 1;
       },
     };

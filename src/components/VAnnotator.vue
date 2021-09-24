@@ -38,7 +38,7 @@ import { RecycleScroller } from "vue-virtual-scroller";
 import { Label, EntityLabelList } from "@/domain/models/Label/Label";
 import { Entities, Entity } from "@/domain/models/Label/Entity";
 import { Font } from "@/domain/models/Line/Font";
-import { createFont, widthOf } from "@/domain/models/Line/fontFactory";
+import { widthOf } from "@/domain/models/Line/fontFactory";
 import { LineWidthManager } from "../domain/models/Line/WidthManager";
 import { TextLine } from "@/domain/models/Line/TextLine";
 import { TextLineSplitter } from "@/domain/models/Line/TextLineSplitter";
@@ -107,7 +107,7 @@ export default Vue.extend({
       handler() {
         this.heights = {};
         this.$nextTick(() => {
-          this.font = createFont(this.text, this.textElement!);
+          this.font = Font.create(this.text, this.textElement!);
         });
       },
       immediate: true,
