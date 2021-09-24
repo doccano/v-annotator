@@ -18,7 +18,6 @@ export class LineWidthManager implements WidthManager {
   ) {}
 
   get width(): number {
-    // console.log(this.maxLineWidth, this.maxLabelWidth)
     return this.totalWidth;
   }
 
