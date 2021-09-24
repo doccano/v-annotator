@@ -13,14 +13,11 @@ export class TextLineSplitter implements BaseLineSplitter {
   split(text: Text): TextLine[] {
     this.calculateChunkWidth(text.text);
     this.widthManager.reset();
-    // const splitter = new GraphemeSplitter();
-    // const letters: string[] = splitter.splitGraphemes(text);
     let startOffset = 0;
     let i = startOffset;
     const lines: TextLine[] = [];
     for (let j = 0; j < text.graphemeLength; j++) {
       const ch = text.graphemeAt(j);
-      // for (const ch of letters) {
       if (this.needsNewline(i, ch)) {
         lines.push(new TextLine(startOffset, i));
         if (this.isCRLF(text.substr(i, 2))) {
