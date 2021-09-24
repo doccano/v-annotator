@@ -17,8 +17,8 @@
         :rtl="rtl"
         :base-x="baseX"
         :margin="margin"
-        :line-y="gEntity.lineY"
-        :text-y="gEntity.textY"
+        :level="gEntity.level"
+        :font-size="font.fontSize"
         @click:entity="$emit('click:entity', gEntity.entity)"
         @contextmenu:entity="$emit('contextmenu:entity', gEntity.entity)"
       />

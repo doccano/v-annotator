@@ -2,14 +2,11 @@ import { Entity, LevelManager } from "../Label/Entity";
 import { LabelList } from "../Label/Label";
 import { TextLine } from "./LineText";
 import { Font } from "./Font";
-import config from "@/domain/models/Config/Config";
-const marginTop = 5;
 
 export interface GeometricEntity {
   entity: Entity;
   ranges: Ranges;
-  lineY: number;
-  textY: number;
+  level: number;
 }
 
 class Range {
@@ -65,30 +62,14 @@ export class EntityLine {
             : [range.x1, range.x2]
         )
       );
-      const lineY = this.calculateLineY(entity);
-      const textY = this.calculateTextY(entity);
+      const level = this.levelManager.fetchLevel(entity)!;
       geometricEntities.push({
         entity,
         ranges,
-        lineY,
-        textY,
+        level,
       });
     }
     return geometricEntities;
-  }
-
-  private calculateLineY(entity: Entity): number {
-    const level = this.levelManager.fetchLevel(entity)!;
-    const marginBottom = 8;
-    return (
-      config.lineWidth +
-      (config.lineWidth + this.font.fontSize + marginBottom) * level
-    );
-  }
-
-  private calculateTextY(entity: Entity): number {
-    const lineY = this.calculateLineY(entity);
-    return lineY + this.font.fontSize / 2 + marginTop;
   }
 
   private createRanges(

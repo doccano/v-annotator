@@ -62,15 +62,17 @@ export default Vue.extend({
       type: Number,
       default: 0,
     },
-    lineY: {
-      type: Number,
-    },
-    textY: {
-      type: Number,
-    },
     margin: {
       type: Number,
       default: 0,
+    },
+    level: {
+      type: Number,
+      default: 0,
+    },
+    fontSize: {
+      type: Number,
+      default: 17,
     },
   },
 
@@ -90,6 +92,17 @@ export default Vue.extend({
       } else {
         return this.x(this.ranges.first.x1);
       }
+    },
+    textY(): number {
+      const marginTop = 5;
+      return this.lineY + this.fontSize / 2 + marginTop;
+    },
+    lineY(): number {
+      const marginBottom = 8;
+      return (
+        config.lineWidth +
+        (config.lineWidth + this.fontSize + marginBottom) * this.level
+      );
     },
     coordinates(): [number, number][] {
       return this.ranges.items.map((range) => [
