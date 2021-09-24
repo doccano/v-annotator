@@ -39,6 +39,9 @@ export class EntityLine {
   ) {}
 
   render(element: SVGTextElement, rtl = false): GeometricEntity[] {
+    if (element.getNumberOfChars() === 0) {
+      return [];
+    }
     const geometricEntities: GeometricEntity[] = [];
     this.levelManager.clear();
     for (let i = 0; i < this.entities.length; i++) {
