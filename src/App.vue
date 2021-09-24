@@ -43,41 +43,41 @@ export default Vue.extend({
         1 //0000
       ),
       entities: [
-        // {
-        //   id: 0,
-        //   user: 0,
-        //   label: 0,
-        //   startOffset: 3,
-        //   endOffset: 7,
-        // },
-        // {
-        //   id: 4,
-        //   user: 0,
-        //   label: 0,
-        //   startOffset: 35,
-        //   endOffset: 46,
-        // },
-        // {
-        //   id: 1,
-        //   user: 0,
-        //   label: 1,
-        //   startOffset: 59,
-        //   endOffset: 62,
-        // },
-        // {
-        //   id: 2,
-        //   user: 0,
-        //   label: 0,
-        //   startOffset: 79,
-        //   endOffset: 89,
-        // },
-        // {
-        //   id: 3,
-        //   user: 0,
-        //   label: 1,
-        //   startOffset: 79,
-        //   endOffset: 94,
-        // },
+        {
+          id: 0,
+          user: 0,
+          label: 0,
+          startOffset: 3,
+          endOffset: 7,
+        },
+        {
+          id: 4,
+          user: 0,
+          label: 0,
+          startOffset: 35,
+          endOffset: 46,
+        },
+        {
+          id: 1,
+          user: 0,
+          label: 1,
+          startOffset: 59,
+          endOffset: 62,
+        },
+        {
+          id: 2,
+          user: 0,
+          label: 0,
+          startOffset: 79,
+          endOffset: 89,
+        },
+        {
+          id: 3,
+          user: 0,
+          label: 1,
+          startOffset: 79,
+          endOffset: 94,
+        },
       ],
       entityLabels: [
         {
@@ -102,7 +102,6 @@ export default Vue.extend({
 
   methods: {
     addEntity(startOffset: number, endOffset: number) {
-      console.log(`added: [${startOffset}, ${endOffset}]`);
       this.entities.push({
         id: this.id,
         startOffset,
@@ -113,7 +112,8 @@ export default Vue.extend({
       this.id++;
     },
     updateEntity(id: number) {
-      console.log(id);
+      const entity = this.entities.find((e) => e.id === id);
+      console.log(JSON.stringify(entity));
     },
     deleteEntity(entity: Entity) {
       this.entities = this.entities.filter((e) => e.id !== entity.id);

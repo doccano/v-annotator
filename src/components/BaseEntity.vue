@@ -28,7 +28,7 @@
 import Vue, { PropType } from "vue";
 import BaseEntityText from "./BaseEntityText.vue";
 import BaseEntityLine from "./BaseEntityLine.vue";
-import { Ranges } from "@/domain/models/Line/EntityLine";
+import { Ranges } from "@/domain/models/Line/LineEntity";
 import config from "@/domain/models/Config/Config";
 
 export default Vue.extend({

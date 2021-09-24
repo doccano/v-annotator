@@ -31,7 +31,7 @@ import Vue, { PropType } from "vue";
 import { Entity } from "@/domain/models/Label/Entity";
 import { Font } from "@/domain/models/Line/Font";
 import { EntityLabelList } from "@/domain/models/Label/Label";
-import { TextLine } from "@/domain/models/Line/TextLine";
+import { TextLine } from "@/domain/models/Line/LineText";
 import BaseEntity from "./BaseEntity.vue";
 import BaseText from "./BaseText.vue";
 import { EntityLine, GeometricEntity } from "@/domain/models/Line/LineEntity";

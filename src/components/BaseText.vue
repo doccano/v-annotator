@@ -4,7 +4,7 @@
 </template>
 
 <script lang="ts">
-import { TextLine } from "@/domain/models/Line/TextLine";
+import { TextLine } from "../domain/models/Line/LineText";
 import Vue, { PropType } from "vue";
 
 export default Vue.extend({

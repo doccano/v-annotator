@@ -41,7 +41,7 @@ import { Entities, Entity } from "@/domain/models/Label/Entity";
 import { Font } from "@/domain/models/Line/Font";
 import { widthOf } from "@/domain/models/Line/Utils";
 import { LineWidthManager } from "../domain/models/Line/WidthManager";
-import { TextLine } from "@/domain/models/Line/TextLine";
+import { TextLine } from "@/domain/models/Line/LineText";
 import { TextLineSplitter } from "@/domain/models/Line/LineSplitter";
 import { getSelection } from "@/domain/models/EventHandler/TextSelectionHandler";
 
@@ -180,7 +180,7 @@ export default Vue.extend({
 
   methods: {
     clicked(entity: Entity) {
-      console.log(entity);
+      this.$emit("click:entity", entity.id);
     },
     setMaxWidth() {
       this.$nextTick(() => {
