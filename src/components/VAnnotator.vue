@@ -30,7 +30,7 @@
 </template>
 
 <script lang="ts">
-import _ from "lodash";
+import { debounce } from "lodash-es";
 import Vue, { PropType } from "vue";
 import VLine from "./VLine.vue";
 import "vue-virtual-scroller/dist/vue-virtual-scroller.css";
@@ -103,7 +103,7 @@ export default Vue.extend({
     this.textElement = document.getElementById(
       "text"
     ) as unknown as SVGTextElement;
-    window.addEventListener("resize", _.debounce(this.setMaxWidth, 500));
+    window.addEventListener("resize", debounce(this.setMaxWidth, 500));
     this.setMaxWidth();
   },
 

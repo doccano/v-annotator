@@ -8,20 +8,28 @@
   "typings": "dist/types/index.d.ts",
   "license": "MIT",
   "author": "Hironsan",
-  "files": [ "dist" ],
-  "keywords": ["Vue", "Vue.js", "NLP", "Natural Language Processing", "Annotation"],
+  "files": [
+    "dist"
+  ],
+  "keywords": [
+    "Vue",
+    "Vue.js",
+    "NLP",
+    "Natural Language Processing",
+    "Annotation"
+  ],
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
     "lint": "vue-cli-service lint",
-    "build-bundle": "vue-cli-service build --target lib --name v-annotator ./src/wrapper.js"
+    "build-bundle": "vue-cli-service build --target lib --name v-annotator ./src/wrapper.js --report"
   },
   "dependencies": {
     "@flatten-js/interval-tree": "^1.0.14",
     "core-js": "^3.6.5",
     "grapheme-splitter": "^1.0.4",
-    "lodash": "^4.17.21",
+    "lodash-es": "^4.17.21",
     "vue": "^2.6.11",
     "vue-virtual-scroller": "^1.0.10"
   },
@@ -30,6 +38,7 @@
     "@types/jest": "^24.0.19",
     "@types/jsdom": "^16.2.11",
     "@types/lodash": "^4.14.170",
+    "@types/lodash-es": "^4.17.5",
     "@types/vue-virtual-scroller": "npm:@earltp/vue-virtual-scroller",
     "@typescript-eslint/eslint-plugin": "^4.18.0",
     "@typescript-eslint/parser": "^4.18.0",
