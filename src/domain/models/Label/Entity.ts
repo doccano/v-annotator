@@ -1,4 +1,5 @@
 import IntervalTree from "@flatten-js/interval-tree";
+import { Text } from "./Text";
 
 export class Entity {
   constructor(
@@ -27,7 +28,7 @@ export class Entities {
     }
   }
 
-  static valueOf(entities: Entity[]): Entities {
+  static valueOf(entities: Entity[], text?: Text): Entities {
     return new Entities(
       entities.map(
         (entity) =>
@@ -35,8 +36,10 @@ export class Entities {
             entity.id,
             entity.label,
             entity.user,
-            entity.startOffset,
-            entity.endOffset
+            text
+              ? text.toCodePointOffset(entity.startOffset)
+              : entity.startOffset,
+            text ? text.toCodePointOffset(entity.endOffset) : entity.endOffset
           )
       )
     );

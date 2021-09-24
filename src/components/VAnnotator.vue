@@ -35,6 +35,7 @@ import Vue, { PropType } from "vue";
 import VLine from "./VLine.vue";
 import "vue-virtual-scroller/dist/vue-virtual-scroller.css";
 import { RecycleScroller } from "vue-virtual-scroller";
+import { Text } from "@/domain/models/Label/Text";
 import { Label, EntityLabelList } from "@/domain/models/Label/Label";
 import { Entities, Entity } from "@/domain/models/Label/Entity";
 import { Font } from "@/domain/models/Line/Font";
@@ -81,6 +82,10 @@ export default Vue.extend({
       type: Boolean,
       default: false,
     },
+    perCodePoint: {
+      type: Boolean,
+      default: false,
+    },
   },
 
   data() {
@@ -115,6 +120,9 @@ export default Vue.extend({
   },
 
   computed: {
+    _text(): Text {
+      return new Text(this.text);
+    },
     entityLabelList(): EntityLabelList | null {
       if (this.textElement) {
         const widths = this.entityLabels.map((label) =>
@@ -141,7 +149,14 @@ export default Vue.extend({
       return viewLines;
     },
     entityList(): Entities {
-      return Entities.valueOf(JSON.parse(this.entities as string));
+      if (this.perCodePoint) {
+        return Entities.valueOf(JSON.parse(this.entities as string));
+      } else {
+        return Entities.valueOf(
+          JSON.parse(this.entities as string),
+          this._text
+        );
+      }
     },
     textLines(): TextLine[] {
       if (!this.font || !this.entityLabelList) {
@@ -154,7 +169,7 @@ export default Vue.extend({
           maxLabelWidth
         );
         const splitter = new TextLineSplitter(calculator);
-        return splitter.split(this.text);
+        return splitter.split(this._text);
       }
     },
   },
@@ -195,7 +210,13 @@ export default Vue.extend({
             return;
           }
         }
-        this.$emit("add:entity", startOffset, endOffset);
+        if (this.perCodePoint) {
+          this.$emit("add:entity", startOffset, endOffset);
+        } else {
+          const graphemeStartOffset = this._text.toGraphemeOffset(startOffset);
+          const graphemeEndOffset = this._text.toGraphemeOffset(endOffset);
+          this.$emit("add:entity", graphemeStartOffset, graphemeEndOffset);
+        }
       } catch (e) {
         return;
       }

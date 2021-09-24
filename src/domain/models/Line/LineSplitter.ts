@@ -1,24 +1,26 @@
-import GraphemeSplitter from "grapheme-splitter";
+import { Text } from "../Label/Text";
 import { TextLine } from "./LineText";
 import { WidthManager } from "./WidthManager";
 
 export interface BaseLineSplitter {
-  split(text: string): TextLine[];
+  split(text: Text): TextLine[];
 }
 
 export class TextLineSplitter implements BaseLineSplitter {
   private chunkWidth: Map<number, number> = new Map();
   constructor(private widthManager: WidthManager) {}
 
-  split(text: string): TextLine[] {
-    this.calculateChunkWidth(text);
+  split(text: Text): TextLine[] {
+    this.calculateChunkWidth(text.text);
     this.widthManager.reset();
-    const splitter = new GraphemeSplitter();
-    const letters: string[] = splitter.splitGraphemes(text);
+    // const splitter = new GraphemeSplitter();
+    // const letters: string[] = splitter.splitGraphemes(text);
     let startOffset = 0;
     let i = startOffset;
     const lines: TextLine[] = [];
-    for (const ch of letters) {
+    for (let j = 0; j < text.graphemeLength; j++) {
+      const ch = text.graphemeAt(j);
+      // for (const ch of letters) {
       if (this.needsNewline(i, ch)) {
         lines.push(new TextLine(startOffset, i));
         if (this.isCRLF(text.substr(i, 2))) {
@@ -35,7 +37,7 @@ export class TextLineSplitter implements BaseLineSplitter {
       i += ch.length;
     }
     if (!this.widthManager.isEmpty()) {
-      lines.push(new TextLine(startOffset, text.length));
+      lines.push(new TextLine(startOffset, text.codePointLength));
     }
     return lines;
   }

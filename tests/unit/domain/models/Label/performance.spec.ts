@@ -3,6 +3,7 @@ import { TextLineSplitter } from "@/domain/models/Line/LineSplitter";
 import { LineWidthManager } from "@/domain/models/Line/WidthManager";
 import { Font } from "@/domain/models/Line/Font";
 import { Entity, Entities } from "@/domain/models/Label/Entity";
+import { Text } from "@/domain/models/Label/Text";
 
 jest.mock("@/domain/models/Line/Font");
 const FontMock = Font as unknown as jest.Mock;
@@ -35,7 +36,7 @@ describe("Subject", () => {
 
   it("initial run", () => {
     const t0 = performance.now();
-    splitter.split(text);
+    splitter.split(new Text(text));
     const t1 = performance.now();
     console.log(`Call to doSomething took ${t1 - t0} milliseconds.`);
   });

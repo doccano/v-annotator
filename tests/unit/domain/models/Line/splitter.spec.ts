@@ -1,6 +1,7 @@
 import { TextLineSplitter } from "@/domain/models/Line/LineSplitter";
 import { LineWidthManager } from "@/domain/models/Line/WidthManager";
 import { Font } from "@/domain/models/Line/Font";
+import { Text } from "@/domain/models/Label/Text";
 
 jest.mock("@/domain/models/Line/Font");
 const FontMock = Font as unknown as jest.Mock;
@@ -29,7 +30,7 @@ describe("TextLineSplitter", () => {
   });
 
   it("startOffset is 0", () => {
-    const lines = splitter.split(text);
+    const lines = splitter.split(new Text(text));
     const expected = [
       [0, 2],
       [2, 4],
