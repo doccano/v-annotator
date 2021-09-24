@@ -1,12 +1,21 @@
 {
-  "name": "annotator",
+  "name": "v-annotator",
   "version": "0.1.0",
   "private": true,
+  "main": "dist/v-annotator.common.js",
+  "unpkg": "./dist/v-annotator.umd.min.js",
+  "jsdelivr": "./dist/v-annotator.umd.min.js",
+  "typings": "dist/types/index.d.ts",
+  "license": "MIT",
+  "author": "Hironsan",
+  "files": [ "dist" ],
+  "keywords": ["Vue", "Vue.js", "NLP", "Natural Language Processing", "Annotation"],
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "build-bundle": "vue-cli-service build --target lib --name v-annotator ./src/wrapper.js"
   },
   "dependencies": {
     "@flatten-js/interval-tree": "^1.0.14",
