@@ -1,5 +1,5 @@
 import GraphemeSplitter from "grapheme-splitter";
-import { TextLine } from "./TextLine";
+import { TextLine } from "./LineText";
 import { WidthManager } from "./WidthManager";
 
 export interface BaseLineSplitter {

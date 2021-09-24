@@ -1,4 +1,4 @@
-import { TextLine } from "../Line/TextLine";
+import { TextLine } from "../Line/LineText";
 
 export function getSelection(): [number, number] {
   const selection = window.getSelection();

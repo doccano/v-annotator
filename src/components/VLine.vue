@@ -34,7 +34,7 @@ import { EntityLabelList } from "@/domain/models/Label/Label";
 import { TextLine } from "@/domain/models/Line/TextLine";
 import BaseEntity from "./BaseEntity.vue";
 import BaseText from "./BaseText.vue";
-import { EntityLine, GeometricEntity } from "@/domain/models/Line/EntityLine";
+import { EntityLine, GeometricEntity } from "@/domain/models/Line/LineEntity";
 
 export default Vue.extend({
   components: {

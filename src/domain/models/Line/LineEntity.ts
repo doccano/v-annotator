@@ -1,6 +1,6 @@
 import { Entity, LevelManager } from "../Label/Entity";
 import { LabelList } from "../Label/Label";
-import { TextLine } from "./TextLine";
+import { TextLine } from "./LineText";
 import { Font } from "./Font";
 import config from "@/domain/models/Config/Config";
 const marginTop = 5;

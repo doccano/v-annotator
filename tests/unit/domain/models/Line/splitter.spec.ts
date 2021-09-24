@@ -1,4 +1,4 @@
-import { TextLineSplitter } from "@/domain/models/Line/TextLineSplitter";
+import { TextLineSplitter } from "@/domain/models/Line/LineSplitter";
 import { LineWidthManager } from "@/domain/models/Line/WidthManager";
 import { Font } from "@/domain/models/Line/Font";
 

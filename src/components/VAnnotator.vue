@@ -41,7 +41,7 @@ import { Font } from "@/domain/models/Line/Font";
 import { widthOf } from "@/domain/models/Line/Utils";
 import { LineWidthManager } from "../domain/models/Line/WidthManager";
 import { TextLine } from "@/domain/models/Line/TextLine";
-import { TextLineSplitter } from "@/domain/models/Line/TextLineSplitter";
+import { TextLineSplitter } from "@/domain/models/Line/LineSplitter";
 import { getSelection } from "@/domain/models/EventHandler/TextSelectionHandler";
 
 interface ViewLine {
