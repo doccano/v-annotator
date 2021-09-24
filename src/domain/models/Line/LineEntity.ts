@@ -1,7 +1,6 @@
 import { Entity, LevelManager } from "../Label/Entity";
 import { LabelList } from "../Label/Label";
 import { TextLine } from "./LineText";
-import { Font } from "./Font";
 
 export interface GeometricEntity {
   entity: Entity;
@@ -36,8 +35,7 @@ export class EntityLine {
   constructor(
     private entities: Entity[],
     private entityLabels: LabelList,
-    private textLine: TextLine,
-    private font: Font
+    private textLine: TextLine
   ) {}
 
   render(element: SVGTextElement, rtl = false): GeometricEntity[] {

@@ -120,8 +120,7 @@ export default Vue.extend({
         const view = new EntityLine(
           this.entities,
           this.entityLabels,
-          this.textLine,
-          this.font
+          this.textLine
         );
         return view.render(this.element, this.rtl);
       } else {
