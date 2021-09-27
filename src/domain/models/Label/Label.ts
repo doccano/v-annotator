@@ -26,6 +26,19 @@ export class EntityLabelListItem implements LabelListItem {
   }
 }
 
+export class RelationLabelListItem implements LabelListItem {
+  constructor(
+    readonly id: number,
+    readonly text: string,
+    readonly color: string,
+    readonly textWidth: number
+  ) {}
+
+  get width(): number {
+    return this.textWidth;
+  }
+}
+
 export abstract class LabelList {
   private id2Label: { [key: number]: LabelListItem } = {};
 
@@ -62,6 +75,22 @@ export class EntityLabelList extends LabelList {
       labels.map(
         (label, index) =>
           new EntityLabelListItem(
+            label.id,
+            label.text,
+            label.color,
+            widths[index]
+          )
+      )
+    );
+  }
+}
+
+export class RelationLabelList extends LabelList {
+  static valueOf(labels: Label[], widths: number[]): RelationLabelList {
+    return new RelationLabelList(
+      labels.map(
+        (label, index) =>
+          new RelationLabelListItem(
             label.id,
             label.text,
             label.color,
