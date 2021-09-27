@@ -28,6 +28,10 @@ export class Ranges {
   get first(): Range {
     return this.items[0];
   }
+
+  center(): number {
+    return this.first.x1 + (this.first.x2 - this.first.x1) / 2;
+  }
 }
 
 export class EntityLine {
