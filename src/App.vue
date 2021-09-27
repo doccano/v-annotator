@@ -11,6 +11,8 @@
       :text="text"
       :entities="JSON.stringify(entities)"
       :entity-labels="entityLabels"
+      :relations="relations"
+      :relation-labels="relationLabels"
       :rtl="rtl"
       @add:entity="addEntity"
       @click:entity="updateEntity"
@@ -39,7 +41,7 @@ export default Vue.extend({
       // rtl: true,
       // text: "👶🏻👦🏻👧🏻👨🏻👩🏻👱🏻‍♀️👱🏻👴🏻👵🏻👲🏻👳🏻‍♀️👳🏻👮🏻‍♀️👮🏻👷🏻‍♀️👷🏻💂🏻‍♀️💂🏻🕵🏻‍♀️👩🏻‍⚕️👨🏻‍⚕️👩🏻‍🌾👨🏻‍🌾👨🏻‍🌾👨🏻‍🌾👨🏻‍🌾👨🏻‍🌾👨🏻‍🌾👨🏻‍🌾👨🏻‍🌾👨🏻‍🌾👨🏻‍🌾👨🏻‍🌾👨🏻‍🌾👨🏻‍🌾👨🏻‍🌾👨🏻‍🌾"
       rtl: false,
-      text: "👶🏻👦🏻👧🏻👨🏻👩🏻👱🏻‍♀️👱🏻👴🏻👵🏻👲🏻👳🏻‍♀️👳🏻👮🏻‍♀️👮🏻👷🏻‍♀️👷🏻💂🏻‍♀️💂🏻🕵🏻‍♀️👩🏻‍⚕️👨🏻‍⚕️👩🏻‍🌾👨🏻‍🌾👨🏻‍🌾👨🏻‍🌾👨🏻‍🌾👨🏻‍🌾👨🏻‍🌾👨🏻‍🌾👨🏻‍🌾👨🏻‍🌾👨🏻‍🌾👨🏻‍🌾👨🏻‍🌾👨🏻‍🌾👨🏻‍🌾👨🏻‍🌾\nwe must respect the will of the individual.\nTake it easy I can assure you that everything will turn out to be fine.\n".repeat(
+      text: "we must respect the will of the individual.\nTake it easy I can assure you that everything will turn out to be fine.\n".repeat(
         1 //0000
       ),
       entities: [
@@ -79,6 +81,14 @@ export default Vue.extend({
           endOffset: 94,
         },
       ],
+      relations: [
+        {
+          id: 0,
+          fromId: 0,
+          toId: 4,
+          labelId: 0,
+        },
+      ],
       entityLabels: [
         {
           id: 0,
@@ -89,6 +99,13 @@ export default Vue.extend({
           id: 1,
           text: "Ipsum",
           color: "#F9A825",
+        },
+      ],
+      relationLabels: [
+        {
+          id: 0,
+          text: "isLocated",
+          color: "#ffffff",
         },
       ],
     };

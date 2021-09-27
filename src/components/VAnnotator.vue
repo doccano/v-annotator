@@ -10,6 +10,8 @@
             )
           "
           :entityLabels="entityLabelList"
+          :relations="relations"
+          :relationLabels="relationLabelList"
           :font="font"
           :rtl="rtl"
           :text="text"
@@ -36,7 +38,11 @@ import VLine from "./VLine.vue";
 import "vue-virtual-scroller/dist/vue-virtual-scroller.css";
 import { RecycleScroller } from "vue-virtual-scroller";
 import { Text } from "@/domain/models/Label/Text";
-import { Label, EntityLabelList } from "@/domain/models/Label/Label";
+import {
+  Label,
+  EntityLabelList,
+  RelationLabelList,
+} from "@/domain/models/Label/Label";
 import { Entities, Entity } from "@/domain/models/Label/Entity";
 import { Font } from "@/domain/models/Line/Font";
 import { widthOf } from "@/domain/models/Line/Utils";
@@ -44,6 +50,7 @@ import { LineWidthManager } from "../domain/models/Line/WidthManager";
 import { TextLine } from "@/domain/models/Line/LineText";
 import { TextLineSplitter } from "@/domain/models/Line/LineSplitter";
 import { getSelection } from "@/domain/models/EventHandler/TextSelectionHandler";
+import { Relation } from "@/domain/models/Label/Relation";
 
 interface ViewLine {
   id: string;
@@ -72,6 +79,14 @@ export default Vue.extend({
       type: Array as PropType<Label[]>,
       default: () => [],
       required: true,
+    },
+    relations: {
+      type: Array as PropType<Relation[]>,
+      default: () => [],
+    },
+    relationLabels: {
+      type: Array as PropType<Label[]>,
+      default: () => [],
     },
     allowOverlapping: {
       type: Boolean,
@@ -129,6 +144,16 @@ export default Vue.extend({
           widthOf(label.text, this.textElement!)
         );
         return EntityLabelList.valueOf(this.entityLabels, widths);
+      } else {
+        return null;
+      }
+    },
+    relationLabelList(): RelationLabelList | null {
+      if (this.textElement) {
+        const widths = this.relationLabels.map((label) =>
+          widthOf(label.text, this.textElement!)
+        );
+        return RelationLabelList.valueOf(this.relationLabels, widths);
       } else {
         return null;
       }
