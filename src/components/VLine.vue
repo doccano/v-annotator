@@ -31,11 +31,11 @@
         :rtl="rtl"
         :base-x="baseX"
         :margin="margin"
-        :selected="selectedRelation === relation.relation"
+        :selected="$store.getters.isSelectedRelation(relation.relation)"
         @click:relation="$emit('click:relation', relation.relation)"
         @contextmenu:relation="$emit('contextmenu:relation', relation.relation)"
-        @mouseover="selectedRelation = relation.relation"
-        @mouseleave="selectedRelation = null"
+        @mouseover="$store.commit('setSelectedRelation', relation.relation)"
+        @mouseleave="$store.commit('setSelectedRelation', null)"
       />
       <g :transform="translateEntity">
         <BaseText :id="id" :text-line="textLine" :text="text" :x="baseX" />
@@ -51,9 +51,11 @@
           :margin="margin"
           :level="gEntity.level"
           :font-size="font.fontSize"
-          :selected="isSelected(gEntity.entity)"
+          :selected="$store.getters.isSelectedEntity(gEntity.entity)"
           @click:entity="$emit('click:entity', gEntity.entity)"
           @contextmenu:entity="$emit('contextmenu:entity', gEntity.entity)"
+          @mouseover="$store.commit('setSelectedEntity', gEntity.entity)"
+          @mouseleave="$store.commit('setSelectedEntity', null)"
         />
       </g>
     </g>

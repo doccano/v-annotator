@@ -1,5 +1,5 @@
 <template>
-  <g>
+  <g @mouseover="$emit('mouseover')" @mouseleave="$emit('mouseleave')">
     <BaseEntityLine
       v-for="([x1, x2], index) in coordinates"
       :key="index"
