@@ -6,6 +6,7 @@
     <button @click="allowOverlapping = !allowOverlapping">
       Allow overlapping({{ allowOverlapping }})
     </button>
+    <button @click="addRelation">Add relation</button>
     <v-annotator
       :allow-overlapping="allowOverlapping"
       :text="text"
@@ -89,9 +90,9 @@ export default Vue.extend({
           labelId: 0,
         },
         {
-          id: 1,
-          fromId: 1,
-          toId: 2,
+          id: 2,
+          fromId: 4,
+          toId: 1,
           labelId: 0,
         },
       ],
@@ -111,6 +112,11 @@ export default Vue.extend({
         {
           id: 0,
           text: "isLocated",
+          color: "#ffffff",
+        },
+        {
+          id: 1,
+          text: "isLivedIn",
           color: "#ffffff",
         },
       ],
@@ -152,6 +158,16 @@ export default Vue.extend({
       this.entityLabels[0].color = "#FF5733";
       this.entityLabels[0].text = "Misc";
     },
+    addRelation() {
+      this.relations.push(
+        {
+          id: 1,
+          fromId: 1,
+          toId: 2,
+          labelId: 1,
+        }
+      )
+    }
   },
 });
 </script>

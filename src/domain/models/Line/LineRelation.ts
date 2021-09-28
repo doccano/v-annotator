@@ -28,15 +28,16 @@ export class RelationLine {
     entities.forEach((entity) => {
       entityMap.set(entity.entity.id, entity);
     });
-    let x1 = undefined;
-    let x2 = undefined;
     for (const relation of this.relations) {
+      let x1 = undefined;
+      let x2 = undefined;
       const fromEntity = entityMap.get(relation.fromId);
       const toEntity = entityMap.get(relation.toId);
       const label = this.relationLabels.getById(relation.labelId);
       if (fromEntity) {
-        x1 = fromEntity.ranges.center();
-        if (fromEntity.entity.startOffset < this.textLine.startOffset) continue;
+        if (this.textLine.startOffset <= fromEntity.entity.startOffset) {
+          x1 = fromEntity.ranges.center();
+        };
       }
       if (toEntity) {
         x2 = toEntity.ranges.center();

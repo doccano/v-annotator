@@ -7,14 +7,21 @@
       stroke-width="1"
       fill-opacity="0"
     />
-    <rect
-      :x="rectX"
-      :y="rectY"
-      :width="labelWidth"
-      :height="fontSize"
-      fill="white"
-    />
-    <text :x="center" :y="textY" text-anchor="middle" v-text="label" />
+    <g v-if="x1">
+      <rect
+        :x="rectX"
+        :y="rectY"
+        :width="labelWidth"
+        :height="fontSize"
+        fill="white"
+      />
+      <text
+        :x="center"
+        :y="textY"
+        text-anchor="middle"
+        v-text="label"
+      />
+    </g>
   </g>
 </template>
 
@@ -29,11 +36,9 @@ export default Vue.extend({
     },
     x1: {
       type: Number,
-      required: true,
     },
     x2: {
       type: Number,
-      required: true,
     },
     label: {
       type: String,
@@ -69,13 +74,27 @@ export default Vue.extend({
       return this.dy + this.fontSize / 2;
     },
     d(): string {
-      return `M ${this._x1} ${this.y}
-      v -${this.dy}
-      A ${this.r} ${this.r} 0 0 1 ${this._x1 + this.r} ${this.lineY}
-      H ${this._x2 - this.r}
-      A ${this.r} ${this.r} 0 0 1 ${this._x2} ${this.lineY + this.r}
-      v ${this.dy - 8}
-      `;
+      if (this.x1 && this.x2) {
+        return `M ${this._x1} ${this.y}
+        v -${this.dy}
+        A ${this.r} ${this.r} 0 0 1 ${this._x1 + this.r} ${this.lineY}
+        H ${this._x2 - this.r}
+        A ${this.r} ${this.r} 0 0 1 ${this._x2} ${this.lineY + this.r}
+        v ${this.dy - 3}
+        `;
+      } else if (this.x1) {
+        return `M ${this._x1} ${this.y}
+        v -${this.dy}
+        A ${this.r} ${this.r} 0 0 1 ${this._x1 + this.r} ${this.lineY}
+        H 5000
+        `;
+      } else {
+        return `M ${this._x1} ${this.y - this.dy - this.r}
+        H ${this._x2 - this.r}
+        A ${this.r} ${this.r} 0 0 1 ${this._x2} ${this.lineY + this.r}
+        v ${this.dy - 3}
+        `;
+      }
     },
     dy(): number {
       return 20 + this.fontSize * this.level;
@@ -96,10 +115,18 @@ export default Vue.extend({
       return this.lineY + this.fontSize / 2 - 3;
     },
     _x1(): number {
-      return this.rtl ? this.x1 - this.margin : this.x1 - this.baseX;
+      if (this.x1) {
+        return this.rtl ? this.x1 - this.margin : this.x1 - this.baseX;
+      } else {
+        return this.baseX;
+      }
     },
     _x2(): number {
-      return this.rtl ? this.x2 - this.margin : this.x2 - this.baseX;
+      if (this.x2) {
+        return this.rtl ? this.x2 - this.margin : this.x2 - this.baseX;
+      } else {
+        return this.x1 + 100;
+      }
     },
   },
 });
