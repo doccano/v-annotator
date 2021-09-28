@@ -2,7 +2,7 @@ import { LevelManager } from "../Label/Entity";
 import { LabelList } from "../Label/Label";
 import { Relation } from "../Label/Relation";
 import { GeometricEntity } from "./LineEntity";
-import { TextLine } from './LineText';
+import { TextLine } from "./LineText";
 
 export interface LineRelation {
   x1: number | undefined;
@@ -37,7 +37,7 @@ export class RelationLine {
       if (fromEntity) {
         if (this.textLine.startOffset <= fromEntity.entity.startOffset) {
           x1 = fromEntity.ranges.center();
-        };
+        }
       }
       if (toEntity) {
         x2 = toEntity.ranges.center();

@@ -6,9 +6,15 @@
     :id="svgId"
   >
     <defs>
-      <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5"
-          markerWidth="6" markerHeight="6"
-          orient="auto-start-reverse">
+      <marker
+        id="arrow"
+        viewBox="0 0 10 10"
+        refX="5"
+        refY="5"
+        markerWidth="6"
+        markerHeight="6"
+        orient="auto-start-reverse"
+      >
         <path d="M 0 0 L 10 5 L 0 10 z" stroke="#74b8dc" fill="#74b8dc" />
       </marker>
     </defs>
@@ -25,11 +31,11 @@
         :rtl="rtl"
         :base-x="baseX"
         :margin="margin"
-        :selected="selectedRelation===relation.relation"
+        :selected="selectedRelation === relation.relation"
         @click:relation="$emit('click:relation', relation.relation)"
         @contextmenu:relation="$emit('contextmenu:relation', relation.relation)"
-        @mouseover="selectedRelation=relation.relation"
-        @mouseleave="selectedRelation=null"
+        @mouseover="selectedRelation = relation.relation"
+        @mouseleave="selectedRelation = null"
       />
       <g :transform="translateEntity">
         <BaseText :id="id" :text-line="textLine" :text="text" :x="baseX" />
@@ -171,7 +177,11 @@ export default Vue.extend({
       }
     },
     lineRelations(): LineRelation[] {
-      const view = new RelationLine(this.relations, this.relationLabels, this.textLine);
+      const view = new RelationLine(
+        this.relations,
+        this.relationLabels,
+        this.textLine
+      );
       return view.render(this.geometricEntities);
     },
     y(): number {
@@ -199,7 +209,10 @@ export default Vue.extend({
   methods: {
     isSelected(entity: Entity): boolean {
       if (this.selectedRelation) {
-        return this.selectedRelation.fromId === entity.id || this.selectedRelation.toId === entity.id;
+        return (
+          this.selectedRelation.fromId === entity.id ||
+          this.selectedRelation.toId === entity.id
+        );
       } else {
         return false;
       }

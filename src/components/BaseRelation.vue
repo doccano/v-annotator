@@ -21,12 +21,7 @@
         :height="fontSize"
         fill="white"
       />
-      <text
-        :x="center"
-        :y="textY"
-        text-anchor="middle"
-        v-text="label"
-      />
+      <text :x="center" :y="textY" text-anchor="middle" v-text="label" />
     </g>
   </g>
 </template>
@@ -140,7 +135,7 @@ export default Vue.extend({
     },
     width(): number {
       return this.selected ? 3 : 1;
-    }
+    },
   },
 });
 </script>

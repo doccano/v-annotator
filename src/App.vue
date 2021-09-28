@@ -46,7 +46,7 @@ export default Vue.extend({
       // text: "👶🏻👦🏻👧🏻👨🏻👩🏻👱🏻‍♀️👱🏻👴🏻👵🏻👲🏻👳🏻‍♀️👳🏻👮🏻‍♀️👮🏻👷🏻‍♀️👷🏻💂🏻‍♀️💂🏻🕵🏻‍♀️👩🏻‍⚕️👨🏻‍⚕️👩🏻‍🌾👨🏻‍🌾👨🏻‍🌾👨🏻‍🌾👨🏻‍🌾👨🏻‍🌾👨🏻‍🌾👨🏻‍🌾👨🏻‍🌾👨🏻‍🌾👨🏻‍🌾👨🏻‍🌾👨🏻‍🌾👨🏻‍🌾👨🏻‍🌾👨🏻‍🌾"
       rtl: false,
       text: "we must respect the will of the individual.\nTake it easy I can assure you that everything will turn out to be fine.\n".repeat(
-        1//0000
+        1 //0000
       ),
       entities: [
         {
@@ -153,7 +153,7 @@ export default Vue.extend({
         if (r.fromId === entity.id || r.toId === entity.id) {
           this.deleteRelation(r);
         }
-      })
+      });
     },
     changeText() {
       this.text = "The president Obama came to Japan.";
@@ -167,17 +167,15 @@ export default Vue.extend({
       this.entityLabels[0].text = "Misc";
     },
     addRelation() {
-      this.relations.push(
-        {
-          id: 1,
-          fromId: 1,
-          toId: 2,
-          labelId: 1,
-        }
-      )
+      this.relations.push({
+        id: 1,
+        fromId: 1,
+        toId: 2,
+        labelId: 1,
+      });
     },
     updateRelation(relation: Relation) {
-      console.log(relation)
+      console.log(relation);
     },
     deleteRelation(relation: Relation) {
       this.relations = this.relations.filter((r) => r.id !== relation.id);
