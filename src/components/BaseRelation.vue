@@ -1,5 +1,9 @@
 <template>
-  <g>
+  <g
+    style="cursor: pointer; userselect: none"
+    @click="$emit('click:relation')"
+    @contextmenu="$emit('contextmenu:relation')"
+  >
     <path
       :d="d"
       marker-end="url(#arrow)"

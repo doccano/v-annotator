@@ -20,7 +20,9 @@
           :margin="marginLeft"
           :key="index"
           @click:entity="clicked"
+          @click:relation="$emit('click:relation', $event)"
           @contextmenu:entity="$emit('contextmenu:entity', $event)"
+          @contextmenu:relation="$emit('contextmenu:relation', $event)"
           @update:height="updateHeight"
         />
       </template>

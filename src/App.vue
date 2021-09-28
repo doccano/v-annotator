@@ -17,7 +17,9 @@
       :rtl="rtl"
       @add:entity="addEntity"
       @click:entity="updateEntity"
+      @click:relation="updateRelation"
       @contextmenu:entity="deleteEntity"
+      @contextmenu:relation="deleteRelation"
     />
   </div>
 </template>
@@ -26,6 +28,7 @@
 import Vue from "vue";
 import VAnnotator from "./components/VAnnotator.vue";
 import { Entity } from "./domain/models/Label/Entity";
+import { Relation } from "./domain/models/Label/Relation";
 
 export default Vue.extend({
   name: "App",
@@ -167,7 +170,13 @@ export default Vue.extend({
           labelId: 1,
         }
       )
-    }
+    },
+    updateRelation(relation: Relation) {
+      console.log(relation)
+    },
+    deleteRelation(relation: Relation) {
+      this.relations = this.relations.filter((r) => r.id !== relation.id);
+    },
   },
 });
 </script>

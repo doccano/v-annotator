@@ -27,6 +27,8 @@
         :base-x="baseX"
         :margin="margin"
         :ref="relId"
+        @click:relation="$emit('click:relation', relation.relation)"
+        @contextmenu:relation="$emit('contextmenu:relation', relation.relation)"
       />
       <g :transform="translateEntity">
         <BaseText :id="id" :text-line="textLine" :text="text" :x="baseX" />
