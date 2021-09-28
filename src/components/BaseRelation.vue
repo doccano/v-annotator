@@ -3,12 +3,14 @@
     style="cursor: pointer; userselect: none"
     @click="$emit('click:relation')"
     @contextmenu="$emit('contextmenu:relation')"
+    @mouseover="$emit('mouseover')"
+    @mouseleave="$emit('mouseleave')"
   >
     <path
       :d="d"
       marker-end="url(#arrow)"
       stroke="#74b8dc"
-      stroke-width="1"
+      :stroke-width="width"
       fill-opacity="0"
     />
     <g v-if="x1">
@@ -67,6 +69,10 @@ export default Vue.extend({
     margin: {
       type: Number,
       default: 0,
+    },
+    selected: {
+      type: Boolean,
+      default: false,
     },
   },
 
@@ -129,9 +135,12 @@ export default Vue.extend({
       if (this.x2) {
         return this.rtl ? this.x2 - this.margin : this.x2 - this.baseX;
       } else {
-        return this.x1 + 100;
+        return this.x1 + 150;
       }
     },
+    width(): number {
+      return this.selected ? 3 : 1;
+    }
   },
 });
 </script>

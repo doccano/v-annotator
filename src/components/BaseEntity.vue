@@ -74,6 +74,10 @@ export default Vue.extend({
       type: Number,
       default: 17,
     },
+    selected: {
+      type: Boolean,
+      default: false,
+    },
   },
 
   computed: {
@@ -84,7 +88,7 @@ export default Vue.extend({
       return config.radius;
     },
     height(): number {
-      return config.lineWidth;
+      return this.selected ? config.lineWidth * 1.5 : config.lineWidth;
     },
     textX(): number {
       if (this.rtl) {

@@ -14,9 +14,8 @@
     </defs>
     <g :transform="translate">
       <BaseRelation
-        v-for="(relation, index) in lineRelations"
-        :key="index"
-        :id="relId"
+        v-for="relation in lineRelations"
+        :key="relation.relation.id"
         :font-size="font.fontSize"
         :x1="relation.x1"
         :x2="relation.x2"
@@ -26,9 +25,11 @@
         :rtl="rtl"
         :base-x="baseX"
         :margin="margin"
-        :ref="relId"
+        :selected="selectedRelation===relation.relation"
         @click:relation="$emit('click:relation', relation.relation)"
         @contextmenu:relation="$emit('contextmenu:relation', relation.relation)"
+        @mouseover="selectedRelation=relation.relation"
+        @mouseleave="selectedRelation=null"
       />
       <g :transform="translateEntity">
         <BaseText :id="id" :text-line="textLine" :text="text" :x="baseX" />
@@ -44,6 +45,7 @@
           :margin="margin"
           :level="gEntity.level"
           :font-size="font.fontSize"
+          :selected="isSelected(gEntity.entity)"
           @click:entity="$emit('click:entity', gEntity.entity)"
           @contextmenu:entity="$emit('contextmenu:entity', gEntity.entity)"
         />
@@ -121,6 +123,7 @@ export default Vue.extend({
   data() {
     return {
       element: null as SVGTextElement | null,
+      selectedRelation: null as Relation | null,
     };
   },
 
@@ -191,12 +194,16 @@ export default Vue.extend({
     svgId(): string {
       return "svg" + this.id;
     },
-    relId(): string {
-      return `relation-${this.id}`;
-    },
   },
 
   methods: {
+    isSelected(entity: Entity): boolean {
+      if (this.selectedRelation) {
+        return this.selectedRelation.fromId === entity.id || this.selectedRelation.toId === entity.id;
+      } else {
+        return false;
+      }
+    },
     noText(entity: Entity): boolean {
       // Do not show a label text if the entity continues from the previous line.
       return entity.startOffset < this.textLine.startOffset;

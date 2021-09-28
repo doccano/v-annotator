@@ -149,6 +149,11 @@ export default Vue.extend({
     },
     deleteEntity(entity: Entity) {
       this.entities = this.entities.filter((e) => e.id !== entity.id);
+      this.relations.forEach((r) => {
+        if (r.fromId === entity.id || r.toId === entity.id) {
+          this.deleteRelation(r);
+        }
+      })
     },
     changeText() {
       this.text = "The president Obama came to Japan.";
