@@ -5,23 +5,47 @@
     :direction="direction"
     :id="svgId"
   >
+    <defs>
+      <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5"
+          markerWidth="6" markerHeight="6"
+          orient="auto-start-reverse">
+        <path d="M 0 0 L 10 5 L 0 10 z" stroke="#74b8dc" fill="#74b8dc" />
+      </marker>
+    </defs>
     <g :transform="translate">
-      <BaseText :id="id" :text-line="textLine" :text="text" :x="baseX" />
-      <BaseEntity
-        v-for="gEntity in geometricEntities"
-        :key="gEntity.entity.id"
-        :ranges="gEntity.ranges"
-        :color="color(gEntity.entity)"
-        :label="labelText(gEntity.entity)"
-        :no-text="noText(gEntity.entity)"
+      <BaseRelation
+        v-for="(relation, index) in lineRelations"
+        :key="index"
+        :id="relId"
+        :font-size="font.fontSize"
+        :x1="relation.x1"
+        :x2="relation.x2"
+        :level="relation.level"
+        :label="relation.label"
+        :label-width="relation.labelWidth"
         :rtl="rtl"
         :base-x="baseX"
         :margin="margin"
-        :level="gEntity.level"
-        :font-size="font.fontSize"
-        @click:entity="$emit('click:entity', gEntity.entity)"
-        @contextmenu:entity="$emit('contextmenu:entity', gEntity.entity)"
+        :ref="relId"
       />
+      <g :transform="translateEntity">
+        <BaseText :id="id" :text-line="textLine" :text="text" :x="baseX" />
+        <BaseEntity
+          v-for="gEntity in geometricEntities"
+          :key="gEntity.entity.id"
+          :ranges="gEntity.ranges"
+          :color="color(gEntity.entity)"
+          :label="labelText(gEntity.entity)"
+          :no-text="noText(gEntity.entity)"
+          :rtl="rtl"
+          :base-x="baseX"
+          :margin="margin"
+          :level="gEntity.level"
+          :font-size="font.fontSize"
+          @click:entity="$emit('click:entity', gEntity.entity)"
+          @contextmenu:entity="$emit('contextmenu:entity', gEntity.entity)"
+        />
+      </g>
     </g>
   </svg>
 </template>
@@ -29,17 +53,24 @@
 <script lang="ts">
 import Vue, { PropType } from "vue";
 import { Entity } from "@/domain/models/Label/Entity";
+import { Relation } from "@/domain/models/Label/Relation";
 import { Font } from "@/domain/models/Line/Font";
-import { EntityLabelList } from "@/domain/models/Label/Label";
+import {
+  EntityLabelList,
+  RelationLabelList,
+} from "@/domain/models/Label/Label";
 import { TextLine } from "@/domain/models/Line/LineText";
 import BaseEntity from "./BaseEntity.vue";
 import BaseText from "./BaseText.vue";
+import BaseRelation from "./BaseRelation.vue";
 import { EntityLine, GeometricEntity } from "@/domain/models/Line/LineEntity";
+import { RelationLine, LineRelation } from "@/domain/models/Line/LineRelation";
 
 export default Vue.extend({
   components: {
     BaseEntity,
     BaseText,
+    BaseRelation,
   },
 
   props: {
@@ -47,6 +78,10 @@ export default Vue.extend({
       type: [] as PropType<Entity[]>,
       default: () => [],
       required: true,
+    },
+    relations: {
+      type: [] as PropType<Relation[]>,
+      default: () => [],
     },
     textLine: {
       type: Object as PropType<TextLine>,
@@ -63,6 +98,9 @@ export default Vue.extend({
     entityLabels: {
       type: Object as PropType<EntityLabelList>,
       required: true,
+    },
+    relationLabels: {
+      type: Object as PropType<RelationLabelList>,
     },
     rtl: {
       type: Boolean,
@@ -127,6 +165,21 @@ export default Vue.extend({
         return [];
       }
     },
+    lineRelations(): LineRelation[] {
+      const view = new RelationLine(this.relations, this.relationLabels, this.textLine);
+      return view.render(this.geometricEntities);
+    },
+    y(): number {
+      const level = Math.max(...this.lineRelations.map((item) => item.level));
+      if (level < 0) {
+        return 0;
+      } else {
+        return 20 + this.font.fontSize * (level + 1.5);
+      }
+    },
+    translateEntity(): string {
+      return `translate(0, ${this.y})`;
+    },
     direction(): string {
       return this.rtl ? "rtl" : "ltr";
     },
@@ -135,6 +188,9 @@ export default Vue.extend({
     },
     svgId(): string {
       return "svg" + this.id;
+    },
+    relId(): string {
+      return `relation-${this.id}`;
     },
   },
 
