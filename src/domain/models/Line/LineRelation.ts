@@ -11,6 +11,7 @@ export interface LineRelation {
   labelWidth: number;
   level: number;
   relation: Relation;
+  marker: string;
 }
 
 export class RelationLine {
@@ -31,6 +32,7 @@ export class RelationLine {
     for (const relation of this.relations) {
       let x1 = undefined;
       let x2 = undefined;
+      let marker = "";
       const fromEntity = entityMap.get(relation.fromId);
       const toEntity = entityMap.get(relation.toId);
       const label = this.relationLabels.getById(relation.labelId);
@@ -41,9 +43,14 @@ export class RelationLine {
       }
       if (toEntity) {
         x2 = toEntity.ranges.center();
+        marker = "end";
         if (toEntity.entity.startOffset < this.textLine.startOffset) continue;
       }
       if (x1 === undefined && x2 === undefined) continue;
+      if (x1 && x2 && x1 > x2) {
+        marker = "start";
+        [x1, x2] = [x2, x1];
+      }
       // this.levelManager.update();
       // const level = this.levelManager.fetchLevel(relation)!;
       const level = 0;
@@ -54,6 +61,7 @@ export class RelationLine {
         label: label!.text,
         labelWidth: label!.width,
         relation,
+        marker,
       });
     }
     return lineRelations;

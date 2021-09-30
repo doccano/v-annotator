@@ -88,8 +88,8 @@ export default Vue.extend({
       relations: [
         {
           id: 0,
-          fromId: 0,
-          toId: 4,
+          fromId: 4,
+          toId: 0,
           labelId: 0,
         },
         {

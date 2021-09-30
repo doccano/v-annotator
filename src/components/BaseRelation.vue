@@ -8,7 +8,7 @@
   >
     <path
       :d="d"
-      marker-end="url(#arrow)"
+      v-bind="markerObj"
       stroke="#74b8dc"
       :stroke-width="width"
       fill-opacity="0"
@@ -64,6 +64,9 @@ export default Vue.extend({
     margin: {
       type: Number,
       default: 0,
+    },
+    marker: {
+      type: String,
     },
     selected: {
       type: Boolean,
@@ -135,6 +138,15 @@ export default Vue.extend({
     },
     width(): number {
       return this.selected ? 3 : 1;
+    },
+    markerObj() {
+      if (this.marker === "start") {
+        return { "marker-start": "url(#arrow)" };
+      } else if (this.marker === "end") {
+        return { "marker-end": "url(#arrow)" };
+      } else {
+        return {};
+      }
     },
   },
 });

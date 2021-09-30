@@ -28,6 +28,7 @@
         :level="relation.level"
         :label="relation.label"
         :label-width="relation.labelWidth"
+        :marker="relation.marker"
         :rtl="rtl"
         :base-x="baseX"
         :margin="margin"
