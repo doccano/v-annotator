@@ -21,10 +21,12 @@ export class Entity {
 
 export class Entities {
   private tree: IntervalTree<Entity> = new IntervalTree();
+  private id2entity: Map<number, Entity> = new Map();
 
   constructor(entities: Entity[]) {
     for (const entity of entities) {
       this.tree.insert([entity.startOffset, entity.endOffset], entity);
+      this.id2entity.set(entity.id, entity);
     }
   }
 
@@ -51,6 +53,10 @@ export class Entities {
 
   list(): Entity[] {
     return this.tree.values;
+  }
+
+  findById(id: number): Entity {
+    return this.id2entity.get(id)!;
   }
 
   filterByRange(startOffset: number, endOffset: number): Entity[] {
