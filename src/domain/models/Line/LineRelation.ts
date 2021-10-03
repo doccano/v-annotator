@@ -12,6 +12,8 @@ export interface LineRelation {
   level: number;
   relation: RelationListItem;
   marker: string;
+  openLeft: boolean;
+  openRight: boolean;
 }
 
 export class RelationLine {
@@ -36,6 +38,8 @@ export class RelationLine {
       const fromEntity = entityMap.get(relation.fromId);
       const toEntity = entityMap.get(relation.toId);
       const label = this.relationLabels.getById(relation.labelId);
+      const openLeft = relation.startOffset < this.textLine.startOffset;
+      const openRight = relation.endOffset > this.textLine.endOffset;
       if (fromEntity) {
         if (this.textLine.startOffset <= fromEntity.entity.startOffset) {
           x1 = fromEntity.ranges.center();
@@ -46,7 +50,6 @@ export class RelationLine {
         marker = "end";
         if (toEntity.entity.startOffset < this.textLine.startOffset) continue;
       }
-      if (x1 === undefined && x2 === undefined) continue;
       if (x1 && x2 && x1 > x2) {
         marker = "start";
         [x1, x2] = [x2, x1];
@@ -62,6 +65,8 @@ export class RelationLine {
         labelWidth: label!.width,
         relation,
         marker,
+        openLeft,
+        openRight,
       });
     }
     return lineRelations;

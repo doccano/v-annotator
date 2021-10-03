@@ -29,6 +29,8 @@
         :label="relation.label"
         :label-width="relation.labelWidth"
         :marker="relation.marker"
+        :openLeft="relation.openLeft"
+        :openRight="relation.openRight"
         :rtl="rtl"
         :base-x="baseX"
         :margin="margin"

@@ -53,6 +53,14 @@ export default Vue.extend({
       type: Number,
       default: 0,
     },
+    openLeft: {
+      type: Boolean,
+      default: false,
+    },
+    openRight: {
+      type: Boolean,
+      default: false,
+    },
     rtl: {
       type: Boolean,
       default: false,
@@ -82,22 +90,26 @@ export default Vue.extend({
       return this.dy + this.fontSize / 2;
     },
     d(): string {
-      if (this.x1 && this.x2) {
-        return `M ${this._x1} ${this.y}
-        v -${this.dy}
-        A ${this.r} ${this.r} 0 0 1 ${this._x1 + this.r} ${this.lineY}
+      if (this.openLeft && this.openRight) {
+        return `M ${this._x1} ${this.y - this.dy - this.r}
+        H 5000
+        `;
+      } else if (this.openLeft) {
+        return `M ${this._x1} ${this.y - this.dy - this.r}
         H ${this._x2 - this.r}
         A ${this.r} ${this.r} 0 0 1 ${this._x2} ${this.lineY + this.r}
         v ${this.dy - 3}
         `;
-      } else if (this.x1) {
+      } else if (this.openRight) {
         return `M ${this._x1} ${this.y}
         v -${this.dy}
         A ${this.r} ${this.r} 0 0 1 ${this._x1 + this.r} ${this.lineY}
         H 5000
         `;
       } else {
-        return `M ${this._x1} ${this.y - this.dy - this.r}
+        return `M ${this._x1} ${this.y}
+        v -${this.dy}
+        A ${this.r} ${this.r} 0 0 1 ${this._x1 + this.r} ${this.lineY}
         H ${this._x2 - this.r}
         A ${this.r} ${this.r} 0 0 1 ${this._x2} ${this.lineY + this.r}
         v ${this.dy - 3}
@@ -133,7 +145,7 @@ export default Vue.extend({
       if (this.x2) {
         return this.rtl ? this.x2 - this.margin : this.x2 - this.baseX;
       } else {
-        return this.x1 + 150;
+        return this._x1 + 150;
       }
     },
     width(): number {
