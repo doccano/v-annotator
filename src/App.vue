@@ -45,7 +45,7 @@ export default Vue.extend({
       // rtl: true,
       // text: "👶🏻👦🏻👧🏻👨🏻👩🏻👱🏻‍♀️👱🏻👴🏻👵🏻👲🏻👳🏻‍♀️👳🏻👮🏻‍♀️👮🏻👷🏻‍♀️👷🏻💂🏻‍♀️💂🏻🕵🏻‍♀️👩🏻‍⚕️👨🏻‍⚕️👩🏻‍🌾👨🏻‍🌾👨🏻‍🌾👨🏻‍🌾👨🏻‍🌾👨🏻‍🌾👨🏻‍🌾👨🏻‍🌾👨🏻‍🌾👨🏻‍🌾👨🏻‍🌾👨🏻‍🌾👨🏻‍🌾👨🏻‍🌾👨🏻‍🌾👨🏻‍🌾"
       rtl: false,
-      text: "we must respect the will of the individual.\nTake it easy I can assure you that everything will turn out to be fine.\n".repeat(
+      text: "we must respect the will of the individual.\nTake it easy I can assure you that everything will turn out to be fine.\nThe president Obama.".repeat(
         1 //0000
       ),
       entities: [
@@ -84,6 +84,13 @@ export default Vue.extend({
           startOffset: 79,
           endOffset: 94,
         },
+        {
+          id: 5,
+          user: 0,
+          label: 1,
+          startOffset: 130,
+          endOffset: 135,
+        },
       ],
       relations: [
         {
@@ -95,7 +102,7 @@ export default Vue.extend({
         {
           id: 2,
           fromId: 4,
-          toId: 1,
+          toId: 5,
           labelId: 0,
         },
       ],
