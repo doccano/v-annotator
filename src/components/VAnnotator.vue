@@ -10,7 +10,12 @@
             )
           "
           :entityLabels="entityLabelList"
-          :relations="relations"
+          :relations="
+            relationList.filterByRange(
+              item.textLine.startOffset,
+              item.textLine.endOffset
+            )
+          "
           :relationLabels="relationLabelList"
           :font="font"
           :rtl="rtl"
@@ -52,7 +57,7 @@ import { LineWidthManager } from "../domain/models/Line/WidthManager";
 import { TextLine } from "@/domain/models/Line/LineText";
 import { TextLineSplitter } from "@/domain/models/Line/LineSplitter";
 import { getSelection } from "@/domain/models/EventHandler/TextSelectionHandler";
-import { Relation } from "@/domain/models/Label/Relation";
+import { Relation, RelationList } from "@/domain/models/Label/Relation";
 
 interface ViewLine {
   id: string;
@@ -184,6 +189,9 @@ export default Vue.extend({
           this._text
         );
       }
+    },
+    relationList(): RelationList {
+      return new RelationList(this.relations, this.entityList);
     },
     textLines(): TextLine[] {
       if (!this.font || !this.entityLabelList) {

@@ -66,7 +66,7 @@
 <script lang="ts">
 import Vue, { PropType } from "vue";
 import { Entity } from "@/domain/models/Label/Entity";
-import { Relation } from "@/domain/models/Label/Relation";
+import { RelationListItem } from "@/domain/models/Label/Relation";
 import { Font } from "@/domain/models/Line/Font";
 import {
   EntityLabelList,
@@ -93,7 +93,7 @@ export default Vue.extend({
       required: true,
     },
     relations: {
-      type: [] as PropType<Relation[]>,
+      type: [] as PropType<RelationListItem[]>,
       default: () => [],
     },
     textLine: {
@@ -132,7 +132,6 @@ export default Vue.extend({
   data() {
     return {
       element: null as SVGTextElement | null,
-      selectedRelation: null as Relation | null,
     };
   },
 
@@ -210,16 +209,6 @@ export default Vue.extend({
   },
 
   methods: {
-    isSelected(entity: Entity): boolean {
-      if (this.selectedRelation) {
-        return (
-          this.selectedRelation.fromId === entity.id ||
-          this.selectedRelation.toId === entity.id
-        );
-      } else {
-        return false;
-      }
-    },
     noText(entity: Entity): boolean {
       // Do not show a label text if the entity continues from the previous line.
       return entity.startOffset < this.textLine.startOffset;

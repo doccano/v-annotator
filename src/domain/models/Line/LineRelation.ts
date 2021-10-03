@@ -1,6 +1,6 @@
 import { LevelManager } from "../Label/Entity";
 import { LabelList } from "../Label/Label";
-import { Relation } from "../Label/Relation";
+import { RelationListItem } from "../Label/Relation";
 import { GeometricEntity } from "./LineEntity";
 import { TextLine } from "./LineText";
 
@@ -10,14 +10,14 @@ export interface LineRelation {
   label: string;
   labelWidth: number;
   level: number;
-  relation: Relation;
+  relation: RelationListItem;
   marker: string;
 }
 
 export class RelationLine {
   private levelManager = new LevelManager();
   constructor(
-    private relations: Relation[],
+    private relations: RelationListItem[],
     private relationLabels: LabelList,
     private textLine: TextLine
   ) {}
