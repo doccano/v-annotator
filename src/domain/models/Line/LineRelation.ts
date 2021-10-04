@@ -26,7 +26,7 @@ export class RelationLine {
     private right: number
   ) {}
 
-  render(entities: GeometricEntity[]): LineRelation[] {
+  render(entities: GeometricEntity[], rtl: boolean): LineRelation[] {
     const lineRelations: LineRelation[] = [];
     this.levelManager.clear();
     const entityMap: Map<number, GeometricEntity> = new Map();
@@ -41,17 +41,24 @@ export class RelationLine {
       const fromEntity = entityMap.get(relation.fromId);
       const toEntity = entityMap.get(relation.toId);
       const label = this.relationLabels.getById(relation.labelId);
-      const openLeft = relation.startOffset < this.textLine.startOffset;
-      const openRight = relation.endOffset > this.textLine.endOffset;
+      let openLeft = relation.startOffset < this.textLine.startOffset;
+      let openRight = relation.endOffset > this.textLine.endOffset;
+      if (rtl) {
+        [openLeft, openRight] = [openRight, openLeft];
+      }
       if (fromEntity) {
         if (this.textLine.startOffset <= fromEntity.entity.startOffset) {
           x1 = fromEntity.ranges.center();
         }
+      } else {
+        x1 = rtl ? this.right : this.left;
       }
       if (toEntity) {
         x2 = toEntity.ranges.center();
         marker = "end";
         if (toEntity.entity.startOffset < this.textLine.startOffset) continue;
+      } else {
+        x2 = rtl ? this.left : this.right;
       }
       if (x1 && x2 && x1 > x2) {
         marker = "start";

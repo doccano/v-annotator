@@ -193,7 +193,7 @@ export default Vue.extend({
         this.left,
         this.right
       );
-      return view.render(this.geometricEntities);
+      return view.render(this.geometricEntities, this.rtl);
     },
     maxRelationLevel(): number {
       return Math.max(...this.lineRelations.map((r) => r.level), 0);
