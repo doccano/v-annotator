@@ -29,11 +29,12 @@
         :label="relation.label"
         :label-width="relation.labelWidth"
         :marker="relation.marker"
+        :max-level="maxRelationLevel"
         :openLeft="relation.openLeft"
         :openRight="relation.openRight"
         :rtl="rtl"
         :base-x="baseX"
-        :margin="margin"
+        :margin="left"
         :selected="$store.getters.isSelectedRelation(relation.relation)"
         @click:relation="$emit('click:relation', relation.relation)"
         @contextmenu:relation="$emit('contextmenu:relation', relation.relation)"
@@ -51,7 +52,7 @@
           :no-text="noText(gEntity.entity)"
           :rtl="rtl"
           :base-x="baseX"
-          :margin="margin"
+          :margin="left"
           :level="gEntity.level"
           :font-size="font.fontSize"
           :selected="$store.getters.isSelectedEntity(gEntity.entity)"
@@ -125,7 +126,11 @@ export default Vue.extend({
       type: Number,
       default: 0,
     },
-    margin: {
+    left: {
+      type: Number,
+      default: 0,
+    },
+    right: {
       type: Number,
       default: 0,
     },
@@ -184,9 +189,14 @@ export default Vue.extend({
       const view = new RelationLine(
         this.relations,
         this.relationLabels,
-        this.textLine
+        this.textLine,
+        this.left,
+        this.right
       );
       return view.render(this.geometricEntities);
+    },
+    maxRelationLevel(): number {
+      return Math.max(...this.lineRelations.map((r) => r.level), 0);
     },
     y(): number {
       const level = Math.max(...this.lineRelations.map((item) => item.level));

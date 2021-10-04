@@ -76,6 +76,9 @@ export default Vue.extend({
     marker: {
       type: String,
     },
+    maxLevel: {
+      type: Number,
+    },
     selected: {
       type: Boolean,
       default: false,
@@ -87,12 +90,13 @@ export default Vue.extend({
       return 12;
     },
     y(): number {
-      return this.dy + this.fontSize / 2;
+      return 20 + this.fontSize * this.maxLevel + this.fontSize / 2;
+      // return this.dy + this.fontSize / 2;
     },
     d(): string {
       if (this.openLeft && this.openRight) {
         return `M ${this._x1} ${this.y - this.dy - this.r}
-        H 5000
+        H ${this._x2}
         `;
       } else if (this.openLeft) {
         return `M ${this._x1} ${this.y - this.dy - this.r}
@@ -104,7 +108,7 @@ export default Vue.extend({
         return `M ${this._x1} ${this.y}
         v -${this.dy}
         A ${this.r} ${this.r} 0 0 1 ${this._x1 + this.r} ${this.lineY}
-        H 5000
+        H ${this._x2}
         `;
       } else {
         return `M ${this._x1} ${this.y}
@@ -135,18 +139,10 @@ export default Vue.extend({
       return this.lineY + this.fontSize / 2 - 3;
     },
     _x1(): number {
-      if (this.x1) {
-        return this.rtl ? this.x1 - this.margin : this.x1 - this.baseX;
-      } else {
-        return this.baseX;
-      }
+      return this.rtl ? this.x1 - this.margin : this.x1 - this.baseX;
     },
     _x2(): number {
-      if (this.x2) {
-        return this.rtl ? this.x2 - this.margin : this.x2 - this.baseX;
-      } else {
-        return this._x1 + 150;
-      }
+      return this.rtl ? this.x2 - this.margin : this.x2 - this.baseX;
     },
     width(): number {
       return this.selected ? 3 : 1;

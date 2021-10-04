@@ -5,8 +5,8 @@ import { GeometricEntity } from "./LineEntity";
 import { TextLine } from "./LineText";
 
 export interface LineRelation {
-  x1: number | undefined;
-  x2: number | undefined;
+  x1: number;
+  x2: number;
   label: string;
   labelWidth: number;
   level: number;
@@ -21,7 +21,9 @@ export class RelationLine {
   constructor(
     private relations: RelationListItem[],
     private relationLabels: LabelList,
-    private textLine: TextLine
+    private textLine: TextLine,
+    private left: number,
+    private right: number
   ) {}
 
   render(entities: GeometricEntity[]): LineRelation[] {
@@ -32,8 +34,8 @@ export class RelationLine {
       entityMap.set(entity.entity.id, entity);
     });
     for (const relation of this.relations) {
-      let x1 = undefined;
-      let x2 = undefined;
+      let x1 = this.left;
+      let x2 = this.right;
       let marker = "";
       const fromEntity = entityMap.get(relation.fromId);
       const toEntity = entityMap.get(relation.toId);
@@ -54,9 +56,8 @@ export class RelationLine {
         marker = "start";
         [x1, x2] = [x2, x1];
       }
-      // this.levelManager.update();
-      // const level = this.levelManager.fetchLevel(relation)!;
-      const level = 0;
+      this.levelManager.update(relation, [[x1, x2]]);
+      const level = this.levelManager.fetchLevel(relation)!;
       lineRelations.push({
         x1,
         x2,

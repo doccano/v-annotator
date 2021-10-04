@@ -22,7 +22,8 @@
           :text="text"
           :textLine="item.textLine"
           :base-x="baseX"
-          :margin="marginLeft"
+          :left="left"
+          :right="right"
           :key="index"
           @click:entity="clicked"
           @click:relation="$emit('click:relation', $event)"
@@ -116,7 +117,8 @@ export default Vue.extend({
       heights: {} as { [id: string]: number },
       maxWidth: 0,
       baseX: 0,
-      marginLeft: 0,
+      left: 0,
+      right: 0,
       textElement: null as SVGTextElement | null,
     };
   },
@@ -221,10 +223,10 @@ export default Vue.extend({
       this.$nextTick(() => {
         const containerElement = document.getElementById("container")!;
         this.maxWidth = containerElement.clientWidth;
-        this.baseX = !this.rtl
-          ? containerElement.getBoundingClientRect().left
-          : containerElement.getBoundingClientRect().right;
-        this.marginLeft = containerElement.getBoundingClientRect().left;
+        const rect = containerElement.getBoundingClientRect();
+        this.baseX = !this.rtl ? rect.left : rect.right;
+        this.left = rect.left;
+        this.right = rect.right;
       });
     },
     updateHeight(id: string, height: number) {
