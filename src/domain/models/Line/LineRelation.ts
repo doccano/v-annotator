@@ -33,6 +33,7 @@ export class RelationLine {
     entities.forEach((entity) => {
       entityMap.set(entity.entity.id, entity);
     });
+    this.relations.sort((r1, r2) => r1.length - r2.length);
     for (const relation of this.relations) {
       let x1 = this.left;
       let x2 = this.right;

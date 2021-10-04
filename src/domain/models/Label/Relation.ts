@@ -26,6 +26,10 @@ export class RelationListItem implements Identifiable {
       (this.startOffset < startOffset && endOffset < this.endOffset)
     );
   }
+
+  get length(): number {
+    return this.endOffset - this.startOffset;
+  }
 }
 
 export class RelationList {
