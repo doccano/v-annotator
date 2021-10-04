@@ -1,4 +1,5 @@
 import { Entities } from "./Entity";
+import { Identifiable } from "./Identifiable";
 import IntervalTree from "@flatten-js/interval-tree";
 
 export interface Relation {
@@ -8,7 +9,7 @@ export interface Relation {
   toId: number;
 }
 
-export class RelationListItem {
+export class RelationListItem implements Identifiable {
   constructor(
     readonly id: number,
     readonly labelId: number,
