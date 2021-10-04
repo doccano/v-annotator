@@ -46,19 +46,32 @@ export class RelationLine {
       if (rtl) {
         [openLeft, openRight] = [openRight, openLeft];
       }
-      if (fromEntity) {
-        if (this.textLine.startOffset <= fromEntity.entity.startOffset) {
-          x1 = fromEntity.ranges.center();
+      if (openLeft && openRight) {
+        x1 = this.left;
+        x2 = this.right;
+      } else {
+        if (fromEntity) {
+          if (this.textLine.startOffset <= fromEntity.entity.startOffset) {
+            x1 = fromEntity.ranges.center();
+          }
+        } else {
+          if (openLeft) {
+            x1 = rtl ? this.right : this.left;
+          } else {
+            x1 = rtl ? this.left : this.right;
+          }
         }
-      } else {
-        x1 = rtl ? this.right : this.left;
-      }
-      if (toEntity) {
-        x2 = toEntity.ranges.center();
-        marker = "end";
-        if (toEntity.entity.startOffset < this.textLine.startOffset) continue;
-      } else {
-        x2 = rtl ? this.left : this.right;
+        if (toEntity) {
+          x2 = toEntity.ranges.center();
+          marker = "end";
+          if (toEntity.entity.startOffset < this.textLine.startOffset) continue;
+        } else {
+          if (openRight) {
+            x2 = rtl ? this.left : this.right;
+          } else {
+            x2 = rtl ? this.right : this.left;
+          }
+        }
       }
       if (x1 && x2 && x1 > x2) {
         marker = "start";
