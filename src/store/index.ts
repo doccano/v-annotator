@@ -34,6 +34,10 @@ export default new Vuex.Store({
     setSelectedEntity(state, entity) {
       state.selectedEntity = entity;
     },
+    resetSelection(state) {
+      state.selectedRelation = null;
+      state.selectedEntity = null;
+    },
   },
   actions: {},
   modules: {},

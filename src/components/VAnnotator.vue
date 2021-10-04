@@ -183,6 +183,7 @@ export default Vue.extend({
       return viewLines;
     },
     entityList(): Entities {
+      this.$store.commit("resetSelection");
       if (this.perCodePoint) {
         return Entities.valueOf(JSON.parse(this.entities as string));
       } else {
@@ -193,6 +194,7 @@ export default Vue.extend({
       }
     },
     relationList(): RelationList {
+      this.$store.commit("resetSelection");
       return new RelationList(this.relations, this.entityList);
     },
     textLines(): TextLine[] {
