@@ -9,7 +9,10 @@ export class Font {
 
   widthOf(text: string, return_max = false): number {
     if (return_max) {
-      return Math.max(...Array.from(text).map((ch) => this.widthOfChar(ch)));
+      return Math.max(
+        ...Array.from(text).map((ch) => this.widthOfChar(ch)),
+        20
+      ); // Todo: return fixed width
     } else {
       return Array.from(text)
         .map((ch) => this.widthOfChar(ch))
