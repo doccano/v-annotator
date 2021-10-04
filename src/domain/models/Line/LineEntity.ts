@@ -1,4 +1,5 @@
-import { Entity, LevelManager } from "../Label/Entity";
+import { Entity } from "../Label/Entity";
+import { LevelManager } from "./LevelManager";
 import { LabelList } from "../Label/Label";
 import { TextLine } from "./LineText";
 

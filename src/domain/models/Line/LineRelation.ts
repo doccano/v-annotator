@@ -1,4 +1,4 @@
-import { LevelManager } from "../Label/Entity";
+import { LevelManager } from "./LevelManager";
 import { LabelList } from "../Label/Label";
 import { RelationListItem } from "../Label/Relation";
 import { GeometricEntity } from "./LineEntity";
