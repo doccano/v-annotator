@@ -19,6 +19,8 @@
           :relationLabels="relationLabelList"
           :font="font"
           :rtl="rtl"
+          :selected-entity="selectedEntity"
+          :selected-relation="selectedRelation"
           :text="text"
           :textLine="item.textLine"
           :base-x="baseX"
@@ -30,6 +32,8 @@
           @contextmenu:entity="$emit('contextmenu:entity', $event)"
           @contextmenu:relation="$emit('contextmenu:relation', $event)"
           @update:height="updateHeight"
+          @setSelectedEntity="selectedEntity = $event"
+          @setSelectedRelation="selectedRelation = $event"
         />
       </template>
     </RecycleScroller>
@@ -120,6 +124,8 @@ export default Vue.extend({
       left: 0,
       right: 0,
       textElement: null as SVGTextElement | null,
+      selectedRelation: null as Relation | null,
+      selectedEntity: null as Entity | null,
     };
   },
 
@@ -183,7 +189,7 @@ export default Vue.extend({
       return viewLines;
     },
     entityList(): Entities {
-      this.$store.commit("resetSelection");
+      this.resetSelection();
       if (this.perCodePoint) {
         return Entities.valueOf(JSON.parse(this.entities as string));
       } else {
@@ -194,7 +200,7 @@ export default Vue.extend({
       }
     },
     relationList(): RelationList {
-      this.$store.commit("resetSelection");
+      this.resetSelection();
       return new RelationList(this.relations, this.entityList);
     },
     textLines(): TextLine[] {
@@ -233,6 +239,10 @@ export default Vue.extend({
     },
     updateHeight(id: string, height: number) {
       this.$set(this.heights, id, height);
+    },
+    resetSelection() {
+      this.selectedRelation = null;
+      this.selectedEntity = null;
     },
     open(): void {
       try {

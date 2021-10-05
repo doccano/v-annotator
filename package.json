@@ -31,8 +31,7 @@
     "grapheme-splitter": "^1.0.4",
     "lodash-es": "^4.17.21",
     "vue": "^2.6.11",
-    "vue-virtual-scroller": "^1.0.10",
-    "vuex": "^3.6.2"
+    "vue-virtual-scroller": "^1.0.10"
   },
   "devDependencies": {
     "@types/events": "^3.0.0",

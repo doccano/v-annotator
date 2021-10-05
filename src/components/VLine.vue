@@ -35,11 +35,11 @@
         :rtl="rtl"
         :base-x="baseX"
         :margin="left"
-        :selected="$store.getters.isSelectedRelation(relation.relation)"
+        :selected="isSelectedRelation(relation.relation)"
         @click:relation="$emit('click:relation', relation.relation)"
         @contextmenu:relation="$emit('contextmenu:relation', relation.relation)"
-        @mouseover="$store.commit('setSelectedRelation', relation.relation)"
-        @mouseleave="$store.commit('setSelectedRelation', null)"
+        @mouseover="$emit('setSelectedRelation', relation.relation)"
+        @mouseleave="$emit('setSelectedRelation', null)"
       />
       <g :transform="translateEntity">
         <BaseText :id="id" :text-line="textLine" :text="text" :x="baseX" />
@@ -55,11 +55,11 @@
           :margin="left"
           :level="gEntity.level"
           :font-size="font.fontSize"
-          :selected="$store.getters.isSelectedEntity(gEntity.entity)"
+          :selected="isSelectedEntity(gEntity.entity)"
           @click:entity="$emit('click:entity', gEntity.entity)"
           @contextmenu:entity="$emit('contextmenu:entity', gEntity.entity)"
-          @mouseover="$store.commit('setSelectedEntity', gEntity.entity)"
-          @mouseleave="$store.commit('setSelectedEntity', null)"
+          @mouseover="$emit('setSelectedEntity', gEntity.entity)"
+          @mouseleave="$emit('setSelectedEntity', null)"
         />
       </g>
     </g>
@@ -133,6 +133,12 @@ export default Vue.extend({
     right: {
       type: Number,
       default: 0,
+    },
+    selectedEntity: {
+      type: Object as PropType<Entity | null>,
+    },
+    selectedRelation: {
+      type: Object as PropType<RelationListItem | null>,
     },
   },
 
@@ -237,6 +243,21 @@ export default Vue.extend({
     },
     labelText(entity: Entity): string {
       return this.entityLabels.getText(entity.label);
+    },
+    isSelectedRelation(relation: RelationListItem): boolean {
+      return this.selectedRelation === relation;
+    },
+    isSelectedEntity(entity: Entity): boolean {
+      if (this.selectedRelation) {
+        return (
+          this.selectedRelation!.fromId === entity.id ||
+          this.selectedRelation!.toId === entity.id
+        );
+      } else if (this.selectedEntity) {
+        return this.selectedEntity === entity;
+      } else {
+        return false;
+      }
     },
   },
 });
