@@ -4,6 +4,7 @@
     xmlns="http://www.w3.org/2000/svg"
     :direction="direction"
     :id="svgId"
+    width="100%"
   >
     <defs>
       <marker
@@ -265,8 +266,6 @@ export default Vue.extend({
 
 <style scoped>
 svg {
-  white-space: pre;
   overflow-wrap: normal;
-  width: 100%;
 }
 </style>
