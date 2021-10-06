@@ -119,7 +119,7 @@ export default Vue.extend({
     return {
       font: null as Font | null,
       heights: {} as { [id: string]: number },
-      maxWidth: 0,
+      maxWidth: -1,
       baseX: 0,
       left: 0,
       right: 0,
@@ -178,6 +178,7 @@ export default Vue.extend({
         return [];
       }
       const viewLines: ViewLine[] = [];
+      console.log(this.textLines);
       for (let i = 0; i < this.textLines.length; i++) {
         const id = `${this.textLines[i].startOffset}:${this.textLines[i].endOffset}`;
         viewLines.push({
@@ -201,10 +202,11 @@ export default Vue.extend({
     },
     relationList(): RelationList {
       this.resetSelection();
+      console.log(new RelationList(this.relations, this.entityList))
       return new RelationList(this.relations, this.entityList);
     },
     textLines(): TextLine[] {
-      if (!this.font || !this.entityLabelList) {
+      if (!this.font || !this.entityLabelList || this.maxWidth === -1) {
         return [];
       } else {
         const maxLabelWidth = this.entityLabelList.maxLabelWidth();
@@ -235,6 +237,7 @@ export default Vue.extend({
         this.baseX = !this.rtl ? rect.left : rect.right;
         this.left = rect.left;
         this.right = rect.right;
+        console.log(this.maxWidth)
       });
     },
     updateHeight(id: string, height: number) {
