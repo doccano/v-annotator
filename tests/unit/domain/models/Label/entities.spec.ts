@@ -32,6 +32,11 @@ describe("Entities", () => {
     expect(entities.filterByRange(5, 6).length == 0).toBeTruthy();
   });
 
+  it("return empty list by filtering", () => {
+    const entities = new Entities([]);
+    expect(entities.filterByRange(0, 1)).toEqual([]);
+  });
+
   it("can get size", () => {
     const entities = new Entities([new Entity(0, 0, 0, 0, 0)]);
     expect(entities.size).toEqual(1);

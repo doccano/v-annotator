@@ -23,6 +23,7 @@
       <BaseRelation
         v-for="relation in lineRelations"
         :key="relation.relation.id"
+        :dark="dark"
         :font-size="font.fontSize"
         :x1="relation.x1"
         :x2="relation.x2"
@@ -103,6 +104,10 @@ export default Vue.extend({
     textLine: {
       type: Object as PropType<TextLine>,
       required: true,
+    },
+    dark: {
+      type: Boolean,
+      default: false,
     },
     font: {
       type: Object as PropType<Font>,

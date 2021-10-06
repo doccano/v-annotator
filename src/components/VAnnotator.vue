@@ -3,6 +3,7 @@
     <RecycleScroller page-mode class="scroller" :items="items">
       <template v-slot="{ item, index }">
         <v-line
+          :dark="dark"
           :entities="
             entityList.filterByRange(
               item.textLine.startOffset,
@@ -110,6 +111,10 @@ export default Vue.extend({
       default: false,
     },
     perCodePoint: {
+      type: Boolean,
+      default: false,
+    },
+    dark: {
       type: Boolean,
       default: false,
     },

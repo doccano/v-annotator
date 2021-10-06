@@ -19,7 +19,7 @@
         :y="rectY"
         :width="labelWidth"
         :height="fontSize"
-        fill="white"
+        :fill="fill"
       />
       <text
         :x="center"
@@ -46,6 +46,10 @@ export default Vue.extend({
     },
     x2: {
       type: Number,
+    },
+    dark: {
+      type: Boolean,
+      default: false,
     },
     label: {
       type: String,
@@ -161,6 +165,9 @@ export default Vue.extend({
       } else {
         return {};
       }
+    },
+    fill(): string {
+      return this.dark ? "#1E1E1E" : "white";
     },
   },
 });
