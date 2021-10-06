@@ -178,7 +178,6 @@ export default Vue.extend({
         return [];
       }
       const viewLines: ViewLine[] = [];
-      console.log(this.textLines);
       for (let i = 0; i < this.textLines.length; i++) {
         const id = `${this.textLines[i].startOffset}:${this.textLines[i].endOffset}`;
         viewLines.push({
@@ -202,7 +201,6 @@ export default Vue.extend({
     },
     relationList(): RelationList {
       this.resetSelection();
-      console.log(new RelationList(this.relations, this.entityList))
       return new RelationList(this.relations, this.entityList);
     },
     textLines(): TextLine[] {
@@ -237,7 +235,6 @@ export default Vue.extend({
         this.baseX = !this.rtl ? rect.left : rect.right;
         this.left = rect.left;
         this.right = rect.right;
-        console.log(this.maxWidth)
       });
     },
     updateHeight(id: string, height: number) {

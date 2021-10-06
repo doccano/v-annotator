@@ -21,7 +21,13 @@
         :height="fontSize"
         fill="white"
       />
-      <text :x="center" :y="textY" text-anchor="middle" v-text="label" />
+      <text
+        :x="center"
+        :y="textY"
+        fill="currentColor"
+        text-anchor="middle"
+        v-text="label"
+      />
     </g>
   </g>
 </template>

@@ -1,6 +1,11 @@
 <template>
-  <text v-if="snippet" v-text="snippet" />
-  <text v-else style="font-size: 6px">⮐</text>
+  <text
+    v-if="snippet"
+    v-text="snippet"
+    fill="currentColor"
+    style="white-space: pre"
+  />
+  <text v-else style="font-size: 6px" fill="currentColor">⮐</text>
 </template>
 
 <script lang="ts">
