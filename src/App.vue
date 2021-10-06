@@ -153,7 +153,7 @@ export default Vue.extend({
   },
 
   methods: {
-    addEntity(startOffset: number, endOffset: number) {
+    addEntity(event: Event, startOffset: number, endOffset: number) {
       this.entities.push({
         id: this.id,
         startOffset,

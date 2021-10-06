@@ -1,5 +1,5 @@
 <template>
-  <div id="container" @click="open">
+  <div id="container" @click="open" @touchend="open">
     <RecycleScroller page-mode class="scroller" :items="items">
       <template v-slot="{ item, index }">
         <v-line
@@ -249,7 +249,7 @@ export default Vue.extend({
       this.selectedRelation = null;
       this.selectedEntity = null;
     },
-    open(): void {
+    open(event: Event): void {
       try {
         const [startOffset, endOffset] = getSelection();
         if (startOffset >= endOffset) {
@@ -265,11 +265,11 @@ export default Vue.extend({
           }
         }
         if (this.perCodePoint) {
-          this.$emit("add:entity", startOffset, endOffset);
+          this.$emit("add:entity", event, startOffset, endOffset);
         } else {
           const graphemeStartOffset = this._text.toGraphemeOffset(startOffset);
           const graphemeEndOffset = this._text.toGraphemeOffset(endOffset);
-          this.$emit("add:entity", graphemeStartOffset, graphemeEndOffset);
+          this.$emit("add:entity", event, graphemeStartOffset, graphemeEndOffset);
         }
       } catch (e) {
         return;
