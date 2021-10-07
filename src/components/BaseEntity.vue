@@ -58,10 +58,6 @@ export default Vue.extend({
       type: Boolean,
       default: false,
     },
-    baseX: {
-      type: Number,
-      default: 0,
-    },
     margin: {
       type: Number,
       default: 0,
@@ -118,7 +114,7 @@ export default Vue.extend({
 
   methods: {
     x(x: number): number {
-      return this.rtl ? x - this.margin : x - this.baseX;
+      return x - this.margin;
     },
   },
 });

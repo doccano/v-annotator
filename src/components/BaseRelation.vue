@@ -75,10 +75,6 @@ export default Vue.extend({
       type: Boolean,
       default: false,
     },
-    baseX: {
-      type: Number,
-      default: 0,
-    },
     margin: {
       type: Number,
       default: 0,
@@ -149,10 +145,10 @@ export default Vue.extend({
       return this.lineY + this.fontSize / 2 - 3;
     },
     _x1(): number {
-      return this.rtl ? this.x1 - this.margin : this.x1 - this.baseX;
+      return this.x1 - this.margin;
     },
     _x2(): number {
-      return this.rtl ? this.x2 - this.margin : this.x2 - this.baseX;
+      return this.x2 - this.margin;
     },
     width(): number {
       return this.selected ? 3 : 1;

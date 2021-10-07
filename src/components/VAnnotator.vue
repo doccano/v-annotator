@@ -240,9 +240,9 @@ export default Vue.extend({
         const containerElement = document.getElementById("container")!;
         this.maxWidth = containerElement.clientWidth;
         const rect = containerElement.getBoundingClientRect();
-        this.baseX = !this.rtl ? rect.left : rect.right;
         this.left = rect.left;
-        this.right = rect.right;
+        this.right = rect.right - rect.left;
+        this.baseX = !this.rtl ? 0 : this.right;
       });
     },
     updateHeight(id: string, height: number) {
