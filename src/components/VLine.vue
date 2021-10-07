@@ -58,7 +58,7 @@
           :level="gEntity.level"
           :font-size="font.fontSize"
           :selected="isSelectedEntity(gEntity.entity)"
-          @click:entity="$emit('click:entity', gEntity.entity)"
+          @click:entity="$emit('click:entity', $event, gEntity.entity)"
           @contextmenu:entity="$emit('contextmenu:entity', gEntity.entity)"
           @mouseover="$emit('setSelectedEntity', gEntity.entity)"
           @mouseleave="$emit('setSelectedEntity', null)"

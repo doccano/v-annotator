@@ -18,7 +18,7 @@
       :rtl="rtl"
       :text="label"
       :color="color"
-      @click:entity="$emit('click:entity')"
+      @click:entity="$emit('click:entity', $event)"
       @contextmenu:entity="$emit('contextmenu:entity')"
     />
   </g>

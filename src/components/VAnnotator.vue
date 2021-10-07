@@ -229,8 +229,8 @@ export default Vue.extend({
   },
 
   methods: {
-    clicked(entity: Entity) {
-      this.$emit("click:entity", entity.id);
+    clicked(event: any, entity: Entity) {
+      this.$emit("click:entity", event, entity.id);
     },
     setMaxWidth() {
       this.$nextTick(() => {
@@ -269,7 +269,12 @@ export default Vue.extend({
         } else {
           const graphemeStartOffset = this._text.toGraphemeOffset(startOffset);
           const graphemeEndOffset = this._text.toGraphemeOffset(endOffset);
-          this.$emit("add:entity", event, graphemeStartOffset, graphemeEndOffset);
+          this.$emit(
+            "add:entity",
+            event,
+            graphemeStartOffset,
+            graphemeEndOffset
+          );
         }
       } catch (e) {
         return;

@@ -1,7 +1,7 @@
 <template>
   <g
     style="cursor: pointer; userselect: none"
-    @click="$emit('click:entity')"
+    @click="$emit('click:entity', $event)"
     @contextmenu.prevent="$emit('contextmenu:entity')"
   >
     <circle :r="r" :fill="color" :cx="cx" :cy="y" />
