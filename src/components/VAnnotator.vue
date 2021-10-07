@@ -152,6 +152,9 @@ export default Vue.extend({
       },
       immediate: true,
     },
+    rtl() {
+      this.setMaxWidth();
+    },
   },
 
   computed: {
