@@ -35,14 +35,17 @@ export class RelationLine {
     });
     this.relations.sort((r1, r2) => r1.length - r2.length);
     for (const relation of this.relations) {
+      if (!relation.isVisible(this.textLine.startOffset)) {
+        continue;
+      }
       let x1 = this.left;
       let x2 = this.right;
       let marker = "";
-      const fromEntity = entityMap.get(relation.fromId);
-      const toEntity = entityMap.get(relation.toId);
+      const fromEntity = entityMap.get(relation.fromEntity.id);
+      const toEntity = entityMap.get(relation.toEntity.id);
       const label = this.relationLabels.getById(relation.labelId);
-      let openLeft = relation.startOffset < this.textLine.startOffset;
-      let openRight = relation.endOffset > this.textLine.endOffset;
+      let openLeft = relation.isOpenOnLeft(this.textLine.startOffset);
+      let openRight = relation.isOpenOnRight(this.textLine.endOffset);
       if (rtl) {
         [openLeft, openRight] = [openRight, openLeft];
       }

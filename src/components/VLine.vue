@@ -253,10 +253,7 @@ export default Vue.extend({
     },
     isSelectedEntity(entity: Entity): boolean {
       if (this.selectedRelation) {
-        return (
-          this.selectedRelation!.fromId === entity.id ||
-          this.selectedRelation!.toId === entity.id
-        );
+        return this.selectedRelation.consistOf(entity);
       } else if (this.selectedEntity) {
         return this.selectedEntity === entity;
       } else {
