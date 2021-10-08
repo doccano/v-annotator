@@ -18,6 +18,10 @@ export class Entity implements Identifiable {
       (this.startOffset < startOffset && endOffset < this.endOffset)
     );
   }
+
+  equalTo(other: Entity): boolean {
+    return this.id === other.id;
+  }
 }
 
 export class Entities {
