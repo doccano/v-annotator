@@ -22,6 +22,10 @@ export class Entity implements Identifiable {
   equalTo(other: Entity): boolean {
     return this.id === other.id;
   }
+
+  get center(): number {
+    return (this.endOffset - this.startOffset) / 2;
+  }
 }
 
 export class Entities {
