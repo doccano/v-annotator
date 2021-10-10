@@ -60,6 +60,10 @@ export abstract class LabelList {
     return this.getById(id)!.text;
   }
 
+  getWidth(id: number): number {
+    return this.getById(id)!.width;
+  }
+
   maxLabelWidth(): number {
     return Math.max(...this.labels.map((label) => label.width), 0);
   }
