@@ -23,6 +23,10 @@ export class Entity implements Identifiable {
     return this.id === other.id;
   }
 
+  startsAfter(offset: number): boolean {
+    return offset <= this.startOffset;
+  }
+
   get center(): number {
     return (this.endOffset - this.startOffset) / 2;
   }
