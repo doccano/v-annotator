@@ -3,14 +3,32 @@ import { LevelManager } from "./LevelManager";
 import { LabelList } from "../Label/Label";
 import { TextLine } from "./LineText";
 
-export interface GeometricEntity {
-  entity: Entity;
-  ranges: Ranges;
-  level: number;
+export class GeometricEntity {
+  constructor(
+    readonly entity: Entity,
+    readonly ranges: Ranges,
+    readonly level: number
+  ) {}
+
+  get center(): number {
+    return this.ranges.center;
+  }
 }
 
 export class Range {
   constructor(readonly x1: number, readonly x2: number) {}
+
+  get center(): number {
+    return this.x1 + (this.x2 - this.x1) / 2;
+  }
+
+  getInterval(rtl = false, labelWidth = 0): [number, number] {
+    if (rtl) {
+      return [Math.min(this.x1, this.x2 - labelWidth), this.x2];
+    } else {
+      return [this.x1, Math.max(this.x2, this.x1 + labelWidth)];
+    }
+  }
 }
 
 export class Ranges {
@@ -35,63 +53,46 @@ export class Ranges {
   }
 
   get center(): number {
-    return this.first.x1 + (this.first.x2 - this.first.x1) / 2;
+    return this.first.center;
   }
 
   getIntervals(startsWith: boolean, labelWidth: number): [number, number][] {
     return this.items.map((range, index) => {
       return index === 0 && startsWith
-        ? this.getInterval(range, labelWidth)
-        : [range.x1, range.x2];
+        ? range.getInterval(this.rtl, labelWidth)
+        : range.getInterval();
     });
-  }
-
-  private getInterval(range: Range, labelWidth: number): [number, number] {
-    if (this.rtl) {
-      return [Math.min(range.x1, range.x2 - labelWidth), range.x2];
-    } else {
-      return [range.x1, Math.max(range.x2, range.x1 + labelWidth)];
-    }
   }
 }
 
 export class EntityLine {
   private levelManager = new LevelManager();
-  constructor(
-    private entities: Entity[],
-    private entityLabels: LabelList,
-    private textLine: TextLine
-  ) {}
+  constructor(private textLine: TextLine, private rtl = false) {}
 
-  render(element: SVGTextElement, rtl = false): GeometricEntity[] {
+  render(
+    element: SVGTextElement,
+    entities: Entity[],
+    entityLabels: LabelList
+  ): GeometricEntity[] {
     if (element.getNumberOfChars() === 0) {
       return [];
     }
     const geometricEntities: GeometricEntity[] = [];
     this.levelManager.clear();
-    for (let i = 0; i < this.entities.length; i++) {
-      const entity = this.entities[i];
-      const ranges = this.createRanges(element, entity, rtl);
+    for (const entity of entities) {
+      const ranges = this.createRanges(element, entity);
       const startsWith = entity.startsAfter(this.textLine.startOffset);
-      const labelWidth = this.entityLabels.getWidth(entity.label);
+      const labelWidth = entityLabels.getWidth(entity.label);
       const intervals = ranges.getIntervals(startsWith, labelWidth);
       this.levelManager.update(entity, intervals);
       const level = this.levelManager.fetchLevel(entity)!;
-      geometricEntities.push({
-        entity,
-        ranges,
-        level,
-      });
+      geometricEntities.push(new GeometricEntity(entity, ranges, level));
     }
     return geometricEntities;
   }
 
-  private createRanges(
-    element: SVGTextElement,
-    entity: Entity,
-    rtl: boolean
-  ): Ranges {
-    const ranges = new Ranges(rtl);
+  private createRanges(element: SVGTextElement, entity: Entity): Ranges {
+    const ranges = new Ranges(this.rtl);
     const node = element.firstChild!;
     const s =
       Math.max(entity.startOffset, this.textLine.startOffset) -

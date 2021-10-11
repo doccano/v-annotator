@@ -185,12 +185,8 @@ export default Vue.extend({
     },
     geometricEntities(): GeometricEntity[] {
       if (this.element) {
-        const view = new EntityLine(
-          this.entities,
-          this.entityLabels,
-          this.textLine
-        );
-        return view.render(this.element, this.rtl);
+        const view = new EntityLine(this.textLine, this.rtl);
+        return view.render(this.element, this.entities, this.entityLabels);
       } else {
         return [];
       }
