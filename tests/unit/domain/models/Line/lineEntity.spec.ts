@@ -59,16 +59,24 @@ describe("Ranges", () => {
   it("LTR getIntervals", () => {
     const ranges = new Ranges();
     ranges.add(0, 1);
+    ranges.add(20, 30);
     const actual = ranges.getIntervals(true, 10);
-    const expected = [[0, 10]];
+    const expected = [
+      [0, 10],
+      [20, 30],
+    ];
     expect(actual).toEqual(expected);
   });
 
   it("RTL getIntervals", () => {
     const ranges = new Ranges(true);
+    ranges.add(0, 10);
     ranges.add(25, 30);
     const actual = ranges.getIntervals(true, 10);
-    const expected = [[20, 30]];
+    const expected = [
+      [20, 30],
+      [0, 10],
+    ];
     expect(actual).toEqual(expected);
   });
 });
