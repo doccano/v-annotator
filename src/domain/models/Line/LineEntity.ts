@@ -9,7 +9,7 @@ export interface GeometricEntity {
   level: number;
 }
 
-class Range {
+export class Range {
   constructor(readonly x1: number, readonly x2: number) {}
 }
 
@@ -18,20 +18,40 @@ export class Ranges {
   constructor(readonly rtl = false) {}
 
   get items(): Range[] {
-    return this.rtl ? this._items.reverse() : this._items;
+    return this._items;
   }
 
   add(x1: number, x2: number): void {
     const range = new Range(x1, x2);
-    this._items.push(range);
+    if (this.rtl) {
+      this._items.unshift(range);
+    } else {
+      this._items.push(range);
+    }
   }
 
   get first(): Range {
     return this.items[0];
   }
 
-  center(): number {
+  get center(): number {
     return this.first.x1 + (this.first.x2 - this.first.x1) / 2;
+  }
+
+  getIntervals(startsWith: boolean, labelWidth: number): [number, number][] {
+    return this.items.map((range, index) => {
+      return index === 0 && startsWith
+        ? this.getInterval(range, labelWidth)
+        : [range.x1, range.x2];
+    });
+  }
+
+  private getInterval(range: Range, labelWidth: number): [number, number] {
+    if (this.rtl) {
+      return [Math.min(range.x1, range.x2 - labelWidth), range.x2];
+    } else {
+      return [range.x1, Math.max(range.x2, range.x1 + labelWidth)];
+    }
   }
 }
 
@@ -52,22 +72,10 @@ export class EntityLine {
     for (let i = 0; i < this.entities.length; i++) {
       const entity = this.entities[i];
       const ranges = this.createRanges(element, entity, rtl);
-      this.levelManager.update(
-        entity,
-        ranges.items.map((range, index) =>
-          // If it's the first element,
-          index === 0 && this.textLine.startOffset <= entity.startOffset
-            ? [
-                range.x1,
-                // consider label length,
-                Math.max(
-                  range.x2,
-                  range.x1 + this.entityLabels.getById(entity.label)!.width
-                ),
-              ]
-            : [range.x1, range.x2]
-        )
-      );
+      const startsWith = entity.startsAfter(this.textLine.startOffset);
+      const labelWidth = this.entityLabels.getWidth(entity.label);
+      const intervals = ranges.getIntervals(startsWith, labelWidth);
+      this.levelManager.update(entity, intervals);
       const level = this.levelManager.fetchLevel(entity)!;
       geometricEntities.push({
         entity,
