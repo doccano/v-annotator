@@ -5,28 +5,7 @@ export interface Label {
   readonly color: string;
 }
 
-export interface LabelListItem {
-  readonly id: number;
-  readonly text: string;
-  readonly color: string;
-  readonly textWidth: number;
-  width: number;
-}
-
-export class EntityLabelListItem implements LabelListItem {
-  constructor(
-    readonly id: number,
-    readonly text: string,
-    readonly color: string,
-    readonly textWidth: number
-  ) {}
-
-  get width(): number {
-    return config.diameter + config.labelMargin + this.textWidth;
-  }
-}
-
-export class RelationLabelListItem implements LabelListItem {
+export class LabelListItem {
   constructor(
     readonly id: number,
     readonly text: string,
@@ -39,7 +18,15 @@ export class RelationLabelListItem implements LabelListItem {
   }
 }
 
-export abstract class LabelList {
+export class EntityLabelListItem extends LabelListItem {
+  get width(): number {
+    return config.diameter + config.labelMargin + this.textWidth;
+  }
+}
+
+export class RelationLabelListItem extends LabelListItem {}
+
+export class LabelList {
   private id2Label: { [key: number]: LabelListItem } = {};
 
   constructor(private labels: LabelListItem[]) {
@@ -67,35 +54,16 @@ export abstract class LabelList {
   maxLabelWidth(): number {
     return Math.max(...this.labels.map((label) => label.width), 0);
   }
-}
 
-export class EntityLabelList extends LabelList {
-  static valueOf(labels: Label[], widths: number[]): EntityLabelList {
-    return new EntityLabelList(
+  static valueOf(
+    labels: Label[],
+    widths: number[],
+    itemClass: typeof LabelListItem
+  ): LabelList {
+    return new LabelList(
       labels.map(
         (label, index) =>
-          new EntityLabelListItem(
-            label.id,
-            label.text,
-            label.color,
-            widths[index]
-          )
-      )
-    );
-  }
-}
-
-export class RelationLabelList extends LabelList {
-  static valueOf(labels: Label[], widths: number[]): RelationLabelList {
-    return new RelationLabelList(
-      labels.map(
-        (label, index) =>
-          new RelationLabelListItem(
-            label.id,
-            label.text,
-            label.color,
-            widths[index]
-          )
+          new itemClass(label.id, label.text, label.color, widths[index])
       )
     );
   }

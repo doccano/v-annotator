@@ -53,8 +53,9 @@ import { RecycleScroller } from "vue-virtual-scroller";
 import { Text } from "@/domain/models/Label/Text";
 import {
   Label,
-  EntityLabelList,
-  RelationLabelList,
+  LabelList,
+  EntityLabelListItem,
+  RelationLabelListItem,
 } from "@/domain/models/Label/Label";
 import { Entities, Entity } from "@/domain/models/Label/Entity";
 import { Font } from "@/domain/models/Line/Font";
@@ -161,22 +162,30 @@ export default Vue.extend({
     _text(): Text {
       return new Text(this.text);
     },
-    entityLabelList(): EntityLabelList | null {
+    entityLabelList(): LabelList | null {
       if (this.textElement) {
         const widths = this.entityLabels.map((label) =>
           widthOf(label.text, this.textElement!)
         );
-        return EntityLabelList.valueOf(this.entityLabels, widths);
+        return LabelList.valueOf(
+          this.entityLabels,
+          widths,
+          EntityLabelListItem
+        );
       } else {
         return null;
       }
     },
-    relationLabelList(): RelationLabelList | null {
+    relationLabelList(): LabelList | null {
       if (this.textElement) {
         const widths = this.relationLabels.map((label) =>
           widthOf(label.text, this.textElement!)
         );
-        return RelationLabelList.valueOf(this.relationLabels, widths);
+        return LabelList.valueOf(
+          this.relationLabels,
+          widths,
+          RelationLabelListItem
+        );
       } else {
         return null;
       }

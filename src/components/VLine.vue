@@ -71,10 +71,7 @@ import Vue, { PropType } from "vue";
 import { Entity } from "@/domain/models/Label/Entity";
 import { RelationListItem } from "@/domain/models/Label/Relation";
 import { Font } from "@/domain/models/Line/Font";
-import {
-  EntityLabelList,
-  RelationLabelList,
-} from "@/domain/models/Label/Label";
+import { LabelList } from "@/domain/models/Label/Label";
 import { TextLine } from "@/domain/models/Line/LineText";
 import BaseEntity from "./BaseEntity.vue";
 import BaseText from "./BaseText.vue";
@@ -116,11 +113,11 @@ export default Vue.extend({
       required: true,
     },
     entityLabels: {
-      type: Object as PropType<EntityLabelList>,
+      type: Object as PropType<LabelList>,
       required: true,
     },
     relationLabels: {
-      type: Object as PropType<RelationLabelList>,
+      type: Object as PropType<LabelList>,
     },
     rtl: {
       type: Boolean,
