@@ -78,6 +78,13 @@ export default Vue.extend({
           endOffset: 69,
         },
         {
+          id: 7,
+          user: 0,
+          label: 1,
+          startOffset: 70,
+          endOffset: 73,
+        },
+        {
           id: 2,
           user: 0,
           label: 0,
@@ -116,6 +123,12 @@ export default Vue.extend({
           id: 3,
           fromId: 1,
           toId: 6,
+          labelId: 1,
+        },
+        {
+          id: 4,
+          fromId: 6,
+          toId: 7,
           labelId: 1,
         },
       ],

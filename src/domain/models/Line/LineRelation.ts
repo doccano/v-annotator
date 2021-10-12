@@ -44,43 +44,63 @@ export class RelationLine {
       const fromEntity = entityMap.get(relation.fromEntity.id);
       const toEntity = entityMap.get(relation.toEntity.id);
       const label = this.relationLabels.getById(relation.labelId);
-      let openLeft = relation.isOpenOnLeft(this.textLine.startOffset);
-      let openRight = relation.isOpenOnRight(this.textLine.endOffset);
-      if (rtl) {
-        [openLeft, openRight] = [openRight, openLeft];
-      }
-      if (openLeft && openRight) {
+      let openStart = relation.isOpenOnLeft(this.textLine.startOffset);
+      let openEnd = relation.isOpenOnRight(this.textLine.endOffset);
+      if (openStart && openEnd) {
         x1 = this.left;
         x2 = this.right;
-      } else {
-        if (fromEntity) {
-          if (this.textLine.startOffset <= fromEntity.entity.startOffset) {
-            x1 = fromEntity.ranges.center();
+      } else if (openStart) {
+        if (rtl) {
+          if (fromEntity) {
+            x1 = fromEntity.center;
+          } else if (toEntity) {
+            x1 = toEntity.center;
           }
         } else {
-          if (openLeft) {
-            x1 = rtl ? this.right : this.left;
-          } else {
-            x1 = rtl ? this.left : this.right;
+          if (fromEntity) {
+            x2 = fromEntity.center;
+          } else if (toEntity) {
+            x2 = toEntity.center;
           }
         }
-        if (toEntity) {
-          x2 = toEntity.ranges.center();
-          marker = "end";
-          if (toEntity.entity.startOffset < this.textLine.startOffset) continue;
-        } else {
-          if (openRight) {
-            x2 = rtl ? this.left : this.right;
-          } else {
-            x2 = rtl ? this.right : this.left;
+      } else if (openEnd) {
+        if (rtl) {
+          if (fromEntity) {
+            x2 = fromEntity.center;
+          } else if (toEntity) {
+            x2 = toEntity.center;
           }
+        } else {
+          if (fromEntity) {
+            x1 = fromEntity.center;
+          } else if (toEntity) {
+            x1 = toEntity.center;
+          }
+        }
+      } else {
+        if (toEntity && fromEntity) {
+          x1 = Math.min(toEntity.center, fromEntity.center);
+          x2 = Math.max(toEntity.center, fromEntity.center);
         }
       }
-      if (x1 && x2 && x1 > x2) {
+      if (toEntity && x1 === toEntity.center) {
         marker = "start";
+      } else if (toEntity && x2 === toEntity.center) {
+        marker = "end";
+      }
+      if (x1 > x2) {
         [x1, x2] = [x2, x1];
       }
-      this.levelManager.update(relation, [[x1, x2]]);
+      if (rtl) {
+        [openStart, openEnd] = [openEnd, openStart];
+      }
+      if ((x2 - x1) < label!.width) {
+        const center = x1 + (x2 - x1) / 2;
+        const half = label!.width / 2;
+        this.levelManager.update(relation, [[center - half, center + half]]);
+      } else {
+        this.levelManager.update(relation, [[x1, x2]]);
+      }
       const level = this.levelManager.fetchLevel(relation)!;
       lineRelations.push({
         x1,
@@ -90,8 +110,8 @@ export class RelationLine {
         labelWidth: label!.width,
         relation,
         marker,
-        openLeft,
-        openRight,
+        openLeft: openStart,
+        openRight: openEnd,
       });
     }
     return lineRelations;

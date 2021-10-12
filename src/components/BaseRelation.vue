@@ -97,7 +97,6 @@ export default Vue.extend({
     },
     y(): number {
       return 20 + this.fontSize * this.maxLevel + this.fontSize / 2;
-      // return this.dy + this.fontSize / 2;
     },
     d(): string {
       if (this.openLeft && this.openRight) {
