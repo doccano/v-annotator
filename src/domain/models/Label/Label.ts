@@ -67,10 +67,6 @@ export abstract class LabelList {
   maxLabelWidth(): number {
     return Math.max(...this.labels.map((label) => label.width), 0);
   }
-
-  list(): LabelListItem[] {
-    return this.labels;
-  }
 }
 
 export class EntityLabelList extends LabelList {

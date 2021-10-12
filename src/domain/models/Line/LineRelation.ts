@@ -94,7 +94,7 @@ export class RelationLine {
       if (rtl) {
         [openStart, openEnd] = [openEnd, openStart];
       }
-      if ((x2 - x1) < label!.width) {
+      if (x2 - x1 < label!.width) {
         const center = x1 + (x2 - x1) / 2;
         const half = label!.width / 2;
         this.levelManager.update(relation, [[center - half, center + half]]);

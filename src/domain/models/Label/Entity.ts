@@ -64,10 +64,6 @@ export class Entities {
     return this.tree.size;
   }
 
-  list(): Entity[] {
-    return this.tree.values;
-  }
-
   findById(id: number): Entity {
     return this.id2entity.get(id)!;
   }

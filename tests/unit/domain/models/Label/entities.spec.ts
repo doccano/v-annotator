@@ -9,18 +9,12 @@ describe("Entities", () => {
       new Entity(0, 0, 0, 0, content.length + 1),
       new Entity(0, 0, 0, content.length, content.length + 1),
     ]);
-    const expected = new Entities([
+    const expected = [
       new Entity(0, 0, 0, 0, content.length),
       new Entity(0, 0, 0, 0, content.length + 1),
-    ]);
+    ];
     const actual = entities.filterByRange(0, content.length);
-    expect(actual).toEqual(expected.list());
-  });
-
-  it("can list", () => {
-    const expected = [new Entity(0, 0, 0, 0, 0)];
-    const entities = new Entities(expected);
-    expect(entities.list()).toEqual(expected);
+    expect(actual).toEqual(expected);
   });
 
   it("can filter by range", () => {
