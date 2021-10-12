@@ -16,7 +16,11 @@ export class GeometricEntity {
 }
 
 export class Range {
-  constructor(readonly x1: number, readonly x2: number) {}
+  constructor(readonly x1: number, readonly x2: number) {
+    if (x1 > x2) {
+      throw new RangeError(`The argument must be x1 <= x2.`);
+    }
+  }
 
   get center(): number {
     return this.x1 + (this.x2 - this.x1) / 2;

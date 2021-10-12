@@ -1,5 +1,38 @@
 import { Range, Ranges } from "@/domain/models/Line/LineEntity";
 
+describe("Range", () => {
+  it("center", () => {
+    const range = new Range(0, 1);
+    const expected = 0.5;
+    expect(range.center).toEqual(expected);
+  });
+
+  it("throw exception", () => {
+    expect(() => new Range(1, 0)).toThrowError(RangeError);
+  });
+
+  it("getInterval", () => {
+    const range = new Range(20, 30);
+    const actual = range.getInterval();
+    const expected = [20, 30];
+    expect(actual).toEqual(expected);
+  });
+
+  it("LTR getInterval", () => {
+    const range = new Range(0, 1);
+    const actual = range.getInterval(false, 10);
+    const expected = [0, 10];
+    expect(actual).toEqual(expected);
+  });
+
+  it("RTL getInterval", () => {
+    const range = new Range(25, 30);
+    const actual = range.getInterval(true, 10);
+    const expected = [20, 30];
+    expect(actual).toEqual(expected);
+  });
+});
+
 describe("Ranges", () => {
   it("add", () => {
     const ranges = new Ranges();
