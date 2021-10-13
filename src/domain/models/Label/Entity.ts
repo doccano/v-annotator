@@ -9,7 +9,13 @@ export class Entity implements Identifiable {
     readonly user: number,
     readonly startOffset: number,
     readonly endOffset: number
-  ) {}
+  ) {
+    if (startOffset > endOffset) {
+      throw new RangeError(
+        `The startOffset(${startOffset}) must be smaller than endOffset(${endOffset}).`
+      );
+    }
+  }
 
   isIn(startOffset: number, endOffset: number): boolean {
     return (
@@ -28,7 +34,7 @@ export class Entity implements Identifiable {
   }
 
   get center(): number {
-    return (this.endOffset - this.startOffset) / 2;
+    return this.startOffset + (this.endOffset - this.startOffset) / 2;
   }
 }
 

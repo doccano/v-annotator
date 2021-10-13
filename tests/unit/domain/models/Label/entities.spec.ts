@@ -35,4 +35,11 @@ describe("Entities", () => {
     const entities = new Entities([new Entity(0, 0, 0, 0, 0)]);
     expect(entities.size).toEqual(1);
   });
+
+  it("find by id", () => {
+    const entity = new Entity(1, 0, 0, 0, 0);
+    const entities = new Entities([entity]);
+    expect(entities.findById(1)).toEqual(entity);
+    expect(entities.findById(0)).toBeUndefined();
+  });
 });
