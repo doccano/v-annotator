@@ -18,7 +18,7 @@ export class TextLineSplitter implements BaseLineSplitter {
     const lines: TextLine[] = [];
     for (let j = 0; j < text.graphemeLength; j++) {
       const ch = text.graphemeAt(j);
-      if (this.needsNewline(i, ch)) {
+      if (this.needsNewline(i, text)) {
         lines.push(new TextLine(startOffset, i));
         if (this.isCRLF(text.substr(i, 2))) {
           startOffset = i + 2;
@@ -82,7 +82,8 @@ export class TextLineSplitter implements BaseLineSplitter {
     }
   }
 
-  private needsNewline(i: number, ch: string): boolean {
+  private needsNewline(i: number, text: Text): boolean {
+    const ch = text.charAt(i);
     if (this.isLF(ch) || this.isCR(ch)) {
       return true;
     }
