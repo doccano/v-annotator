@@ -111,9 +111,9 @@ export default Vue.extend({
       type: Boolean,
       default: false,
     },
-    perCodePoint: {
+    graphemeMode: {
       type: Boolean,
-      default: false,
+      default: true,
     },
     dark: {
       type: Boolean,
@@ -207,13 +207,13 @@ export default Vue.extend({
     },
     entityList(): Entities {
       this.resetSelection();
-      if (this.perCodePoint) {
-        return Entities.valueOf(JSON.parse(this.entities as string));
-      } else {
+      if (this.graphemeMode) {
         return Entities.valueOf(
           JSON.parse(this.entities as string),
           this._text
         );
+      } else {
+        return Entities.valueOf(JSON.parse(this.entities as string));
       }
     },
     relationList(): RelationList {
@@ -276,9 +276,7 @@ export default Vue.extend({
             return;
           }
         }
-        if (this.perCodePoint) {
-          this.$emit("add:entity", event, startOffset, endOffset);
-        } else {
+        if (this.graphemeMode) {
           const graphemeStartOffset = this._text.toGraphemeOffset(startOffset);
           const graphemeEndOffset = this._text.toGraphemeOffset(endOffset);
           this.$emit(
@@ -287,6 +285,8 @@ export default Vue.extend({
             graphemeStartOffset,
             graphemeEndOffset
           );
+        } else {
+          this.$emit("add:entity", event, startOffset, endOffset);
         }
       } catch (e) {
         return;
