@@ -1,6 +1,6 @@
 {
   "name": "v-annotator",
-  "version": "0.1.17",
+  "version": "0.1.18",
   "private": false,
   "main": "dist/v-annotator.common.js",
   "unpkg": "./dist/v-annotator.umd.min.js",
