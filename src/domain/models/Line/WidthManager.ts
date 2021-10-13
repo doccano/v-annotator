@@ -7,6 +7,7 @@ export interface WidthManager {
   reset(): void;
   isFull(wordOrLabelWidth: number): boolean;
   isEmpty(): boolean;
+  canInsertChar(char: string): boolean;
 }
 
 export class LineWidthManager implements WidthManager {
@@ -36,6 +37,13 @@ export class LineWidthManager implements WidthManager {
 
   isFull(wordOrLabelWidth = 0): boolean {
     return this.maxWidth < this.totalWidth + wordOrLabelWidth;
+  }
+
+  canInsertChar(char: string): boolean {
+    return (
+      this.totalWidth + this.font.widthOf(char, char.length > 1) <=
+      this.maxWidth
+    );
   }
 
   isEmpty(): boolean {

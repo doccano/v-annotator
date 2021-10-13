@@ -18,17 +18,17 @@ export class TextLineSplitter implements BaseLineSplitter {
     const lines: TextLine[] = [];
     for (let j = 0; j < text.graphemeLength; j++) {
       const ch = text.graphemeAt(j);
-      if (this.needsNewline(i, text)) {
+      if (this.needsNewline(i, text, ch)) {
         lines.push(new TextLine(startOffset, i));
+        this.widthManager.reset();
         if (this.isCRLF(text.substr(i, 2))) {
           startOffset = i + 2;
-          i++;
         } else if (this.isLF(ch) || this.isCR(ch)) {
           startOffset = i + 1;
         } else {
           startOffset = i;
+          this.widthManager.add(ch, ch.length > 1);
         }
-        this.widthManager.reset();
       } else {
         this.widthManager.add(ch, ch.length > 1);
       }
@@ -83,11 +83,16 @@ export class TextLineSplitter implements BaseLineSplitter {
     }
   }
 
-  private needsNewline(i: number, text: Text): boolean {
+  private needsNewline(i: number, text: Text, char: string): boolean {
     const ch = text.charAt(i);
     if (this.isLF(ch) || this.isCR(ch)) {
       return true;
     }
+
+    if (!this.widthManager.canInsertChar(char)) {
+      return true;
+    }
+
     // check whether the word exceeds the maxWidth
     const wordWidth = this.chunkWidth.get(i) || 0;
     const isShortWord = wordWidth <= this.widthManager.maxWidth;
