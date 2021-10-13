@@ -29,8 +29,9 @@ export class TextLineSplitter implements BaseLineSplitter {
           startOffset = i;
         }
         this.widthManager.reset();
+      } else {
+        this.widthManager.add(ch, ch.length > 1);
       }
-      this.widthManager.add(ch, ch.length > 1);
       i += ch.length;
     }
     if (!this.widthManager.isEmpty()) {
@@ -89,7 +90,7 @@ export class TextLineSplitter implements BaseLineSplitter {
     }
     // check whether the word exceeds the maxWidth
     const wordWidth = this.chunkWidth.get(i) || 0;
-    const isShortWord = wordWidth <= this.widthManager.width;
+    const isShortWord = wordWidth <= this.widthManager.maxWidth;
     if (isShortWord && this.widthManager.isFull(wordWidth)) {
       return true;
     }

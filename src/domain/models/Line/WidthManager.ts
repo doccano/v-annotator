@@ -2,6 +2,7 @@ import { Font } from "./Font";
 
 export interface WidthManager {
   width: number;
+  maxWidth: number;
   add(ch: string, return_max: boolean): void;
   reset(): void;
   isFull(wordOrLabelWidth: number): boolean;
@@ -21,6 +22,10 @@ export class LineWidthManager implements WidthManager {
     return this.totalWidth;
   }
 
+  get maxWidth(): number {
+    return this.maxLineWidth - this.maxLabelWidth;
+  }
+
   add(ch: string, return_max = false): void {
     this.totalWidth += this.font.widthOf(ch, return_max);
   }
@@ -30,10 +35,7 @@ export class LineWidthManager implements WidthManager {
   }
 
   isFull(wordOrLabelWidth = 0): boolean {
-    return (
-      this.maxLineWidth - this.maxLabelWidth <=
-      this.totalWidth + wordOrLabelWidth
-    );
+    return this.maxWidth < this.totalWidth + wordOrLabelWidth;
   }
 
   isEmpty(): boolean {

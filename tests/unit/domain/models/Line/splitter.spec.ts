@@ -7,8 +7,7 @@ jest.mock("@/domain/models/Line/Font");
 const FontMock = Font as unknown as jest.Mock;
 
 describe("TextLineSplitter", () => {
-  const text = "Biden";
-  const maxWidth = 2;
+  const maxWidth = 5;
   const maxLabelWidth = 0;
   FontMock.mockImplementationOnce(() => {
     return {
@@ -24,22 +23,37 @@ describe("TextLineSplitter", () => {
 
   const calculator = new LineWidthManager(font, maxWidth, maxLabelWidth);
   const splitter = new TextLineSplitter(calculator);
+  const assertOffset = (text: string, expected: [number, number][]) => {
+    const lines = splitter.split(new Text(text));
+    for (let i = 0; i < lines.length; i++) {
+      const actual = [lines[i].startOffset, lines[i].endOffset];
+      expect(actual).toEqual(expected[i]);
+    }
+  };
 
   beforeEach(() => {
     calculator.reset();
   });
 
-  it("startOffset is 0", () => {
-    const lines = splitter.split(new Text(text));
-    const expected = [
-      [0, 2],
-      [2, 4],
-      [4, 5],
+  it("newline is \n or \r", () => {
+    const texts = ["Bush\nObama\nTrump", "Bush\rObama\rTrump"];
+    const expected: [number, number][] = [
+      [0, 4],
+      [5, 10],
+      [11, 16],
     ];
-    let i = 0;
-    for (const line of lines) {
-      expect([line.startOffset, line.endOffset]).toEqual(expected[i++]);
+    for (const text of texts) {
+      assertOffset(text, expected);
     }
-    expect(i).toEqual(3);
+  });
+
+  it("newline is \r\n", () => {
+    const text = "Bush\r\nObama\r\nTrump";
+    const expected: [number, number][] = [
+      [0, 4],
+      [6, 11],
+      [13, 18],
+    ];
+    assertOffset(text, expected);
   });
 });
