@@ -7,7 +7,7 @@ export class LevelManager {
 
   update(item: Identifiable, ranges: [number, number][]): void {
     for (const [level, tree] of this.intervalPerLevel.entries()) {
-      if (ranges.every((range) => !this.intersect_any(tree, range))) {
+      if (ranges.every((range) => !this.intersectAny(tree, range))) {
         ranges.forEach((range) => {
           tree.insert(range);
         });
@@ -23,7 +23,7 @@ export class LevelManager {
     this.intervalPerLevel.push(tree);
   }
 
-  private intersect_any(tree: IntervalTree, range: [number, number]): boolean {
+  private intersectAny(tree: IntervalTree, range: [number, number]): boolean {
     const res = tree.search(range);
     return (
       res.filter((r) => !(r[0] === range[1] || r[1] === range[0])).length > 0
