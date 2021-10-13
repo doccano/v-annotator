@@ -6,6 +6,22 @@ export interface BaseLineSplitter {
   split(text: Text): TextLine[];
 }
 
+function isWhitespace(ch: string): boolean {
+  return /^\s$/.test(ch);
+}
+
+function isLF(ch: string): boolean {
+  return ch === "\n";
+}
+
+function isCR(ch: string): boolean {
+  return ch === "\r";
+}
+
+function isCRLF(text: string): boolean {
+  return text === "\r\n";
+}
+
 export class TextLineSplitter implements BaseLineSplitter {
   private chunkWidth: Map<number, number> = new Map();
   constructor(private widthManager: WidthManager) {}
@@ -21,9 +37,9 @@ export class TextLineSplitter implements BaseLineSplitter {
       if (this.needsNewline(i, text, ch)) {
         lines.push(new TextLine(startOffset, i));
         this.widthManager.reset();
-        if (this.isCRLF(text.substr(i, 2))) {
+        if (isCRLF(text.substr(i, 2))) {
           startOffset = i + 2;
-        } else if (this.isLF(ch) || this.isCR(ch)) {
+        } else if (isLF(ch) || isCR(ch)) {
           startOffset = i + 1;
         } else {
           startOffset = i;
@@ -40,22 +56,6 @@ export class TextLineSplitter implements BaseLineSplitter {
     return lines;
   }
 
-  private isWhitespace(ch: string): boolean {
-    return /^\s$/.test(ch);
-  }
-
-  private isLF(ch: string): boolean {
-    return ch === "\n";
-  }
-
-  private isCR(ch: string): boolean {
-    return ch === "\r";
-  }
-
-  private isCRLF(text: string): boolean {
-    return text === "\r\n";
-  }
-
   private calculateChunkWidth(text: string): void {
     if (this.chunkWidth.size > 0) return;
     let isInsideWord = false;
@@ -63,16 +63,16 @@ export class TextLineSplitter implements BaseLineSplitter {
     this.widthManager.reset();
     for (let i = 0; i < text.length; i++) {
       const ch = text[i];
-      if (!isInsideWord && !this.isWhitespace(ch)) {
+      if (!isInsideWord && !isWhitespace(ch)) {
         // word starts
         isInsideWord = true;
         start = i;
         this.widthManager.add(ch, ch.length > 1);
-      } else if (!isInsideWord && this.isWhitespace(ch)) {
+      } else if (!isInsideWord && isWhitespace(ch)) {
         // space is continuous.
-      } else if (isInsideWord && !this.isWhitespace(ch)) {
+      } else if (isInsideWord && !isWhitespace(ch)) {
         this.widthManager.add(ch, ch.length > 1);
-      } else if (isInsideWord && this.isWhitespace(ch)) {
+      } else if (isInsideWord && isWhitespace(ch)) {
         isInsideWord = false;
         this.chunkWidth.set(start, this.widthManager.width);
         this.widthManager.reset();
@@ -85,7 +85,7 @@ export class TextLineSplitter implements BaseLineSplitter {
 
   private needsNewline(i: number, text: Text, char: string): boolean {
     const ch = text.charAt(i);
-    if (this.isLF(ch) || this.isCR(ch)) {
+    if (isLF(ch) || isCR(ch)) {
       return true;
     }
 
