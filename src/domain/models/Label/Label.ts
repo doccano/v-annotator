@@ -1,4 +1,5 @@
 import config from "@/domain/models/Config/Config";
+
 export interface Label {
   readonly id: number;
   readonly text: string;
@@ -10,11 +11,24 @@ export class LabelListItem {
     readonly id: number,
     readonly text: string,
     readonly color: string,
-    readonly textWidth: number
+    readonly textWidth: number,
+    readonly maxLength = config.maxLabelLength
   ) {}
 
   get width(): number {
     return this.textWidth;
+  }
+
+  get truncatedText(): string {
+    if (this.text.length <= this.maxLength) {
+      return this.text;
+    } else {
+      return `${this.text.substr(0, this.maxLength)}`;
+    }
+  }
+
+  get truncatedWidth(): number {
+    return (this.textWidth / this.text.length) * this.truncatedText.length;
   }
 }
 

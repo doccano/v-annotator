@@ -7,7 +7,7 @@ import {
 describe("LabelListItem", () => {
   it("check properties", () => {
     const id = 0;
-    const text = "text";
+    const text = "x".repeat(15);
     const color = "color";
     const width = 10;
     const label = new LabelListItem(id, text, color, width);
@@ -15,6 +15,15 @@ describe("LabelListItem", () => {
     expect(label.text).toBe(text);
     expect(label.color).toBe(color);
     expect(label.width).toBe(width);
+    expect(label.truncatedText).toBe(text);
+  });
+
+  it("check truncated text", () => {
+    const text = "x".repeat(100);
+    const width = 100;
+    const label = new LabelListItem(0, text, "color", width);
+    expect(label.truncatedText).toBe("x".repeat(15));
+    expect(label.truncatedWidth).toBeLessThan(width);
   });
 });
 

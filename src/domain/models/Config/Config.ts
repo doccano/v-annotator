@@ -3,11 +3,13 @@ interface Config {
   lineWidth: number;
   labelMargin: number;
   diameter: number;
+  maxLabelLength: number;
 }
 
 const defaultConfig: Config = Object.freeze({
   radius: 3,
   lineWidth: 5,
+  maxLabelLength: 15,
   get labelMargin(): number {
     return 5 + this.radius;
   },
