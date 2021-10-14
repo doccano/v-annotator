@@ -3,7 +3,8 @@ import config from "@/domain/models/Config/Config";
 export interface Label {
   readonly id: number;
   readonly text: string;
-  readonly color: string;
+  readonly color?: string;
+  readonly backgroundColor?: string;
 }
 
 export class LabelListItem {
@@ -77,7 +78,12 @@ export class LabelList {
     return new LabelList(
       labels.map(
         (label, index) =>
-          new itemClass(label.id, label.text, label.color, widths[index])
+          new itemClass(
+            label.id,
+            label.text,
+            (label.color || label.backgroundColor)!,
+            widths[index]
+          )
       )
     );
   }
