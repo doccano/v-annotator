@@ -34,10 +34,6 @@ export class LevelManager {
     return this.id2level.get(item.id);
   }
 
-  get maxLevel(): number {
-    return Math.max(Math.max(...this.id2level.values()) + 1, 0);
-  }
-
   clear(): void {
     this.intervalPerLevel = [];
     this.id2level.clear();
