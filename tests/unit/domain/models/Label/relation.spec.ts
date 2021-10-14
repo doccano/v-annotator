@@ -1,5 +1,5 @@
-import { Entity } from "@/domain/models/Label/Entity";
-import { RelationListItem } from "@/domain/models/Label/Relation";
+import { Entity, Entities } from "@/domain/models/Label/Entity";
+import { RelationListItem, RelationList } from "@/domain/models/Label/Relation";
 
 describe("Entity component", () => {
   it("start offset", () => {
@@ -75,5 +75,26 @@ describe("Entity component", () => {
     const toEntity = new Entity(1, 0, 0, 3, 3);
     const relation = new RelationListItem(0, 0, fromEntity, toEntity);
     expect(relation.length).toEqual(2);
+  });
+});
+
+describe("RelationList", () => {
+  const entities = new Entities([
+    new Entity(0, 0, 0, 5, 10),
+    new Entity(1, 0, 0, 20, 30),
+  ]);
+  const relations = [{ id: 0, labelId: 0, fromId: 0, toId: 1 }];
+  const relationList = new RelationList(relations, entities);
+
+  it("can filter by range", () => {
+    expect(relationList.filterByRange(0, 5).length).toBe(0);
+    expect(relationList.filterByRange(0, 6).length).toBe(1);
+    expect(relationList.filterByRange(30, 31).length).toBe(0);
+    expect(relationList.filterByRange(29, 31).length).toBe(1);
+    expect(relationList.filterByRange(5, 30).length).toBe(1);
+  });
+
+  it("return empty list by filtering", () => {
+    expect(relationList.filterByRange(100, 101)).toEqual([]);
   });
 });
