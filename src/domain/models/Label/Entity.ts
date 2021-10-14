@@ -58,9 +58,9 @@ export class Entities {
             entity.label,
             entity.user,
             text
-              ? text.toCodePointOffset(entity.startOffset)
+              ? text.toCodePointOffset(entity.startOffset)!
               : entity.startOffset,
-            text ? text.toCodePointOffset(entity.endOffset) : entity.endOffset
+            text ? text.toCodePointOffset(entity.endOffset)! : entity.endOffset
           )
       )
     );
