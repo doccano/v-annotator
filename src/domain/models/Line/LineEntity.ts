@@ -86,7 +86,7 @@ export class EntityLine {
     for (const entity of entities) {
       const ranges = this.createRanges(element, entity);
       const startsWith = entity.startsAfter(this.textLine.startOffset);
-      const labelWidth = entityLabels.getWidth(entity.label);
+      const labelWidth = entityLabels.getWidth(entity.label)!;
       const intervals = ranges.getIntervals(startsWith, labelWidth);
       this.levelManager.update(entity, intervals);
       const level = this.levelManager.fetchLevel(entity)!;

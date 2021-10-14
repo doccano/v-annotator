@@ -236,10 +236,10 @@ export default Vue.extend({
       });
     },
     color(entity: Entity): string {
-      return this.entityLabels.getColor(entity.label);
+      return this.entityLabels.getColor(entity.label)!;
     },
     labelText(entity: Entity): string {
-      return this.entityLabels.getText(entity.label);
+      return this.entityLabels.getText(entity.label)!;
     },
     isSelectedRelation(relation: RelationListItem): boolean {
       return this.selectedRelation === relation;

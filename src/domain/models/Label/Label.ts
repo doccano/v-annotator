@@ -39,19 +39,19 @@ export class LabelList {
     return this.id2Label[id];
   }
 
-  getColor(id: number): string {
-    return this.getById(id)!.color;
+  getColor(id: number): string | undefined {
+    return this.getById(id)?.color;
   }
 
-  getText(id: number): string {
-    return this.getById(id)!.text;
+  getText(id: number): string | undefined {
+    return this.getById(id)?.text;
   }
 
-  getWidth(id: number): number {
-    return this.getById(id)!.width;
+  getWidth(id: number): number | undefined {
+    return this.getById(id)?.width;
   }
 
-  maxLabelWidth(): number {
+  get maxLabelWidth(): number {
     return Math.max(...this.labels.map((label) => label.width), 0);
   }
 

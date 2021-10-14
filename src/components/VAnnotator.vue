@@ -224,7 +224,7 @@ export default Vue.extend({
       if (!this.font || !this.entityLabelList || this.maxWidth === -1) {
         return [];
       } else {
-        const maxLabelWidth = this.entityLabelList.maxLabelWidth();
+        const maxLabelWidth = this.entityLabelList.maxLabelWidth;
         const calculator = new LineWidthManager(
           this.font,
           this.maxWidth,
