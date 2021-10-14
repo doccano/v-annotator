@@ -236,12 +236,12 @@ export default Vue.extend({
     },
   },
 
-  beforeDestroy: function () {
+  beforeDestroy() {
     window.removeEventListener("resize", this.setMaxWidth);
   },
 
   methods: {
-    clicked(event: any, entity: Entity) {
+    clicked(event: Event, entity: Entity) {
       this.$emit("click:entity", event, entity.id);
     },
     setMaxWidth() {

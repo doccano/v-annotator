@@ -176,7 +176,7 @@ export default Vue.extend({
       });
       this.id++;
     },
-    updateEntity(event: any, id: number) {
+    updateEntity(event: Event, id: number) {
       const entity = this.entities.find((e) => e.id === id);
       console.log(JSON.stringify(entity));
       console.log(event);
