@@ -69,4 +69,11 @@ describe("Entity component", () => {
       expect(relation.isVisible(25)).toBeTruthy();
     }
   });
+
+  it("check length", () => {
+    const fromEntity = new Entity(0, 0, 0, 1, 1);
+    const toEntity = new Entity(1, 0, 0, 3, 3);
+    const relation = new RelationListItem(0, 0, fromEntity, toEntity);
+    expect(relation.length).toEqual(2);
+  });
 });
