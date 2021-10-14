@@ -3,23 +3,23 @@ import { RelationListItem, RelationList } from "@/domain/models/Label/Relation";
 
 describe("Entity component", () => {
   it("start offset", () => {
-    const fromEntity = new Entity(0, 0, 0, 1, 2);
-    const toEntity = new Entity(1, 0, 0, 3, 4);
+    const fromEntity = new Entity(0, 0, 1, 2);
+    const toEntity = new Entity(1, 0, 3, 4);
     const relation = new RelationListItem(0, 0, fromEntity, toEntity);
     expect(relation.startOffset).toEqual(1);
   });
 
   it("end offset", () => {
-    const fromEntity = new Entity(0, 0, 0, 1, 2);
-    const toEntity = new Entity(1, 0, 0, 3, 4);
+    const fromEntity = new Entity(0, 0, 1, 2);
+    const toEntity = new Entity(1, 0, 3, 4);
     const relation = new RelationListItem(0, 0, fromEntity, toEntity);
     expect(relation.endOffset).toEqual(4);
   });
 
   it("check consistOf", () => {
-    const fromEntity = new Entity(0, 0, 0, 0, 0);
-    const toEntity = new Entity(1, 0, 0, 0, 0);
-    const entity = new Entity(2, 0, 0, 0, 0);
+    const fromEntity = new Entity(0, 0, 0, 0);
+    const toEntity = new Entity(1, 0, 0, 0);
+    const entity = new Entity(2, 0, 0, 0);
     const relation = new RelationListItem(0, 0, fromEntity, toEntity);
 
     expect(relation.consistOf(fromEntity)).toBeTruthy();
@@ -28,8 +28,8 @@ describe("Entity component", () => {
   });
 
   it("is open on left to be truthy", () => {
-    const fromEntity = new Entity(0, 0, 0, 10, 20);
-    const toEntity = new Entity(1, 0, 0, 20, 30);
+    const fromEntity = new Entity(0, 0, 10, 20);
+    const toEntity = new Entity(1, 0, 20, 30);
     const relations = [
       new RelationListItem(0, 0, fromEntity, toEntity),
       new RelationListItem(0, 0, toEntity, fromEntity),
@@ -42,8 +42,8 @@ describe("Entity component", () => {
   });
 
   it("is open on left to be truthy", () => {
-    const fromEntity = new Entity(0, 0, 0, 0, 0);
-    const toEntity = new Entity(1, 0, 0, 10, 20);
+    const fromEntity = new Entity(0, 0, 0, 0);
+    const toEntity = new Entity(1, 0, 10, 20);
     const relations = [
       new RelationListItem(0, 0, fromEntity, toEntity),
       new RelationListItem(0, 0, toEntity, fromEntity),
@@ -56,8 +56,8 @@ describe("Entity component", () => {
   });
 
   it("is visible", () => {
-    const fromEntity = new Entity(0, 0, 0, 10, 20);
-    const toEntity = new Entity(1, 0, 0, 25, 30);
+    const fromEntity = new Entity(0, 0, 10, 20);
+    const toEntity = new Entity(1, 0, 25, 30);
     const relations = [
       new RelationListItem(0, 0, fromEntity, toEntity),
       new RelationListItem(0, 0, toEntity, fromEntity),
@@ -71,8 +71,8 @@ describe("Entity component", () => {
   });
 
   it("check length", () => {
-    const fromEntity = new Entity(0, 0, 0, 1, 1);
-    const toEntity = new Entity(1, 0, 0, 3, 3);
+    const fromEntity = new Entity(0, 0, 1, 1);
+    const toEntity = new Entity(1, 0, 3, 3);
     const relation = new RelationListItem(0, 0, fromEntity, toEntity);
     expect(relation.length).toEqual(2);
   });
@@ -80,8 +80,8 @@ describe("Entity component", () => {
 
 describe("RelationList", () => {
   const entities = new Entities([
-    new Entity(0, 0, 0, 5, 10),
-    new Entity(1, 0, 0, 20, 30),
+    new Entity(0, 0, 5, 10),
+    new Entity(1, 0, 20, 30),
   ]);
   const relations = [{ id: 0, labelId: 0, fromId: 0, toId: 1 }];
   const relationList = new RelationList(relations, entities);

@@ -6,7 +6,6 @@ export class Entity implements Identifiable {
   constructor(
     readonly id: number,
     readonly label: number,
-    readonly user: number,
     readonly startOffset: number,
     readonly endOffset: number
   ) {
@@ -56,7 +55,6 @@ export class Entities {
           new Entity(
             entity.id,
             entity.label,
-            entity.user,
             text
               ? text.toCodePointOffset(entity.startOffset)!
               : entity.startOffset,
