@@ -41,4 +41,18 @@ describe("Text", () => {
     expect(text.toCodePointOffset(1)).toBe(4);
     expect(text.toCodePointOffset(4)).toBeUndefined();
   });
+
+  it("getWord", () => {
+    const text = new Text("we\tmust  respect\nthe");
+    expect(text.getWord(0)).toBe("we");
+    expect(text.getWord(3)).toBe("must");
+    expect(text.getWord(9)).toBe("respect");
+    expect(text.getWord(17)).toBe("the");
+    for (let i = 0; i < 20; i++) {
+      if ([0, 3, 9, 17].includes(i)) {
+        continue;
+      }
+      expect(text.getWord(i)).toBeUndefined();
+    }
+  });
 });

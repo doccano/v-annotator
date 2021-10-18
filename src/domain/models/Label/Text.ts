@@ -4,6 +4,7 @@ export class Text {
   private graphemes: string[] = [];
   private g2c: Map<number, number> = new Map();
   private c2g: Map<number, number> = new Map();
+  private idx2len: Map<number, number> = new Map();
 
   constructor(readonly text: string) {
     const splitter = new GraphemeSplitter();
@@ -16,6 +17,26 @@ export class Text {
     for (const [graphemeOffset, codeOffset] of this.g2c) {
       this.c2g.set(codeOffset, graphemeOffset);
     }
+    this.setWordBoundary();
+  }
+
+  private setWordBoundary() {
+    let index = 0;
+    const words = this.text.split(/\s/);
+    for (let i = 0; i < words.length; i++) {
+      if (words[i] === "") {
+        index++;
+        continue;
+      } else {
+        this.idx2len.set(index, words[i].length);
+        index += words[i].length + 1; // +1 is whitespace.
+      }
+    }
+  }
+
+  getWord(index: number): string | undefined {
+    const len = this.idx2len.get(index);
+    return len ? this.text.substr(index, len) : undefined;
   }
 
   toGraphemeOffset(codePointOffset: number): number | undefined {
