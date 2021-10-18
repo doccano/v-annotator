@@ -1,13 +1,10 @@
 import { Text } from "../Label/Text";
 import { TextLine } from "./LineText";
 import { WidthManager } from "./WidthManager";
+import { Font } from "./Font";
 
 export interface BaseLineSplitter {
   split(text: Text): TextLine[];
-}
-
-function isWhitespace(ch: string): boolean {
-  return /^\s$/.test(ch);
 }
 
 function isLF(ch: string): boolean {
@@ -23,11 +20,9 @@ function isCRLF(text: string): boolean {
 }
 
 export class TextLineSplitter implements BaseLineSplitter {
-  private chunkWidth: Map<number, number> = new Map();
-  constructor(private widthManager: WidthManager) {}
+  constructor(private widthManager: WidthManager, private font: Font) {}
 
   split(text: Text): TextLine[] {
-    this.calculateChunkWidth(text.text);
     this.widthManager.reset();
     let startOffset = 0;
     let i = startOffset;
@@ -43,10 +38,10 @@ export class TextLineSplitter implements BaseLineSplitter {
           startOffset = i + 1;
         } else {
           startOffset = i;
-          this.widthManager.add(ch, ch.length > 1);
+          this.widthManager.add(this.font.widthOf(ch, ch.length > 1));
         }
       } else {
-        this.widthManager.add(ch, ch.length > 1);
+        this.widthManager.add(this.font.widthOf(ch, ch.length > 1));
       }
       i += ch.length;
     }
@@ -56,49 +51,36 @@ export class TextLineSplitter implements BaseLineSplitter {
     return lines;
   }
 
-  private calculateChunkWidth(text: string): void {
-    if (this.chunkWidth.size > 0) return;
-    let isInsideWord = false;
-    let start = 0;
-    this.widthManager.reset();
-    for (let i = 0; i < text.length; i++) {
-      const ch = text[i];
-      if (!isInsideWord && !isWhitespace(ch)) {
-        // word starts
-        isInsideWord = true;
-        start = i;
-        this.widthManager.add(ch, ch.length > 1);
-      } else if (!isInsideWord && isWhitespace(ch)) {
-        // space is continuous.
-      } else if (isInsideWord && !isWhitespace(ch)) {
-        this.widthManager.add(ch, ch.length > 1);
-      } else if (isInsideWord && isWhitespace(ch)) {
-        isInsideWord = false;
-        this.chunkWidth.set(start, this.widthManager.width);
-        this.widthManager.reset();
-      }
-    }
-    if (isInsideWord) {
-      this.chunkWidth.set(start, this.widthManager.width);
-    }
-  }
-
   private needsNewline(i: number, text: Text, char: string): boolean {
     const ch = text.charAt(i);
     if (isLF(ch) || isCR(ch)) {
       return true;
     }
 
-    if (!this.widthManager.canInsertChar(char)) {
+    if (!this.widthManager.canAdd(this.font.widthOf(char, char.length > 1))) {
       return true;
     }
 
     // check whether the word exceeds the maxWidth
-    const wordWidth = this.chunkWidth.get(i) || 0;
+    const wordWidth = this.calculateWordLength(i, text);
     const isShortWord = wordWidth <= this.widthManager.maxWidth;
     if (isShortWord && this.widthManager.isFull(wordWidth)) {
       return true;
     }
     return false;
+  }
+
+  private calculateWordLength(i: number, text: Text): number {
+    const word = text.getWord(i);
+    if (word) {
+      let total = 0;
+      for (let j = i; j < i + word.length; j++) {
+        const ch = text.graphemeAt(j);
+        total += ch ? this.font.widthOf(ch, ch.length > 1) : 0;
+      }
+      return total;
+    } else {
+      return 0;
+    }
   }
 }

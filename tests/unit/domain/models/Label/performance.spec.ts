@@ -27,8 +27,8 @@ describe("Subject", () => {
   });
 
   const font = new FontMock();
-  const calculator = new LineWidthManager(font, maxWidth, maxLabelWidth);
-  const splitter = new TextLineSplitter(calculator);
+  const calculator = new LineWidthManager(maxWidth, maxLabelWidth);
+  const splitter = new TextLineSplitter(calculator, font);
 
   beforeEach(() => {
     calculator.reset();

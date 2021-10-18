@@ -1,23 +1,17 @@
-import { Font } from "./Font";
-
 export interface WidthManager {
   width: number;
   maxWidth: number;
-  add(ch: string, return_max: boolean): void;
+  add(width: number): void;
   reset(): void;
   isFull(wordOrLabelWidth: number): boolean;
   isEmpty(): boolean;
-  canInsertChar(char: string): boolean;
+  canAdd(charWidth: number): boolean;
 }
 
 export class LineWidthManager implements WidthManager {
   private totalWidth = 0;
 
-  constructor(
-    private font: Font,
-    private maxLineWidth: number,
-    private maxLabelWidth: number
-  ) {}
+  constructor(private maxLineWidth: number, private maxLabelWidth: number) {}
 
   get width(): number {
     return this.totalWidth;
@@ -27,8 +21,8 @@ export class LineWidthManager implements WidthManager {
     return this.maxLineWidth - this.maxLabelWidth;
   }
 
-  add(ch: string, return_max = false): void {
-    this.totalWidth += this.font.widthOf(ch, return_max);
+  add(width: number): void {
+    this.totalWidth += width;
   }
 
   reset(): void {
@@ -39,11 +33,8 @@ export class LineWidthManager implements WidthManager {
     return this.maxWidth < this.totalWidth + wordOrLabelWidth;
   }
 
-  canInsertChar(char: string): boolean {
-    return (
-      this.totalWidth + this.font.widthOf(char, char.length > 1) <=
-      this.maxWidth
-    );
+  canAdd(charWidth: number): boolean {
+    return this.totalWidth + charWidth <= this.maxWidth;
   }
 
   isEmpty(): boolean {

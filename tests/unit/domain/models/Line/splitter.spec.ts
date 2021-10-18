@@ -2,6 +2,7 @@ import { TextLineSplitter } from "@/domain/models/Line/LineSplitter";
 import { LineWidthManager } from "@/domain/models/Line/WidthManager";
 import { Font } from "@/domain/models/Line/Font";
 import { Text } from "@/domain/models/Label/Text";
+import GraphemeSplitter from "grapheme-splitter";
 
 jest.mock("@/domain/models/Line/Font");
 const FontMock = Font as unknown as jest.Mock;
@@ -9,21 +10,22 @@ const FontMock = Font as unknown as jest.Mock;
 describe("TextLineSplitter", () => {
   const maxWidth = 5;
   const maxLabelWidth = 0;
+  const splitter = new GraphemeSplitter();
   FontMock.mockImplementationOnce(() => {
     return {
       widthOfChar: (): number => {
         return 1;
       },
-      widthOf: (): number => {
-        return 1;
+      widthOf: (text: string): number => {
+        return splitter.splitGraphemes(text).length;
       },
     };
   });
   const font = new FontMock();
 
-  const calculator = new LineWidthManager(font, maxWidth, maxLabelWidth);
+  const calculator = new LineWidthManager(maxWidth, maxLabelWidth);
   const assertOffset = (text: string, expected: [number, number][]) => {
-    const splitter = new TextLineSplitter(calculator);
+    const splitter = new TextLineSplitter(calculator, font);
     const lines = splitter.split(new Text(text));
     for (let i = 0; i < lines.length; i++) {
       const actual = [lines[i].startOffset, lines[i].endOffset];

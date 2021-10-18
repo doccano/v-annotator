@@ -225,12 +225,8 @@ export default Vue.extend({
         return [];
       } else {
         const maxLabelWidth = this.entityLabelList.maxLabelWidth;
-        const calculator = new LineWidthManager(
-          this.font,
-          this.maxWidth,
-          maxLabelWidth
-        );
-        const splitter = new TextLineSplitter(calculator);
+        const calculator = new LineWidthManager(this.maxWidth, maxLabelWidth);
+        const splitter = new TextLineSplitter(calculator, this.font);
         return splitter.split(this._text);
       }
     },
