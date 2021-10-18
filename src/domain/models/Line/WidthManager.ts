@@ -5,7 +5,7 @@ export interface WidthManager {
   reset(): void;
   isFull(wordOrLabelWidth: number): boolean;
   isEmpty(): boolean;
-  canAdd(charWidth: number): boolean;
+  canAdd(width: number): boolean;
 }
 
 export class LineWidthManager implements WidthManager {
@@ -33,8 +33,8 @@ export class LineWidthManager implements WidthManager {
     return this.maxWidth < this.totalWidth + wordOrLabelWidth;
   }
 
-  canAdd(charWidth: number): boolean {
-    return this.totalWidth + charWidth <= this.maxWidth;
+  canAdd(width: number): boolean {
+    return this.totalWidth + width <= this.maxWidth;
   }
 
   isEmpty(): boolean {
