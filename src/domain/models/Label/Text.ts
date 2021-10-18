@@ -7,17 +7,25 @@ export class Text {
   private idx2len: Map<number, number> = new Map();
 
   constructor(readonly text: string) {
+    this.setGraphemeMapping();
+    this.setCodePointMapping();
+    this.setWordBoundary();
+  }
+
+  private setCodePointMapping() {
+    for (const [graphemeOffset, codeOffset] of this.g2c) {
+      this.c2g.set(codeOffset, graphemeOffset);
+    }
+  }
+
+  private setGraphemeMapping() {
     const splitter = new GraphemeSplitter();
-    this.graphemes = splitter.splitGraphemes(text);
+    this.graphemes = splitter.splitGraphemes(this.text);
     let total = 0;
     for (let i = 0; i < this.graphemeLength; i++) {
       this.g2c.set(i, total);
       total += this.graphemeAt(i).length;
     }
-    for (const [graphemeOffset, codeOffset] of this.g2c) {
-      this.c2g.set(codeOffset, graphemeOffset);
-    }
-    this.setWordBoundary();
   }
 
   private setWordBoundary() {
