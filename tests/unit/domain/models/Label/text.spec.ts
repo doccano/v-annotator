@@ -32,14 +32,18 @@ describe("Text", () => {
 
   it("toGraphemeOffset", () => {
     const text = new Text("👶🏻👦🏻👧🏻👨🏻");
+    expect(text.toGraphemeOffset(0)).toBe(0);
     expect(text.toGraphemeOffset(4)).toBe(1);
+    expect(text.toGraphemeOffset(16)).toBe(4);
     expect(text.toGraphemeOffset(3)).toBeUndefined();
   });
 
   it("toCodePointOffset", () => {
     const text = new Text("👶🏻👦🏻👧🏻👨🏻");
+    expect(text.toCodePointOffset(0)).toBe(0);
     expect(text.toCodePointOffset(1)).toBe(4);
-    expect(text.toCodePointOffset(4)).toBeUndefined();
+    expect(text.toCodePointOffset(4)).toBe(16);
+    expect(text.toCodePointOffset(5)).toBeUndefined();
   });
 
   it("getWord", () => {

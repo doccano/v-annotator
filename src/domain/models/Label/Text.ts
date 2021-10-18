@@ -26,6 +26,7 @@ export class Text {
       this.g2c.set(i, total);
       total += this.graphemeAt(i).length;
     }
+    this.g2c.set(this.graphemeLength, total);
   }
 
   private setWordBoundary() {
