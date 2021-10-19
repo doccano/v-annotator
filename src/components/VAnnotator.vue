@@ -27,7 +27,7 @@
           :base-x="baseX"
           :left="left"
           :right="right"
-          :key="index"
+          :key="`${index}:${rtl}`"
           @click:entity="clicked"
           @click:relation="$emit('click:relation', $event)"
           @contextmenu:entity="$emit('contextmenu:entity', $event)"
