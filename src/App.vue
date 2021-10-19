@@ -3,6 +3,7 @@
     <button @click="changeText">Change text</button>
     <button @click="resetEntity">Reset entity</button>
     <button @click="changeLabel">Change label</button>
+    <button @click="rtl=!rtl">Change RTL{{ rtl }}</button>
     <button @click="allowOverlapping = !allowOverlapping">
       Allow overlapping({{ allowOverlapping }})
     </button>
