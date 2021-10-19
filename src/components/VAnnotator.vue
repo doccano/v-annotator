@@ -139,7 +139,7 @@ export default Vue.extend({
     this.textElement = document.getElementById(
       "text"
     ) as unknown as SVGTextElement;
-    window.addEventListener("resize", debounce(this.setMaxWidth, 500));
+    window.addEventListener("resize", this.setMaxWidth);
     this.setMaxWidth();
   },
 
@@ -241,14 +241,16 @@ export default Vue.extend({
       this.$emit("click:entity", event, entity.id);
     },
     setMaxWidth() {
-      this.$nextTick(() => {
-        const containerElement = document.getElementById("container")!;
-        this.maxWidth = containerElement.clientWidth;
-        const rect = containerElement.getBoundingClientRect();
-        this.left = rect.left;
-        this.right = rect.right - rect.left;
-        this.baseX = !this.rtl ? 0 : this.right;
-      });
+      this.$nextTick(
+        debounce(() => {
+          const containerElement = document.getElementById("container")!;
+          this.maxWidth = containerElement.clientWidth;
+          const rect = containerElement.getBoundingClientRect();
+          this.left = rect.left;
+          this.right = rect.right - rect.left;
+          this.baseX = !this.rtl ? 0 : this.right;
+        }, 500)
+      );
     },
     updateHeight(id: string, height: number) {
       this.$set(this.heights, id, height);
