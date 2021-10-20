@@ -13,6 +13,7 @@
       :text="text"
       :entities="JSON.stringify(entities)"
       :entity-labels="entityLabels"
+      :grapheme-mode="graphemeMode"
       :relations="relations"
       :relation-labels="relationLabels"
       :rtl="rtl"
@@ -41,6 +42,7 @@ export default Vue.extend({
   data() {
     return {
       allowOverlapping: false,
+      graphemeMode: false,
       id: 100,
       // text: "من ويكيبيديا، الموسوعة الحرة\nداستان SVG Tiny 1.2 طولا ني است.",
       // rtl: true,
@@ -103,8 +105,8 @@ export default Vue.extend({
           id: 5,
           user: 0,
           label: 1,
-          startOffset: 130,
-          endOffset: 135,
+          startOffset: 511,
+          endOffset: 519,
         },
       ],
       relations: [
