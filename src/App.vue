@@ -105,8 +105,8 @@ export default Vue.extend({
           id: 5,
           user: 0,
           label: 1,
-          startOffset: 511,
-          endOffset: 519,
+          startOffset: 130,
+          endOffset: 135,
         },
       ],
       relations: [
