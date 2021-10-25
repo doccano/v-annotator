@@ -1,4 +1,5 @@
 import config from "@/domain/models/Config/Config";
+import { Identifiable } from './Identifiable';
 
 export interface Label {
   readonly id: number;
@@ -7,7 +8,7 @@ export interface Label {
   readonly backgroundColor?: string;
 }
 
-export class LabelListItem {
+export class LabelListItem implements Identifiable {
   constructor(
     readonly id: number,
     readonly text: string,
