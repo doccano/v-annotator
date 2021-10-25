@@ -266,11 +266,7 @@ export default Vue.extend({
           return;
         }
         if (!this.allowOverlapping) {
-          const entities = this.entityList.filterByRange(
-            startOffset,
-            endOffset
-          );
-          if (entities.length > 0) {
+          if (this.entityList.intersectAny(startOffset, endOffset)) {
             return;
           }
         }

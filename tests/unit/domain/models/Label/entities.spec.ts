@@ -42,4 +42,13 @@ describe("Entities", () => {
     expect(entities.findById(1)).toEqual(entity);
     expect(entities.findById(0)).toBeUndefined();
   });
+
+  it("intersect any", () => {
+    const entities = new Entities([new Entity(0, 0, 1, 5)]);
+    expect(entities.intersectAny(0, 1)).toBeFalsy();
+    expect(entities.intersectAny(0, 2)).toBeTruthy();
+    expect(entities.intersectAny(4, 6)).toBeTruthy();
+    expect(entities.intersectAny(5, 6)).toBeFalsy();
+    expect(entities.intersectAny(1, 5)).toBeTruthy();
+  });
 });

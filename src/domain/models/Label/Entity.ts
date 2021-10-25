@@ -77,4 +77,8 @@ export class Entities {
       .search([startOffset, endOffset])
       .filter((entity: Entity) => entity.isIn(startOffset, endOffset));
   }
+
+  intersectAny(startOffset: number, endOffset: number): boolean {
+    return this.filterByRange(startOffset, endOffset).length > 0;
+  }
 }
