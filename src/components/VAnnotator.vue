@@ -63,7 +63,7 @@ import { widthOf } from "@/domain/models/Line/Utils";
 import { LineWidthManager } from "../domain/models/Line/WidthManager";
 import { TextLine } from "@/domain/models/Line/LineText";
 import { TextLineSplitter } from "@/domain/models/Line/LineSplitter";
-import { getSelection } from "@/domain/models/EventHandler/TextSelectionHandler";
+import { TextSelector } from "@/domain/models/EventHandler/TextSelectionHandler";
 import { Relation, RelationList } from "@/domain/models/Label/Relation";
 
 interface ViewLine {
@@ -261,27 +261,15 @@ export default Vue.extend({
     },
     open(event: Event): void {
       try {
-        const [startOffset, endOffset] = getSelection();
-        if (startOffset >= endOffset) {
-          return;
-        }
-        if (!this.allowOverlapping) {
-          if (this.entityList.intersectAny(startOffset, endOffset)) {
-            return;
-          }
-        }
-        if (this.graphemeMode) {
-          const graphemeStartOffset = this._text.toGraphemeOffset(startOffset);
-          const graphemeEndOffset = this._text.toGraphemeOffset(endOffset);
-          this.$emit(
-            "add:entity",
-            event,
-            graphemeStartOffset,
-            graphemeEndOffset
-          );
-        } else {
-          this.$emit("add:entity", event, startOffset, endOffset);
-        }
+        const selector = new TextSelector(
+          this.allowOverlapping,
+          this.graphemeMode
+        );
+        const [startOffset, endOffset] = selector.getOffsets(
+          this.entityList,
+          this._text
+        );
+        this.$emit("add:entity", event, startOffset, endOffset);
       } catch (e) {
         return;
       }
