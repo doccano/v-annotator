@@ -74,7 +74,7 @@ describe("Entity component", () => {
     const fromEntity = new Entity(0, 0, 1, 1);
     const toEntity = new Entity(1, 0, 3, 3);
     const relation = new RelationListItem(0, 0, fromEntity, toEntity);
-    expect(relation.length).toEqual(2);
+    expect(relation.width).toEqual(2);
   });
 });
 

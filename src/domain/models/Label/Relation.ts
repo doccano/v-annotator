@@ -80,9 +80,10 @@ export class RelationListItem implements Identifiable {
   }
 
   /**
-   * Return length between centers of each entity.
+   * Return width between centers of each entity.
+   * @returns {number} - the width between each entity.
    */
-  get length(): number {
+  get width(): number {
     return Math.abs(this.fromEntity.center - this.toEntity.center);
   }
 

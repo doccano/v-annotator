@@ -33,7 +33,7 @@ export class RelationLine {
     entities.forEach((entity) => {
       entityMap.set(entity.entity.id, entity);
     });
-    this.relations.sort((r1, r2) => r1.length - r2.length);
+    this.relations.sort((r1, r2) => r1.width - r2.width);
     for (const relation of this.relations) {
       if (!relation.isVisible(this.textLine.startOffset)) {
         continue;
