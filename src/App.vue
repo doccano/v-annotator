@@ -11,7 +11,7 @@
     <v-annotator
       :allow-overlapping="allowOverlapping"
       :text="text"
-      :entities="JSON.stringify(entities)"
+      :entities="entities"
       :entity-labels="entityLabels"
       :grapheme-mode="graphemeMode"
       :relations="relations"

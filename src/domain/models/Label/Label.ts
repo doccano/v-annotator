@@ -1,5 +1,5 @@
 import config from "@/domain/models/Config/Config";
-import { Identifiable } from './Identifiable';
+import { Identifiable } from "./Identifiable";
 
 export interface Label {
   readonly id: number;

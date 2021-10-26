@@ -85,7 +85,7 @@ export default Vue.extend({
       required: true,
     },
     entities: {
-      type: String,
+      type: Array as PropType<Entity[]>,
       default: () => [],
       required: true,
     },
@@ -208,12 +208,9 @@ export default Vue.extend({
     entityList(): Entities {
       this.resetSelection();
       if (this.graphemeMode) {
-        return Entities.valueOf(
-          JSON.parse(this.entities as string),
-          this._text
-        );
+        return Entities.valueOf(this.entities, this._text);
       } else {
-        return Entities.valueOf(JSON.parse(this.entities as string));
+        return Entities.valueOf(this.entities);
       }
     },
     relationList(): RelationList {
