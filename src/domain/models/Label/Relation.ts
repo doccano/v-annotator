@@ -117,8 +117,8 @@ export class RelationList {
 
   constructor(relations: Relation[], entities: Entities) {
     for (const relation of relations) {
-      const fromEntity = entities.findById(relation.fromId);
-      const toEntity = entities.findById(relation.toId);
+      const fromEntity = entities.findById(relation.fromId)!;
+      const toEntity = entities.findById(relation.toId)!;
       const item = new RelationListItem(
         relation.id,
         relation.labelId,
