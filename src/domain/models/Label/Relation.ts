@@ -17,6 +17,12 @@ export class RelationListItem implements Identifiable {
     readonly toEntity: Entity
   ) {}
 
+  /**
+   * Return true if the relation and start/end offset has some overlapping.
+   * @param {number} startOffset - start offset of something(maybe entity or relation)
+   * @param {number} endOffset - end offset of something(maybe entity or relation)
+   * @returns {boolean} - true if there is an overlapping, otherwise false.
+   */
   isIn(startOffset: number, endOffset: number): boolean {
     return (
       (startOffset <= this.startOffset && this.startOffset < endOffset) ||
@@ -28,7 +34,7 @@ export class RelationListItem implements Identifiable {
   /**
    * Return true if entity is a part of the relation.
    * @param {Entity} entity - an entity.
-   * @returns {boolean} - the result.
+   * @returns {boolean} - true if the entity is a part of the relation, otherwise false.
    */
   consistOf(entity: Entity): boolean {
     return this.fromEntity.equalTo(entity) || this.toEntity.equalTo(entity);
@@ -87,10 +93,20 @@ export class RelationListItem implements Identifiable {
     return Math.abs(this.fromEntity.center - this.toEntity.center);
   }
 
+  /**
+   * Return start offset of the relation.
+   * The value is a smaller value of the two entities.
+   * @returns {number} - the start offset.
+   */
   get startOffset(): number {
     return Math.min(this.fromEntity.startOffset, this.toEntity.startOffset);
   }
 
+  /**
+   * Return end offset of the relation.
+   * The value is a bigger value of the two entities.
+   * @returns {number} - the end offset.
+   */
   get endOffset(): number {
     return Math.max(this.fromEntity.endOffset, this.toEntity.endOffset);
   }
@@ -113,6 +129,12 @@ export class RelationList {
     }
   }
 
+  /**
+   * Filter relations by the provided start/end offsets.
+   * @param {number} startOffset - the start offset.
+   * @param {number} endOffset - the end offset.
+   * @returns {RelationListItem[]} - An array with the filtered relations.
+   */
   filterByRange(startOffset: number, endOffset: number): RelationListItem[] {
     return this.tree
       .search([startOffset, endOffset])
