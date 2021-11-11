@@ -43,15 +43,32 @@ export class Text {
     }
   }
 
+  /**
+   * Returns the word of the specified index.
+   *   If there is no word at the index, returns undefined.
+   * @param {number} index  - An integer between 0 and this.codePointLength.
+   * @returns {(string | undefined)} - a word or undefined.
+   */
   getWord(index: number): string | undefined {
     const len = this.idx2len.get(index);
     return len ? this.text.substr(index, len) : undefined;
   }
 
+  /**
+   * Converts the given codePointOffset to the graphemeOffset.
+   *   If there is no corresponding offset, returns undefined.
+   * @param {number} codePointOffset - An integer between 0 and this.codePointLength.
+   * @returns {(number | undefined)} - A graphemeOffset or undefined.
+   */
   toGraphemeOffset(codePointOffset: number): number | undefined {
     return this.c2g.get(codePointOffset);
   }
 
+  /**
+   * Converts the given graphemeOffset to the codePointOffset.
+   * @param {number} graphemeOffset - An integer between 0 and this.graphemeLength.
+   * @returns {(number | undefined)} - A codePointOffset or undefined.
+   */
   toCodePointOffset(graphemeOffset: number): number | undefined {
     return this.g2c.get(graphemeOffset);
   }
