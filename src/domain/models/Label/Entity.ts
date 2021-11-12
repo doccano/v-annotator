@@ -39,10 +39,19 @@ export class Entity implements Identifiable {
     return this.id === other.id;
   }
 
+  /**
+   * Return true if the entity is located after the given offset.
+   * @param {number} offset - The offset.
+   * @returns {boolean} - true if offset <= this.startOffset.
+   */
   startsAfter(offset: number): boolean {
     return offset <= this.startOffset;
   }
 
+  /**
+   * Return the center offset of the entity.
+   * This is used to calculate the width of the relation.
+   */
   get center(): number {
     return this.startOffset + (this.endOffset - this.startOffset) / 2;
   }
