@@ -25,5 +25,11 @@ yarn test:unit
 yarn lint
 ```
 
+### Publish the package
+
+```
+yarn publish
+```
+
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
