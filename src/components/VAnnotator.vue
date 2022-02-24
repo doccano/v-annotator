@@ -29,7 +29,7 @@
           :right="right"
           :key="`${index}:${rtl}`"
           @click:entity="clicked"
-          @click:relation="$emit('click:relation', $event)"
+          @click:relation="onRelationClicked"
           @contextmenu:entity="$emit('contextmenu:entity', $event)"
           @contextmenu:relation="$emit('contextmenu:relation', $event)"
           @update:height="updateHeight"
@@ -237,6 +237,11 @@ export default Vue.extend({
     clicked(event: Event, entity: Entity) {
       this.$emit("click:entity", event, entity.id);
     },
+
+    onRelationClicked(event: Event, relation: Relation) {
+      this.$emit("click:relation", event, relation);
+    },
+
     setMaxWidth() {
       this.$nextTick(
         debounce(() => {

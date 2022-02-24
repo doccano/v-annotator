@@ -1,7 +1,7 @@
 <template>
   <g
     style="cursor: pointer; userselect: none"
-    @click="$emit('click:relation')"
+    @click="$emit('click:relation', $event)"
     @contextmenu="$emit('contextmenu:relation')"
     @mouseover="$emit('mouseover')"
     @mouseleave="$emit('mouseleave')"

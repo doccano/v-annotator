@@ -211,8 +211,9 @@ export default Vue.extend({
         labelId: 1,
       });
     },
-    updateRelation(relation: Relation) {
+    updateRelation(event: Event, relation: Relation) {
       console.log(relation);
+      console.log(event);
     },
     deleteRelation(relation: Relation) {
       this.relations = this.relations.filter((r) => r.id !== relation.id);

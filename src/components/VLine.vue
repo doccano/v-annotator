@@ -37,7 +37,7 @@
         :rtl="rtl"
         :margin="left"
         :selected="isSelectedRelation(relation.relation)"
-        @click:relation="$emit('click:relation', relation.relation)"
+        @click:relation="$emit('click:relation', $event, relation.relation)"
         @contextmenu:relation="$emit('contextmenu:relation', relation.relation)"
         @mouseover="$emit('setSelectedRelation', relation.relation)"
         @mouseleave="$emit('setSelectedRelation', null)"
