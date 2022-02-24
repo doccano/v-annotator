@@ -11,7 +11,7 @@
       v-bind="markerObj"
       stroke="#74b8dc"
       :stroke-width="width"
-      fill-opacity="0"
+      fill="none"
     />
     <g v-if="x1">
       <rect

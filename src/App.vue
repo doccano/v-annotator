@@ -130,7 +130,7 @@ export default Vue.extend({
         },
         {
           id: 4,
-          fromId: 6,
+          fromId: 1,
           toId: 7,
           labelId: 1,
         },
