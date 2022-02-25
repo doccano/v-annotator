@@ -20,7 +20,7 @@
           :relationLabels="relationLabelList"
           :font="font"
           :rtl="rtl"
-          :selected-entity="selectedEntity"
+          :selected-entities="highlightedEntities"
           :selected-relation="selectedRelation"
           :text="text"
           :textLine="item.textLine"
@@ -118,6 +118,11 @@ export default Vue.extend({
     dark: {
       type: Boolean,
       default: false,
+    },
+    selectedEntities: {
+      type: Array as PropType<Entity[]>,
+      default: () => [],
+      required: false,
     },
   },
 
@@ -225,6 +230,13 @@ export default Vue.extend({
         const calculator = new LineWidthManager(this.maxWidth, maxLabelWidth);
         const splitter = new TextLineSplitter(calculator, this.font);
         return splitter.split(this._text);
+      }
+    },
+    highlightedEntities(): Entity[] {
+      if (this.selectedEntity) {
+        return this.selectedEntities.concat(this.selectedEntity);
+      } else {
+        return this.selectedEntities;
       }
     },
   },

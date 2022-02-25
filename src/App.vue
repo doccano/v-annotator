@@ -17,6 +17,7 @@
       :relations="relations"
       :relation-labels="relationLabels"
       :rtl="rtl"
+      :selected-entities="selectedEntities"
       @add:entity="addEntity"
       @click:entity="updateEntity"
       @click:relation="updateRelation"
@@ -166,6 +167,12 @@ export default Vue.extend({
     // for (let i = 0; i < 10000; i++) {
     //   this.addEntity(i * 10 + 100, i * 10 + 105);
     // }
+  },
+
+  computed: {
+    selectedEntities(): any[] {
+      return [this.entities[0], this.entities[1]];
+    },
   },
 
   methods: {

@@ -135,8 +135,8 @@ export default Vue.extend({
       type: Number,
       default: 0,
     },
-    selectedEntity: {
-      type: Object as PropType<Entity | null>,
+    selectedEntities: {
+      type: Array as PropType<Entity[]>,
     },
     selectedRelation: {
       type: Object as PropType<RelationListItem | null>,
@@ -247,10 +247,10 @@ export default Vue.extend({
     isSelectedEntity(entity: Entity): boolean {
       if (this.selectedRelation) {
         return this.selectedRelation.consistOf(entity);
-      } else if (this.selectedEntity) {
-        return this.selectedEntity === entity;
       } else {
-        return false;
+        return (
+          this.selectedEntities.filter((e) => e.id === entity.id).length > 0
+        );
       }
     },
   },
