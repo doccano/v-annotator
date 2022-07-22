@@ -139,7 +139,7 @@ export default Vue.extend({
       entityLabels: [
         {
           id: 0,
-          text: "Lorem",
+          text: "VeryLongLabelWithManyCharacters",
           color: "#2196F3",
         },
         {
@@ -151,7 +151,7 @@ export default Vue.extend({
       relationLabels: [
         {
           id: 0,
-          text: "isVeryLongLabelWithMoreThanTwentyCharacters",
+          text: "superLongRelationLabel",
           color: "#ffffff",
         },
         {

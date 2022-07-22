@@ -94,9 +94,9 @@ export class RelationLine {
       if (rtl) {
         [openStart, openEnd] = [openEnd, openStart];
       }
-      if (x2 - x1 < label!.width) {
+      if (x2 - x1 < label!.truncatedWidth) {
         const center = x1 + (x2 - x1) / 2;
-        const half = label!.width / 2;
+        const half = label!.truncatedWidth / 2;
         this.levelManager.update(relation, [[center - half, center + half]]);
       } else {
         this.levelManager.update(relation, [[x1, x2]]);
@@ -106,8 +106,8 @@ export class RelationLine {
         x1,
         x2,
         level,
-        label: label!.text,
-        labelWidth: label!.width,
+        label: label!.truncatedText,
+        labelWidth: label!.truncatedWidth,
         relation,
         marker,
         openLeft: openStart,

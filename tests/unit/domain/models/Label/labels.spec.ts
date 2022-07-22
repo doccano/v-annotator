@@ -3,6 +3,7 @@ import {
   LabelList,
   LabelListItem,
 } from "@/domain/models/Label/Label";
+import config from "@/domain/models/Config/Config";
 
 describe("LabelListItem", () => {
   it("check properties", () => {
@@ -11,18 +12,19 @@ describe("LabelListItem", () => {
     const color = "color";
     const width = 10;
     const label = new LabelListItem(id, text, color, width);
+    const truncatedText = "x".repeat(config.maxLabelLength) + "...";
     expect(label.id).toBe(id);
     expect(label.text).toBe(text);
     expect(label.color).toBe(color);
     expect(label.width).toBe(width);
-    expect(label.truncatedText).toBe(text);
+    expect(label.truncatedText).toBe(truncatedText);
   });
 
   it("check truncated text", () => {
     const text = "x".repeat(100);
     const width = 100;
     const label = new LabelListItem(0, text, "color", width);
-    expect(label.truncatedText).toBe("x".repeat(15));
+    expect(label.truncatedText).toBe("x".repeat(config.maxLabelLength) + "...");
     expect(label.truncatedWidth).toBeLessThan(width);
   });
 });
@@ -59,12 +61,12 @@ describe("Labels", () => {
   });
 
   it("getWidth", () => {
-    expect(labels.getWidth(id)).toBeGreaterThan(width);
+    expect(labels.getWidth(id)).toBeGreaterThanOrEqual(width);
     expect(labels.getWidth(1)).toBeUndefined();
   });
 
   it("checkMaxLabelWidth", () => {
-    expect(labels.maxLabelWidth).toBeGreaterThan(width);
+    expect(labels.maxLabelWidth).toBeGreaterThanOrEqual(width);
   });
 
   it("check max width of empty labels", () => {
