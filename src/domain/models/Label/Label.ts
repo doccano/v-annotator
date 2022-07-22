@@ -25,12 +25,13 @@ export class LabelListItem implements Identifiable {
     if (this.text.length <= this.maxLength) {
       return this.text;
     } else {
-      return `${this.text.substr(0, this.maxLength)}`;
+      return `${this.text.slice(0, this.maxLength)}...`;
     }
   }
 
   get truncatedWidth(): number {
-    return (this.textWidth / this.text.length) * this.truncatedText.length;
+    const meanCharLength = this.textWidth / this.text.length;
+    return meanCharLength * Math.min(this.text.length, this.maxLength);
   }
 }
 
@@ -60,15 +61,15 @@ export class LabelList {
   }
 
   getText(id: number): string | undefined {
-    return this.getById(id)?.text;
+    return this.getById(id)?.truncatedText;
   }
 
   getWidth(id: number): number | undefined {
-    return this.getById(id)?.width;
+    return this.getById(id)?.truncatedWidth;
   }
 
   get maxLabelWidth(): number {
-    return Math.max(...this.labels.map((label) => label.width), 0);
+    return Math.max(...this.labels.map((label) => label.truncatedWidth), 0);
   }
 
   static valueOf(
