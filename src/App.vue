@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" style="width: 500px; background-color: #eee">
     <button @click="changeText">Change text</button>
     <button @click="resetEntity">Reset entity</button>
     <button @click="changeLabel">Change label</button>
@@ -151,7 +151,7 @@ export default Vue.extend({
       relationLabels: [
         {
           id: 0,
-          text: "isLocated",
+          text: "isVeryLongLabelWithMoreThanTwentyCharacters",
           color: "#ffffff",
         },
         {
@@ -201,10 +201,11 @@ export default Vue.extend({
     },
     changeText() {
       this.text = "The president Obama came to Japan.";
-      this.entities = [];
+      this.resetEntity();
     },
     resetEntity() {
       this.entities = [];
+      this.resetRelation();
     },
     changeLabel() {
       this.entityLabels[0].color = "#FF5733";
@@ -224,6 +225,9 @@ export default Vue.extend({
     },
     deleteRelation(relation: Relation) {
       this.relations = this.relations.filter((r) => r.id !== relation.id);
+    },
+    resetRelation() {
+      this.relations = [];
     },
   },
 });
