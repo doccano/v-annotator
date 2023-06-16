@@ -17,6 +17,7 @@
               item.textLine.endOffset
             )
           "
+          :maxLabelLength="maxLabelLength"
           :relationLabels="relationLabelList"
           :font="font"
           :rtl="rtl"
@@ -79,6 +80,11 @@ export default Vue.extend({
   },
 
   props: {
+    maxLabelLength: {
+      type: Number,
+      default: 12,
+      required: false,
+    },
     text: {
       type: String,
       default: "",
@@ -173,6 +179,7 @@ export default Vue.extend({
           widthOf(label.text, this.textElement!)
         );
         return LabelList.valueOf(
+          this.maxLabelLength,
           this.entityLabels,
           widths,
           EntityLabelListItem
@@ -187,6 +194,7 @@ export default Vue.extend({
           widthOf(label.text, this.textElement!)
         );
         return LabelList.valueOf(
+          this.maxLabelLength,
           this.relationLabels,
           widths,
           RelationLabelListItem

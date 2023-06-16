@@ -73,6 +73,7 @@ export class LabelList {
   }
 
   static valueOf(
+    maxLabelLength: number,
     labels: Label[],
     widths: number[],
     itemClass: typeof LabelListItem
@@ -84,7 +85,8 @@ export class LabelList {
             label.id,
             label.text,
             (label.color || label.backgroundColor)!,
-            widths[index]
+            widths[index],
+            maxLabelLength
           )
       )
     );
