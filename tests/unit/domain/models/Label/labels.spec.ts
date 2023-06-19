@@ -78,6 +78,7 @@ describe("Labels", () => {
     const labelObjects = [{ id, text, color }];
     const widths = [10];
     const entityLabels = LabelList.valueOf(
+      config.maxLabelLength,
       labelObjects,
       widths,
       EntityLabelListItem
