@@ -1,5 +1,5 @@
 <template>
-  <div id="app" style="width: 500px; background-color: #eee">
+  <div id="app" style="width: 1000px; background-color: #eee">
     <button @click="changeText">Change text</button>
     <button @click="resetEntity">Reset entity</button>
     <button @click="changeLabel">Change label</button>
@@ -8,22 +8,38 @@
       Allow overlapping({{ allowOverlapping }})
     </button>
     <button @click="addRelation">Add relation</button>
-    <v-annotator
-      :allow-overlapping="allowOverlapping"
-      :text="text"
-      :entities="entities"
-      :entity-labels="entityLabels"
-      :grapheme-mode="graphemeMode"
-      :relations="relations"
-      :relation-labels="relationLabels"
-      :rtl="rtl"
-      :selected-entities="selectedEntities"
-      @add:entity="addEntity"
-      @click:entity="updateEntity"
-      @click:relation="updateRelation"
-      @contextmenu:entity="deleteEntity"
-      @contextmenu:relation="deleteRelation"
-    />
+    <div style="width: 600px; display: inline-block">
+      <v-annotator
+        :allow-overlapping="allowOverlapping"
+        :text="text"
+        :entities="entities"
+        :entity-labels="entityLabels"
+        :grapheme-mode="graphemeMode"
+        :relations="relations"
+        :relation-labels="relationLabels"
+        :rtl="rtl"
+        :selected-entities="selectedEntities"
+        @add:entity="addEntity"
+        @click:entity="updateEntity"
+        @click:relation="updateRelation"
+        @contextmenu:entity="deleteEntity"
+        @contextmenu:relation="deleteRelation"
+      />
+    </div>
+    <div style="width: 400px; display: inline-block">
+      <v-annotator
+        :allow-overlapping="allowOverlapping"
+        :text="text2"
+        :entities="entities2"
+        :entity-labels="entityLabels"
+        :grapheme-mode="graphemeMode"
+        :relations="relations2"
+        :relation-labels="relationLabels"
+        :rtl="rtl"
+        @add:entity="addEntity2"
+        @contextmenu:entity="deleteEntity2"
+      />
+    </div>
   </div>
 </template>
 
@@ -160,6 +176,11 @@ export default Vue.extend({
           color: "#ffffff",
         },
       ],
+
+      text2:
+        "👶🏻👦🏻👧🏻👨🏻👩🏻👱🏻‍♀️👱🏻👴🏻👵🏻👲🏻👳🏻‍♀️👳🏻👮🏻‍♀️👮🏻👷🏻‍♀️👷🏻💂🏻‍♀️💂🏻🕵🏻‍♀️👩🏻‍⚕️👨🏻‍⚕️👩🏻‍🌾👨🏻‍🌾👨🏻‍🌾👨🏻‍🌾👨🏻‍🌾👨🏻‍🌾👨🏻‍🌾👨🏻‍🌾👨🏻‍🌾👨🏻‍🌾👨🏻‍🌾👨🏻‍🌾👨🏻‍🌾👨🏻‍🌾👨🏻‍🌾👨🏻‍🌾",
+      entities2: [],
+      relations2: [],
     };
   },
 
@@ -228,6 +249,20 @@ export default Vue.extend({
     },
     resetRelation() {
       this.relations = [];
+    },
+
+    addEntity2(event: Event, startOffset: number, endOffset: number) {
+      this.entities2.push({
+        id: this.id,
+        startOffset,
+        endOffset,
+        label: 0,
+        user: 0,
+      });
+      this.id++;
+    },
+    deleteEntity2(entity: Entity) {
+      this.entities2 = this.entities2.filter((e) => e.id !== entity.id);
     },
   },
 });

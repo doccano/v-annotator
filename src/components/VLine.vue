@@ -43,7 +43,12 @@
         @mouseleave="$emit('setSelectedRelation', null)"
       />
       <g :transform="translateEntity">
-        <BaseText :id="id" :text-line="textLine" :text="text" :x="baseX" />
+        <BaseText
+          :id="basetextId"
+          :text-line="textLine"
+          :text="text"
+          :x="baseX"
+        />
         <BaseEntity
           v-for="gEntity in geometricEntities"
           :key="gEntity.entity.id"
@@ -87,6 +92,10 @@ export default Vue.extend({
   },
 
   props: {
+    annotatorUuid: {
+      type: String,
+      required: true,
+    },
     entities: {
       type: [] as PropType<Entity[]>,
       default: () => [],
@@ -218,8 +227,11 @@ export default Vue.extend({
     id(): string {
       return `${this.textLine.startOffset}:${this.textLine.endOffset}`;
     },
+    basetextId(): string {
+      return `basetext-${this.annotatorUuid}-${this.id}`;
+    },
     svgId(): string {
-      return "svg" + this.id;
+      return `svg-${this.annotatorUuid}-${this.id}`;
     },
   },
 
@@ -231,7 +243,7 @@ export default Vue.extend({
     setElement() {
       this.$nextTick(() => {
         this.element = document.getElementById(
-          this.id
+          this.basetextId
         ) as unknown as SVGTextElement;
       });
     },

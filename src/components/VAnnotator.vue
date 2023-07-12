@@ -1,8 +1,9 @@
 <template>
-  <div id="container" @click="open" @touchend="open">
+  <div :id="`container-${uuid}`" @click="open" @touchend="open">
     <RecycleScroller page-mode class="scroller" :items="items">
       <template v-slot="{ item, index }">
         <v-line
+          :annotator-uuid="uuid"
           :dark="dark"
           :entities="
             entityList.filterByRange(
@@ -40,13 +41,14 @@
       </template>
     </RecycleScroller>
     <svg version="1.1" xmlns="http://www.w3.org/2000/svg">
-      <text id="text" style="white-space: pre" />
+      <text :id="`text-${uuid}`" style="white-space: pre" />
     </svg>
   </div>
 </template>
 
 <script lang="ts">
 import { debounce } from "lodash-es";
+import { v4 as uuidv4 } from "uuid";
 import Vue, { PropType } from "vue";
 import VLine from "./VLine.vue";
 import "vue-virtual-scroller/dist/vue-virtual-scroller.css";
@@ -134,6 +136,7 @@ export default Vue.extend({
 
   data() {
     return {
+      uuid: uuidv4(),
       font: null as Font | null,
       heights: {} as { [id: string]: number },
       maxWidth: -1,
@@ -148,7 +151,7 @@ export default Vue.extend({
 
   mounted() {
     this.textElement = document.getElementById(
-      "text"
+      `text-${this.uuid}`
     ) as unknown as SVGTextElement;
     window.addEventListener("resize", this.setMaxWidth);
     this.setMaxWidth();
@@ -265,7 +268,9 @@ export default Vue.extend({
     setMaxWidth() {
       this.$nextTick(
         debounce(() => {
-          const containerElement = document.getElementById("container")!;
+          const containerElement = document.getElementById(
+            `container-${this.uuid}`
+          )!;
           this.maxWidth = containerElement.clientWidth;
           const rect = containerElement.getBoundingClientRect();
           this.left = rect.left;
