@@ -49,6 +49,14 @@ import VAnnotator from "./components/VAnnotator.vue";
 import { Entity } from "./domain/models/Label/Entity";
 import { Relation } from "./domain/models/Label/Relation";
 
+interface EntityI {
+  id: number;
+  user: number;
+  label: number;
+  startOffset: number;
+  endOffset: number;
+}
+
 export default Vue.extend({
   name: "App",
 
@@ -179,7 +187,7 @@ export default Vue.extend({
 
       text2:
         "👶🏻👦🏻👧🏻👨🏻👩🏻👱🏻‍♀️👱🏻👴🏻👵🏻👲🏻👳🏻‍♀️👳🏻👮🏻‍♀️👮🏻👷🏻‍♀️👷🏻💂🏻‍♀️💂🏻🕵🏻‍♀️👩🏻‍⚕️👨🏻‍⚕️👩🏻‍🌾👨🏻‍🌾👨🏻‍🌾👨🏻‍🌾👨🏻‍🌾👨🏻‍🌾👨🏻‍🌾👨🏻‍🌾👨🏻‍🌾👨🏻‍🌾👨🏻‍🌾👨🏻‍🌾👨🏻‍🌾👨🏻‍🌾👨🏻‍🌾👨🏻‍🌾",
-      entities2: [],
+      entities2: [] as EntityI[],
       relations2: [],
     };
   },
