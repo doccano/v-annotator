@@ -1,6 +1,6 @@
 <template>
   <g
-    style="cursor: pointer; userselect: none"
+    style="cursor: pointer; user-select: none"
     @click="$emit('click:entity', $event)"
     @contextmenu.prevent="$emit('contextmenu:entity')"
   >

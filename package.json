@@ -30,6 +30,7 @@
     "core-js": "^3.6.5",
     "grapheme-splitter": "^1.0.4",
     "lodash-es": "^4.17.21",
+    "uuid": "^9.0.0",
     "vue": "^2.6.11",
     "vue-virtual-scroller": "^1.0.10"
   },
@@ -39,6 +40,7 @@
     "@types/jsdom": "^16.2.11",
     "@types/lodash": "^4.14.170",
     "@types/lodash-es": "^4.17.5",
+    "@types/uuid": "^9.0.2",
     "@types/vue-virtual-scroller": "npm:@earltp/vue-virtual-scroller",
     "@typescript-eslint/eslint-plugin": "^4.18.0",
     "@typescript-eslint/parser": "^4.18.0",

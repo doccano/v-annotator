@@ -154,9 +154,9 @@ export default Vue.extend({
     },
     markerObj() {
       if (this.marker === "start") {
-        return { "marker-start": "url(#arrow)" };
+        return { "marker-start": "url(#v-annotator-arrow)" };
       } else if (this.marker === "end") {
-        return { "marker-end": "url(#arrow)" };
+        return { "marker-end": "url(#v-annotator-arrow)" };
       } else {
         return {};
       }
