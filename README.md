@@ -1,4 +1,8 @@
-# annotator
+# v-annotator
+
+Vue.js component for annotating text with entities.
+
+![](docs/ner.png)
 
 ## Project setup
 ```
