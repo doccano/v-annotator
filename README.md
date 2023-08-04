@@ -1,6 +1,6 @@
 # v-annotator
 
-Vue.js component for annotating text with entities.
+Vue.js component for annotating text with entities and relations.
 
 ![](docs/ner.png)
 
