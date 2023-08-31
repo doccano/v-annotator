@@ -1,6 +1,6 @@
 <template>
   <div :id="`container-${uuid}`" @click="open" @touchend="open">
-    <svg version="1.1" xmlns="http://www.w3.org/2000/svg">
+    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="0" height="0">
       <defs>
         <marker
           id="v-annotator-arrow"
